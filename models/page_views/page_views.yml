@@ -1,0 +1,113 @@
+version: 2
+
+models:
+  - name: snowplow_web_page_views
+    columns:
+      - name: page_view_id
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: domain_userid
+        tests:
+          - not_null
+      - name: network_userid
+        tests:
+          - not_null
+      - name: domain_sessionid
+        tests:
+          - not_null
+      - name: domain_sessionidx
+        tests:
+          - not_null
+      - name: page_view_in_session_index
+        tests:
+          - not_null
+      - name: page_views_in_session
+        tests:
+          - not_null
+      - name: dvce_created_tstamp
+        tests:
+          - not_null
+      - name: collector_tstamp
+        tests:
+          - not_null
+      - name: derived_tstamp
+        tests:
+          - not_null
+      - name: start_tstamp
+        tests:
+          - not_null
+      - name: end_tstamp
+        tests:
+          - not_null
+      - name: engaged_time_in_s
+        tests:
+          - not_null
+      - name: absolute_time_in_s
+        tests:
+          - not_null
+      - name: page_url
+        tests:
+          - not_null
+  - name: snowplow_web_page_views_this_run
+    columns:
+      - name: page_view_id
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: domain_userid
+        tests:
+          - not_null
+      - name: network_userid
+        tests:
+          - not_null
+      - name: domain_sessionid
+        tests:
+          - not_null
+      - name: domain_sessionidx
+        tests:
+          - not_null
+      - name: page_view_in_session_index
+        tests:
+          - not_null
+      - name: page_views_in_session
+        tests:
+          - not_null
+      - name: dvce_created_tstamp
+        tests:
+          - not_null
+      - name: collector_tstamp
+        tests:
+          - not_null
+      - name: derived_tstamp
+        tests:
+          - not_null
+      - name: start_tstamp
+        tests:
+          - not_null
+      - name: end_tstamp
+        tests:
+          - not_null
+      - name: engaged_time_in_s
+        tests:
+          - not_null
+      - name: absolute_time_in_s
+        tests:
+          - not_null
+      - name: page_url
+        tests:
+          - not_null
+
+

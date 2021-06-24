@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: snowplow_web_base_events_this_run
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+
+

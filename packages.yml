@@ -1,0 +1,7 @@
+packages:
+  - local: /Users/williamwarner/Git/snowplow-dbt-utils
+  - package: fishtown-analytics/dbt_utils
+    version: "0.6.5"
+  - package: calogica/dbt_date
+    version: [">=0.3.0", "<0.4.0"]
+

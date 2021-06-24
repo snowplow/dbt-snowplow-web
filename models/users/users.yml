@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: snowplow_web_users
+    columns:
+      - name: domain_userid
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: network_userid
+        tests:
+          - not_null
+      - name: start_tstamp
+        tests:
+          - not_null
+      - name: end_tstamp
+        tests:
+          - not_null
+      - name: page_views
+        tests:
+          - not_null
+      - name: sessions
+        tests:
+          - not_null
+      - name: engaged_time_in_s
+        tests:
+          - not_null
+      - name: first_page_url
+        tests:
+          - not_null
+      - name: last_page_url
+        tests:
+          - not_null
+  - name: snowplow_web_users_this_run
+    columns:
+      - name: domain_userid
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: network_userid
+        tests:
+          - not_null
+      - name: start_tstamp
+        tests:
+          - not_null
+      - name: end_tstamp
+        tests:
+          - not_null
+      - name: page_views
+        tests:
+          - not_null
+      - name: sessions
+        tests:
+          - not_null
+      - name: engaged_time_in_s
+        tests:
+          - not_null
+      - name: first_page_url
+        tests:
+          - not_null
+      - name: last_page_url
+        tests:
+          - not_null
+

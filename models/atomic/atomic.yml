@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: "{{ var('snowplow_atomic_schema') }}"
+    database: dev1
+
+    tables:
+      - name: "{{ var('atomic_events_table') }}"
+      - name: "{{ var('page_view_context_table') }}"
+      - name: "{{ var('iab_context_table') }}"
+      - name: "{{ var('ua_parser_context_table') }}"
+      - name: "{{ var('yauaa_context_table') }}"
