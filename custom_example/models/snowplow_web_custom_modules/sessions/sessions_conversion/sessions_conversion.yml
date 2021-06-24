@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: snowplow_web_sessions_conversion_this_run
+    description: Table the calculates intent to convert and conversion
+    columns:
+      - name: domain_sessionid
+        tests:
+          - unique
+          - not_null
+      - name: is_session_w_intent
+        description: Has the user shown intent to convert
+      - name: is_session_w_conversion
+        description: Has the user converted

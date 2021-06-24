@@ -1,0 +1,105 @@
+version: 2
+
+models:
+  - name: snowplow_web_users
+    description: '{{ doc("table_users") }}'
+    columns:
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+      - name: domain_userid
+        description: '{{ doc("col_domain_userid") }}'
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: network_userid
+        description: '{{ doc("col_network_userid") }}'
+        tests:
+          - not_null
+      - name: start_tstamp
+        description: Timestamp for the start of the users lifecycle, based on `derived_tstamp`
+        tests:
+          - not_null
+      - name: end_tstamp
+        description: Timestamp for the last time the user was seen, based on `derived_tstamp`
+        tests:
+          - not_null
+      - name: model_tstamp
+        description: '{{ doc("col_model_tstamp") }}'
+      - name: page_views
+        description: The total page views by the user
+        tests:
+          - not_null
+      - name: sessions
+        description: The total sessions by the user
+        tests:
+          - not_null
+      - name: engaged_time_in_s
+        description: The total engaged time in seconds by the user
+        tests:
+          - not_null
+      - name: first_page_title
+        description: The title of the first page visited by the user
+      - name: first_page_url
+        description: The url of the first page visited by the user
+        tests:
+          - not_null
+      - name: first_page_urlscheme
+        description: The urlscheme of the first page visited by the user
+      - name: first_page_urlhost
+        description: The urlhost of the first page visited by the user
+      - name: first_page_urlpath
+        description: The urlpath of the first page visited by the user
+      - name: first_page_urlquery
+        description: The urlquery of the first page visited by the user
+      - name: first_page_urlfragment
+        description: The urlfragment of the first page visited by the user
+      - name: last_page_title
+        description: The title of the last page visited by the user
+      - name: last_page_url
+        description: The url of the last page visited by the user
+        tests:
+          - not_null
+      - name: last_page_urlscheme
+        description: The urlscheme of the last page visited by the user
+      - name: last_page_urlhost
+        description: The urlhost of the last page visited by the user
+      - name: last_page_urlpath
+        description: The urlpath of the last page visited by the user
+      - name: last_page_urlquery
+        description: The urlquery of the last page visited by the user
+      - name: last_page_urlfragment
+        description: The urlfragment of the last page visited by the user
+      - name: referrer
+        description: The referrer associated with the first page view of the user
+      - name: refr_urlscheme
+        description: '{{ doc("col_refr_urlscheme") }}'
+      - name: refr_urlhost
+        description: '{{ doc("col_refr_urlhost") }}'
+      - name: refr_urlpath
+        description: '{{ doc("col_refr_urlpath") }}'
+      - name: refr_urlquery
+        description: '{{ doc("col_refr_urlquery") }}'
+      - name: refr_urlfragment
+        description: '{{ doc("col_refr_urlfragment") }}'
+      - name: refr_medium
+        description: '{{ doc("col_refr_medium") }}'
+      - name: refr_source
+        description: '{{ doc("col_refr_source") }}'
+      - name: refr_term
+        description: '{{ doc("col_refr_term") }}'
+      - name: mkt_medium
+        description: '{{ doc("col_mkt_medium") }}'
+      - name: mkt_source
+        description: '{{ doc("col_mkt_source") }}'
+      - name: mkt_term
+        description: '{{ doc("col_mkt_term") }}'
+      - name: mkt_content
+        description: '{{ doc("col_mkt_content") }}'
+      - name: mkt_campaign
+        description: '{{ doc("col_mkt_campaign") }}'
+      - name: mkt_clickid
+        description: '{{ doc("col_mkt_clickid") }}'
+      - name: mkt_network
+        description: '{{ doc("col_mkt_network") }}'
