@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: snowplow_web_pv_channel_engagement
+    description: Page view engagement grouped by channel
+    columns:
+      - name: page_view_id
+        tests:
+          - unique
+          - not_null
+      - name: start_tstamp
+        description: The timestamp when the page view started, based on `derived_tstamp`
+      - name: link_clicks
+        description: The number of links clicked on the page
+      - name: first_link_target
+        description: The url of the first link clicked on the page
+      - name: is_bounced_page_view
+        description: Was the page view a bounce visit
+      - name: engagement_score
+        description: Engagement score based on time engaged and vertical scrolling

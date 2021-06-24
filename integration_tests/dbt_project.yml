@@ -1,0 +1,122 @@
+name: 'snowplow_web_integration_tests'
+version: '0.1.0'
+config-version: 2
+
+profile: 'integration_tests'
+
+source-paths: ["models"]
+analysis-paths: ["analysis"] 
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_modules"
+
+quoting:
+  identifier: false
+  schema: false
+  
+models:
+  snowplow_web_integration_tests:
+    bind: false
+    +schema: "snowplow_int_tests"
+
+vars:
+  snowplow__enable_custom_example: false
+  snowplow_web:
+    snowplow__events: "{{ ref('snowplow_web_events_it') }}"
+    snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_it') }}"
+    snowplow__start_date: '2021-01-04'
+    snowplow__backfill_limit_days: 2
+
+seeds:
+  quote_columns: false
+  snowplow_web_integration_tests:
+    +schema: "snowplow_int_tests"
+    expected:
+      snowplow_web_page_views_expected_it:
+        +column_types:
+          horizontal_percentage_scrolled: double precision
+          vertical_percentage_scrolled: double precision
+          category: varchar
+          primary_impact: varchar
+          reason: varchar
+          spider_or_robot: boolean
+          useragent_family: varchar
+          useragent_major: varchar
+          useragent_minor: varchar
+          useragent_patch: varchar
+          useragent_version: varchar
+          os_family: varchar
+          os_major: varchar
+          os_minor: varchar
+          os_patch: varchar
+          os_patch_minor: varchar
+          os_version: varchar
+          device_family: varchar
+          device_class: varchar
+          agent_class: varchar
+          agent_name: varchar
+          agent_name_version: varchar
+          agent_name_version_major: varchar
+          agent_version: varchar
+          agent_version_major: varchar
+          device_brand: varchar
+          device_name: varchar
+          device_version: varchar
+          layout_engine_class: varchar
+          layout_engine_name: varchar
+          layout_engine_name_version: varchar
+          layout_engine_name_version_major: varchar
+          layout_engine_version: varchar
+          layout_engine_version_major: varchar
+          operating_system_class: varchar
+          operating_system_name: varchar
+          operating_system_name_version: varchar
+          operating_system_version: varchar
+      snowplow_web_sessions_expected_it:
+        +column_types:
+          last_page_urlfragment: varchar
+          category: varchar
+          primary_impact: varchar
+          reason: varchar
+          spider_or_robot: boolean
+          useragent_family: varchar
+          useragent_major: varchar
+          useragent_minor: varchar
+          useragent_patch: varchar
+          useragent_version: varchar
+          os_family: varchar
+          os_major: varchar
+          os_minor: varchar
+          os_patch: varchar
+          os_patch_minor: varchar
+          os_version: varchar
+          device_family: varchar
+          device_class: varchar
+          agent_class: varchar
+          agent_name: varchar
+          agent_name_version: varchar
+          agent_name_version_major: varchar
+          agent_version: varchar
+          agent_version_major: varchar
+          device_brand: varchar
+          device_name: varchar
+          device_version: varchar
+          layout_engine_class: varchar
+          layout_engine_name: varchar
+          layout_engine_name_version: varchar
+          layout_engine_name_version_major: varchar
+          layout_engine_version: varchar
+          layout_engine_version_major: varchar
+          operating_system_class: varchar
+          operating_system_name: varchar
+          operating_system_name_version: varchar
+          operating_system_version: varchar
+      snowplow_web_users_expected_it:
+        +column_types:
+          engaged_time_in_s: bigint
+          last_page_urlfragment: varchar
