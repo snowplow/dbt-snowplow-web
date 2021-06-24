@@ -3,7 +3,7 @@
     materialized='table',
     sort='page_view_id',
     dist='page_view_id',
-    enabled=(var('enable_yauaa') != false)
+    enabled=var('snowplow__enable_yauaa')
   ) 
 }}
 
@@ -32,11 +32,11 @@ select
   ya.operating_system_name_version,
   ya.operating_system_version
 
-from {{ source(var('snowplow_atomic_schema'), var('yauaa_context_table')) }} ya
+from {{ var('snowplow__yauaa_context') }} ya
 
 inner join {{ ref('snowplow_web_page_view_events') }} pv
-  on ya.root_id = pv.event_id
-  and ya.root_tstamp = pv.collector_tstamp
+on ya.root_id = pv.event_id
+and ya.root_tstamp = pv.collector_tstamp
 
 where ya.root_tstamp >= (select lower_limit from {{ ref('snowplow_web_pv_limits') }})
   and ya.root_tstamp <= (select upper_limit from {{ ref('snowplow_web_pv_limits') }})

@@ -6,10 +6,6 @@
   ) 
 }}
 
-{% set has_iab_enabled = (var('enable_iab') != false) %}
-{% set has_ua_parser_enabled = (var('enable_ua') != false) %}
-{% set has_yauaa_enabled = (var('enable_yauaa') != false) %}
-
 select
   ev.page_view_id,
   ev.event_id,
@@ -33,11 +29,11 @@ select
   ev.collector_tstamp,
   ev.derived_tstamp,
   ev.start_tstamp,
-  nvl(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
+  coalesce(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
   {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
 
-  nvl(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
-  datediff(second, ev.derived_tstamp, nvl(t.end_tstamp, ev.derived_tstamp)) as absolute_time_in_s,
+  coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
+  datediff(second, ev.derived_tstamp, coalesce(t.end_tstamp, ev.derived_tstamp)) as absolute_time_in_s,
 
   sd.hmax as horizontal_pixels_scrolled,
   sd.vmax as vertical_pixels_scrolled,
@@ -98,7 +94,7 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {% if has_iab_enabled %}
+  {% if var('snowplow__enable_iab') %}
     iab.category,
     iab.primary_impact,
     iab.reason,
@@ -111,7 +107,7 @@ select
   {% endif %}
 
   -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {% if has_ua_parser_enabled %}
+  {% if var('snowplow__enable_ua') %}
     ua.useragent_family,
     ua.useragent_major,
     ua.useragent_minor,
@@ -140,7 +136,7 @@ select
   {% endif %}
 
   -- yauaa enrichment fields: set yauaa variable to true to enable
-  {% if has_yauaa_enabled %}
+  {% if var('snowplow__enable_yauaa') %}
     ya.device_class,
     ya.agent_class,
     ya.agent_name,
@@ -192,23 +188,23 @@ on ev.page_view_id = t.page_view_id
 left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
 on ev.page_view_id = sd.page_view_id
 
-{% if has_iab_enabled %}
+{% if var('snowplow__enable_iab') -%}
 
   left join {{ ref('snowplow_web_pv_iab') }} iab
   on ev.page_view_id = iab.page_view_id
 
-{% endif %}
+{% endif -%}
 
-{% if has_ua_parser_enabled %}
+{% if var('snowplow__enable_ua') -%}
 
-  left join {{ ref('snowplow_web_pv_ua_parser') }} as ua
+  left join {{ ref('snowplow_web_pv_ua_parser') }} ua
   on ev.page_view_id = ua.page_view_id
 
-{% endif %}
+{% endif -%}
 
-{% if has_yauaa_enabled %}
+{% if var('snowplow__enable_yauaa') -%}
 
   left join {{ ref('snowplow_web_pv_yauaa') }} ya
   on ev.page_view_id = ya.page_view_id
 
-{% endif %}
+{%- endif -%}

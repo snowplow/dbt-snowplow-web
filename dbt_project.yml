@@ -3,12 +3,8 @@ name: 'snowplow_dbt_web'
 version: '0.1.0'
 config-version: 2
 
-# This setting configures which "profile" dbt uses for this project.
 profile: 'default'
 
-# These configurations specify where dbt should look for different types of files.
-# The `source-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
 source-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -16,38 +12,38 @@ data-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
+target-path: "target"
+clean-targets:
     - "target"
     - "dbt_modules"
 
 vars:
-  start_date: '2020-01-01'
-  lookback_window_hours: 6
-  backfill_limit_days: 7
-  session_lookback_days: 365
-  days_late_allowed: 3
-  # snowplow_atomic_schema: atomic
-  # atomic_events_table: events
-  # page_view_context_table: com_snowplowanalytics_snowplow_web_page_1
-  snowplow_atomic_schema: scratch
-  atomic_events_table: events_dbt_equality
-  page_view_context_table: com_snowplowanalytics_snowplow_web_page_1_dbt_equality
-  iab_context_table: com_iab_snowplow_spiders_and_robots_1
-  ua_parser_context_table: com_snowplowanalytics_snowplow_ua_parser_context_1
-  yauaa_context_table: nl_basjes_yauaa_context_1
-  enable_iab: false
-  enable_ua: false
-  enable_yauaa: false
+  # Sources
+  # snowplow__atomic_schema: Only set if not using 'atomic'
+  # snowplow__database: Only set if not using target.database
+  snowplow__events: "{{ source('atomic','events') }}"
+  snowplow__page_view_context: "{{ source('atomic','com_snowplowanalytics_snowplow_web_page_1') }}"
+  snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
+  snowplow__ua_parser_context: "{{ source('atomic','com_snowplowanalytics_snowplow_ua_parser_context_1') }}"
+  snowplow__yauaa_context: "{{ source('atomic','nl_basjes_yauaa_context_1') }}"
+  # Variables
+  snowplow__start_date: '2020-01-01'
+  snowplow__lookback_window_hours: 6
+  snowplow__backfill_limit_days: 7
+  snowplow__session_lookback_days: 365
+  snowplow__days_late_allowed: 3
+  snowplow__min_visit_length: 5
+  snowplow__heartbeat: 10
+  snowplow__upsert_lookback_days: 30
+  snowplow__app_id: []
+  snowplow__enable_iab: false
+  snowplow__enable_ua: false
+  snowplow__enable_yauaa: false
+  snowplow__ua_bot_filter: true
   # can probably remove these flags by setting to disabled under models:
-  enable_derived_page_views: true
-  enable_derived_sessions: true
-  enable_derived_users: true
-  ua_bot_filter: true
-  minimumVisitLength: 5
-  heartbeat: 10
-  upsert_lookback_days: 30
-  app_id: []
+  snowplow__enable_derived_page_views: true
+  snowplow__enable_derived_sessions: true
+  snowplow__enable_derived_users: true
 
 
 # Commits events to event manifest if the run completes sucessfully

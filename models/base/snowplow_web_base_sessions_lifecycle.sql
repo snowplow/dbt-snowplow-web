@@ -16,13 +16,13 @@ with sessions_this_run as (
     min(e.collector_tstamp) as start_tstamp,
     max(e.collector_tstamp) as end_tstamp
 
-  from {{ source(var('snowplow_atomic_schema'), var('atomic_events_table')) }} e
+  from {{ var('snowplow__events') }} e
 
   where
-    {{ dbt_utils.datediff('dvce_created_tstamp', 'dvce_sent_tstamp', 'day') }} <= {{ var("days_late_allowed", 3) }} -- don't process data that's too late
+    {{ dbt_utils.datediff('dvce_created_tstamp', 'dvce_sent_tstamp', 'day') }} <= {{ var("snowplow__days_late_allowed", 3) }} -- don't process data that's too late
     and e.collector_tstamp >= (select lower_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
     and e.collector_tstamp <= (select upper_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
-    and {{ snowplow_dbt_utils.app_id_filter(var("app_id")) }}
+    and {{ snowplow_dbt_utils.app_id_filter(var("snowplow__app_id")) }}
     and {{ has_new_events }} --don't reprocess sessions that have already been processed.
 
   group by 1
@@ -35,7 +35,7 @@ with sessions_this_run as (
 
   from {{ this }}
 
-  where start_tstamp >= (select {{ dbt_utils.dateadd('hour', -var("session_lookback_days", 365), 'lower_limit') }} AS session_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
+  where start_tstamp >= (select {{ dbt_utils.dateadd('hour', -var("snowplow__session_lookback_days", 365), 'lower_limit') }} AS session_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
   and {{ has_new_events }} --don't reprocess sessions that have already been processed.
 )
 
@@ -50,7 +50,7 @@ with sessions_this_run as (
 
   where
     self.session_id is null -- process all new sessions
-    or {{ dbt_utils.datediff('self.start_tstamp', 'self.end_tstamp', 'day') }} <= {{ var("days_late_allowed", 3) }} --stop updating sessions exceeding 3 days
+    or {{ dbt_utils.datediff('self.start_tstamp', 'self.end_tstamp', 'day') }} <= {{ var("snowplow__days_late_allowed", 3) }} --stop updating sessions exceeding 3 days
 
 {% else %}
 

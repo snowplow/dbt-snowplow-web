@@ -1,12 +1,12 @@
 version: 2
 
 sources:
-  - name: "{{ var('snowplow_atomic_schema') }}"
-    database: dev1
-
+  - name: atomic
+    schema: "{{ var('snowplow__atomic_schema', 'atomic') }}"
+    database: "{{ var('snowplow__database', target.database) }}"
     tables:
-      - name: "{{ var('atomic_events_table') }}"
-      - name: "{{ var('page_view_context_table') }}"
-      - name: "{{ var('iab_context_table') }}"
-      - name: "{{ var('ua_parser_context_table') }}"
-      - name: "{{ var('yauaa_context_table') }}"
+      - name: events
+      - name: com_snowplowanalytics_snowplow_web_page_1
+      - name: com_iab_snowplow_spiders_and_robots_1
+      - name: com_snowplowanalytics_snowplow_ua_parser_context_1
+      - name: nl_basjes_yauaa_context_1

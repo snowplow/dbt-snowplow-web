@@ -1,6 +1,6 @@
 {{ 
   config(
-    enabled=var('enable_derived_page_views'),
+    enabled=var('snowplow__enable_derived_page_views'),
     materialized='snowplow_incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',

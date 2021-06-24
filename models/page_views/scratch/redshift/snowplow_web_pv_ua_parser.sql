@@ -3,7 +3,7 @@
     materialized='table',
     sort='page_view_id',
     dist='page_view_id',
-    enabled=(var('enable_ua') != false)
+    enabled=var('snowplow__enable_ua')
   ) 
 }}
 
@@ -23,11 +23,11 @@ select
   ua.os_version,
   ua.device_family
 
-from {{ source(var('snowplow_atomic_schema'), var('ua_parser_context_table')) }} as ua
+from {{ var('snowplow__ua_parser_context') }} as ua
 
 inner join {{ ref('snowplow_web_page_view_events') }} pv
-  on ua.root_id = pv.event_id
-  and ua.root_tstamp = pv.collector_tstamp
+on ua.root_id = pv.event_id
+and ua.root_tstamp = pv.collector_tstamp
 
 where ua.root_tstamp >= (select lower_limit from {{ ref('snowplow_web_pv_limits') }})
   and ua.root_tstamp <= (select upper_limit from {{ ref('snowplow_web_pv_limits') }})

@@ -1,6 +1,6 @@
 {{ 
   config(
-    enabled=var('enable_derived_users'),
+    enabled=var('snowplow__enable_derived_users'),
     materialized='snowplow_incremental',
     unique_key='domain_userid',
     upsert_date_key='start_tstamp',

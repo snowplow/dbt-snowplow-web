@@ -37,15 +37,15 @@ with sessions_this_run as (
     a.*,
     dense_rank() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index --dense_rank to catch event_ids with dupe tstamps later
 
-  from {{ source(var('snowplow_atomic_schema'), var('atomic_events_table')) }} as a
+  from {{ var('snowplow__events') }} as a
   inner join sessions_this_run as b
   on a.domain_sessionid = b.session_id
 
-  where datediff(day, b.start_tstamp, a.collector_tstamp) <= {{ var("days_late_allowed", 3) }}
-  and datediff(day, a.dvce_created_tstamp, a.dvce_sent_tstamp) <= {{ var("days_late_allowed", 3) }}
+  where datediff(day, b.start_tstamp, a.collector_tstamp) <= {{ var("snowplow__days_late_allowed", 3) }}
+  and datediff(day, a.dvce_created_tstamp, a.dvce_sent_tstamp) <= {{ var("snowplow__days_late_allowed", 3) }}
   and a.collector_tstamp >= (select lower_limit from session_limits)
   and a.collector_tstamp <= (select upper_limit from session_limits)
-  and {{ snowplow_dbt_utils.app_id_filter(var("app_id")) }}
+  and {{ snowplow_dbt_utils.app_id_filter(var("snowplow__app_id")) }}
 )
 
 , events_deduped as (
@@ -65,7 +65,7 @@ select
   root_tstamp,
   id as page_view_id
 
-from {{ source(var('snowplow_atomic_schema'), var('page_view_context_table')) }} 
+from {{ var('snowplow__page_view_context') }}
 where 
   root_tstamp >= (select lower_limit from session_limits)
   and root_tstamp <= (select upper_limit from session_limits)

@@ -77,32 +77,25 @@ with page_view_events as (
     ev.br_renderengine,
     ev.os_timezone,
 
-    row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp) as page_view_in_session_index --should this come after the dedupe step?
+    row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp) as page_view_in_session_index, --should this come after the dedupe step?
+    dense_rank() over (partition by ev.page_view_id order by ev.derived_tstamp) as page_view_id_dedupe_index
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
 
   where ev.event_name = 'page_view'
   and ev.page_view_id is not null
 
-  {% if var("ua_bot_filter", true) %}
+  {% if var("snowplow__ua_bot_filter", true) %}
     and ev.useragent not similar to '%(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|pingdombot|phantomjs|yandexbot|twitterbot|a_archiver|facebookexternalhit|bingbot|bingpreview|googlebot|baiduspider|360(spider|user-agent)|semalt)%'
   {% endif %}
 )
 
-, dedupe_step_1 as (
-  select
-    *,
-    dense_rank() over (partition by page_view_id order by derived_tstamp) as page_view_id_dedupe_index
-
-  from page_view_events
-)
-
-, dedupe_step_2 as (
+, dedupe as (
   select
     *,
     count(*) over(partition by page_view_id) as row_count
 
-  from dedupe_step_1
+  from page_view_events
   where page_view_id_dedupe_index = 1 --keep only first page_view_id based on derived_tstamp 
 )
 
@@ -178,6 +171,6 @@ select
 
   pv.page_view_in_session_index
 
-from dedupe_step_2 as pv
+from dedupe as pv
 
 where row_count = 1 -- Remove dupe page_view_ids with same derived_tstamp
