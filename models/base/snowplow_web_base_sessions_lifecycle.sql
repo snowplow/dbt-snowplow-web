@@ -4,10 +4,10 @@
     unique_key='session_id',
     sort='start_tstamp',
     dist='session_id',
-    full_refresh = false
+    full_refresh=false
   ) 
 }}
-
+--TODO: Consider using 'snowplow_incremental' materialization
 {% set has_new_events = snowplow_dbt_utils.is_run_with_new_events('snowplow_web') %}
 
 with sessions_this_run as (
@@ -22,7 +22,7 @@ with sessions_this_run as (
     {{ dbt_utils.datediff('dvce_created_tstamp', 'dvce_sent_tstamp', 'day') }} <= {{ var("snowplow__days_late_allowed", 3) }} -- don't process data that's too late
     and e.collector_tstamp >= (select lower_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
     and e.collector_tstamp <= (select upper_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
-    and {{ snowplow_dbt_utils.app_id_filter(var("snowplow__app_id")) }}
+    and {{ snowplow_dbt_utils.app_id_filter() }}
     and {{ has_new_events }} --don't reprocess sessions that have already been processed.
 
   group by 1

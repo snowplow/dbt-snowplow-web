@@ -45,7 +45,7 @@ with sessions_this_run as (
   and datediff(day, a.dvce_created_tstamp, a.dvce_sent_tstamp) <= {{ var("snowplow__days_late_allowed", 3) }}
   and a.collector_tstamp >= (select lower_limit from session_limits)
   and a.collector_tstamp <= (select upper_limit from session_limits)
-  and {{ snowplow_dbt_utils.app_id_filter(var("snowplow__app_id")) }}
+  and {{ snowplow_dbt_utils.app_id_filter() }}
 )
 
 , events_deduped as (
