@@ -11,6 +11,8 @@ test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+
 
 target-path: "target"
 clean-targets:
@@ -29,7 +31,7 @@ vars:
   # Variables
   snowplow__start_date: '2020-01-01'
   snowplow__lookback_window_hours: 6
-  snowplow__backfill_limit_days: 7
+  snowplow__backfill_limit_days: 30
   snowplow__session_lookback_days: 365
   snowplow__days_late_allowed: 3
   snowplow__min_visit_length: 5

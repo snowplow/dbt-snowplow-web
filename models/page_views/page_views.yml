@@ -4,12 +4,14 @@ models:
   - name: snowplow_web_page_views
     columns:
       - name: page_view_id
+        description: An identifier for each page view.
         tags:
           - primary-key
         tests:
           - unique
           - not_null
       - name: event_id
+        description: An identifier for the page view event.
         tests:
           - unique
           - not_null
@@ -109,5 +111,3 @@ models:
       - name: page_url
         tests:
           - not_null
-
-
