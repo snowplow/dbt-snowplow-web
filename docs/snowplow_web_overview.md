@@ -64,6 +64,31 @@ vars:
   snowplow__heartbeat: 10
 ```
 
+### Output Schemas
+By default all scratch/staging tables will be created in the `<target.schema>_scratch` schema while the production tables (`snowplow_web_page_views`, `snowplow_web_sessions`, `snowplow_web_users`) will be created in `<target.schema>_derived`. To change either, please add the following to your `dbt_project.yml` file:
+```yml
+# dbt_project.yml
+...
+models:
+  snowplow_dbt_web:
+    base:
+      +schema: my_derived_schema 
+      scratch:
+        +schema: my_scratch_schema
+    page_views:
+      +schema: my_derived_schema
+      scratch:
+        +schema: my_scratch_schema
+    sessions:
+      +schema: my_derived_schema
+      scratch:
+        +schema: my_scratch_schema
+    users:
+      +schema: my_derived_schema
+      scratch:
+        +schema: my_scratch_schema
+```
+
 ### Further Configuration
 This package makes use of a series of other variables, which are all set to the recommend values for the operation of the web model. Depending on your use case, you might want to override these values by adding to your `dbt_project.yml` file.
 
@@ -78,5 +103,78 @@ This package makes use of a series of other variables, which are all set to the 
 `snowplow__upsert_lookback_days`:   Default 30. Number of day to look back over the incremental production table during the upsert. Where performance is not a concern, should be set to as long a value as possible. Having too short a period can result in duplicates. Please see the materialization section for more details. ADD LINK
 
 `snowplow__ua_bot_filter`:          Default `True`. Configuration to filter out bots via useragent string pattern match.
+
+
+## Operation
+The Snowplow dbt Web Model is designed to be run as a whole, which ensures all incremental tables are kept in sync. As such, we suggest running the model using:
+```bash
+dbt run --models snowplow_dbt_web tag:snowplow_web_incremental
+```
+The `snowplow_dbt_web` selection will execute all nodes within the Snowplow dbt Web package, while the `tag:snowplow_web_incremental` will execute all custom modules that you may have created.
+
+### Full Refresh
+In order to protect against the [centralized manifest](#incremental-logic) being destroyed accidentally as part of a `--full-refresh` run, we have introduced a variable `snowplow_web_teardown_all` which defaults to `false`. In order to tear down all Snowplow web related models and start again use:
+```bash
+dbt run --models snowplow_dbt_web tag:snowplow_web_incremental --full-refresh --vars 'snowplow_web_teardown_all: true'
+```
+
+### Back-filling Custom Modules
+Overtime you may wish to add custom modules to extend the functionality of this package. As you introduce new custom modules into your project, assuming they are tagged correctly (see section on custom modules), the web model will automatically replay all events up until the latest event to have been processed by the other modules. 
+
+Note that the batch size of this back-fill is limited as outlined in the [identification of events to process section](#identification-of-events-to-process). This means it might take several runs to complete the back-fill, **during which time no new events will be processed by the web model**.
+
+During back-filling, the derived page views, sessions and users tables are blocked from updating. This is to protect against a batched back-fill temporarily introducing incomplete data into these derived tables.
+
+Back-filling a module can be performed either as part of the entire run of the Snowplow web package, or in isolation for reduced cost:
+```bash
+dbt run --models snowplow_dbt_web tag:snowplow_web_incremental # Will execute all Snowplow web modules, as well as custom.
+dbt run --models +my_custom_module # Will execute your custom module + any upstream nodes. 
+```
+
+
+## Incremental Logic
+This package uses a centralized manifest table, `snowplow_web_incremental_manifest`, to record what events have already been processed and by which model/node. This allows for easy identification of what events to process in subsequent runs of the package. The manifest table is updated as part of an `on-run-end` hook, which calls the `snowplow_incremental_post_hook()` macro.
+
+Example `snowplow_web_incremental_manifest`:
+
+| model                   | last_success |
+|-------------------------|--------------|
+| snowplow_web_page_views | '2021-06-03' |
+| snowplow_web_sessions   | '2021-06-02' |
+
+### Identification of events to process
+The identification which events to process is performed by an `on-run-start` hook, which calls the `snowplow_incremental_pre_hook()` macro. This macro uses the metadata recorded in `snowplow_web_incremental_manifest` to determine the correct events based on the current state of the Snowplow dbt Web model. The selection of these events is done by specifying a range of `collector_tstamp`'s to process, between `lower_limit` and `upper_limit`. The calculation of these limits is as follows. Note in all cases the `upper_limit` is limited by the `snowplow__backfill_limit_days` variable. This protects against very large datasets causing the model to crash.
+
+First we query `snowplow_web_incremental_manifest`, filtering for all enabled nodes tagged with `snowplow_web_incremental` within your dbt project:
+
+```sql
+select min(last_success) as min_last_success,
+       max(last_success) as max_last_success,
+       coalesce(count(*), 0) as models
+from 'snowplow_web_incremental_manifest'
+where model in (array_of_snowplow_tagged_enabled_models)
+```
+
+#### Scenario 1: First run of the package
+`lower_limit: snowplow__start_date`  
+`upper_limit: least(current_tstamp, snowplow__start_date + snowplow__backfill_limit_days`  
+
+#### Scenario 2: New custom module introduced
+If a new custom module, tagged with `snowplow_web_incremental`, is added then the package will replay all previously processed events in order to back-fill the new module.
+
+`lower_limit: snowplow__start_date`  
+`upper_limit: least(max_last_success, snowplow__start_date + snowplow__backfill_limit_days)`  
+
+#### Scenario 3: Modules out of sync
+If the modules end up out of sync, for example due to a particular node failing to execute successfully during the previous run, then the package will attempt to sync all modules.
+
+`lower_limit: min_last_success - snowplow__lookback_window_hours`  
+`upper_limit: least(max_last_success, min_last_success + snowplow__backfill_limit_days)`  
+
+#### Scenario 4: Standard run
+If none of the above criteria are met, then we consider it a 'standard run' and we carry on from the last processed event.
+
+`lower_limit: max_last_success - snowplow__lookback_window_hours`  
+`upper_limit: least(current_tstamp, max_last_success + snowplow__backfill_limit_days)`  
 
 {% enddocs %}
