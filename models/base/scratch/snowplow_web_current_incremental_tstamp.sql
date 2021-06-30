@@ -1,3 +1,3 @@
 {{ config(materialized='ephemeral') }}
 
-select * from {{ snowplow_dbt_utils.get_current_incremental_tstamp_table_relation('snowplow_web') }}
+select * from {{ snowplow_utils.get_current_incremental_tstamp_table_relation('snowplow_web') }}

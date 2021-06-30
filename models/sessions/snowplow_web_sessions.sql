@@ -12,4 +12,4 @@
 
 select * 
 from {{ ref('snowplow_web_sessions_this_run') }}
-where {{ snowplow_dbt_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.
+where {{ snowplow_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.

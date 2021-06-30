@@ -1,5 +1,5 @@
 
-name: 'snowplow_dbt_web'
+name: 'snowplow_web'
 version: '0.1.0'
 config-version: 2
 
@@ -51,14 +51,14 @@ vars:
 
 
 # Commits events to event manifest if the run completes sucessfully
-on-run-start: "{{ snowplow_dbt_utils.snowplow_incremental_pre_hook('snowplow_web') }}"
-on-run-end: "{{ snowplow_dbt_utils.snowplow_incremental_post_hook('snowplow_web') }}"
+on-run-start: "{{ snowplow_utils.snowplow_incremental_pre_hook('snowplow_web') }}"
+on-run-end: "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 
 # Tag 'snowplow_web_incremental' allows snowplow_incremental_post_hook to identify Snowplow models
 # and add their last sucessfull collector_tstamp to the manifest.
 models:
-  snowplow_dbt_web:
+  snowplow_web:
     base:
       +schema: derived 
       scratch:

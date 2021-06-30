@@ -1,5 +1,5 @@
 
-name: 'snowplow_dbt_web_integration_tests'
+name: 'snowplow_web_integration_tests'
 version: '0.1.0'
 config-version: 2
 
@@ -24,7 +24,7 @@ models:
   bind: false
 
 vars:
-  snowplow_dbt_web:
+  snowplow_web:
     snowplow__events: "{{ ref('snowplow_web_events_it') }}"
     snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_it') }}"
     snowplow__start_date: '2021-01-04'
@@ -32,7 +32,7 @@ vars:
 
 seeds:
   quote_columns: false
-  snowplow_dbt_web_integration_tests:
+  snowplow_web_integration_tests:
     expected:
       snowplow_web_page_views_expected_it:
         +column_types:
