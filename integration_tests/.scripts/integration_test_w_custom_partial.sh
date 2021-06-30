@@ -18,12 +18,15 @@ echo "Snowplow web integration tests: Execute models - run 1/4"
 
 eval "dbt run --target $DATABASE --full-refresh --vars 'snowplow_web_teardown_all: true'"
 
-for i in {2..4}
-do
-	echo "Snowplow web integration tests: Execute models - run $i/4"
+eval dbt run --target $DATABASE
 
-  eval dbt run --target $DATABASE
-done
+eval "dbt run --target $DATABASE --vars 'snowplow__enable_custom_example: true'"
+
+eval "dbt run --models +snowplow_web_pv_channel_engagement --target $DATABASE --vars 'snowplow__enable_custom_example: true'"
+
+eval "dbt run --target $DATABASE --vars 'snowplow__enable_custom_example: true'"
+
+eval "dbt run --target $DATABASE --vars 'snowplow__enable_custom_example: true'"
 
 echo "Snowplow web integration tests: Test models"
 
