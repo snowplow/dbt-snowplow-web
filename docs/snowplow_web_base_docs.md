@@ -7,7 +7,7 @@ By knowing the lifecycle of a session the model is able to able to determine whi
 {% enddocs %}
 
 
-{% docs table_current_incremental_tstamp %}
+{% docs table_base_new_event_limits %}
 
 This table contains the lower and upper timestamp limits for the given run of the web model. These limits are used to select new events from the events table. 
 
