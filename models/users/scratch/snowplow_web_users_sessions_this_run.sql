@@ -10,7 +10,7 @@
 select
   a.*
 
-from {{ ref('snowplow_web_sessions') }} a
+from {{ var('snowplow__sessions_table') }} a
 inner join {{ ref('snowplow_web_users_userids_this_run') }} b
 on a.domain_userid = b.domain_userid
 

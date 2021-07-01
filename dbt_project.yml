@@ -29,7 +29,7 @@ vars:
   snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
   snowplow__ua_parser_context: "{{ source('atomic','com_snowplowanalytics_snowplow_ua_parser_context_1') }}"
   snowplow__yauaa_context: "{{ source('atomic','nl_basjes_yauaa_context_1') }}"
-  # snowplow__link_click_event: "{{ source('atomic','nl_basjes_yauaa_context_1') }}"
+  snowplow__sessions_table: "{{ ref('snowplow_web_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
   # Variables
   snowplow__start_date: '2020-01-01'
   snowplow__lookback_window_hours: 6
@@ -44,7 +44,6 @@ vars:
   snowplow__enable_ua: false
   snowplow__enable_yauaa: false
   snowplow__ua_bot_filter: true
-  snowplow__enable_custom_example: false
   # can probably remove these flags by setting to disabled under models:
   snowplow__enable_derived_page_views: true
   snowplow__enable_derived_sessions: true

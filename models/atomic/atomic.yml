@@ -5,7 +5,6 @@ sources:
     schema: "{{ var('snowplow__atomic_schema', 'atomic') }}"
     database: "{{ var('snowplow__database', target.database) }}"
     tables:
-      - name: com_snowplowanalytics_snowplow_link_click_1
       - name: com_snowplowanalytics_snowplow_web_page_1
         description: '{{ doc("table_page_view_context") }}'
         columns:

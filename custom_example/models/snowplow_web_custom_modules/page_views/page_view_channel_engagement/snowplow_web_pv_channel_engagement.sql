@@ -1,6 +1,7 @@
+--Using `snowplow_incremental` materialization to reduce table scans. Could also use the standard `incremental` materialization.
+
 {{ 
   config(
-    enabled=var('snowplow__enable_custom_example') | as_bool(),
     materialized='snowplow_incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
@@ -27,11 +28,11 @@ with link_clicks as (
 
   from {{ source('atomic','com_snowplowanalytics_snowplow_link_click_1') }} lc
 
-  inner join {{ ref('snowplow_web_base_events_this_run' ) }} ev
+  inner join {{ ref('snowplow_web_base_events_this_run' ) }} ev -- Select events from base_events_this_run rather than raw events table
   on lc.root_id = ev.event_id and lc.root_tstamp = ev.collector_tstamp
 
   where
-    lc.root_tstamp >= (select lower_limit from {{ ref('snowplow_web_base_new_event_limits') }})
+    lc.root_tstamp >= (select lower_limit from {{ ref('snowplow_web_base_new_event_limits') }}) -- limit link clicks table scan using the base_new_event_limits table
     and lc.root_tstamp <= (select upper_limit from {{ ref('snowplow_web_base_new_event_limits') }})
 )
 
@@ -68,10 +69,10 @@ with link_clicks as (
     case
       when pv.engaged_time_in_s = 0 then true
       else false
-    end as bounced_page_view,
+    end as is_bounced_page_view,
     (pv.vertical_percentage_scrolled / 100) * 0.3 + (pv.engaged_time_in_s / 600) * 0.7 as engagement_score
 
-  from {{ ref('snowplow_web_page_views_this_run' ) }} pv
+  from {{ ref('snowplow_web_page_views_this_run' ) }} pv --select from page_views_this_run rather than derived page_views table
 )
 
 select
@@ -79,7 +80,7 @@ select
   eng.start_tstamp,
   lc.link_clicks,
   lc.first_link_target,
-  eng.bounced_page_view,
+  eng.is_bounced_page_view,
   eng.engagement_score
 
 from engagement eng
