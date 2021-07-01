@@ -1,7 +1,8 @@
-
 name: 'snowplow_web'
 version: '0.1.0'
 config-version: 2
+
+require-dbt-version: ">=0.18.0" # TODO:Check this
 
 profile: 'default'
 
@@ -50,8 +51,12 @@ vars:
   snowplow__enable_derived_users: true
 
 
-# Commits events to event manifest if the run completes sucessfully
-on-run-start: "{{ snowplow_utils.snowplow_incremental_pre_hook('snowplow_web') }}"
+
+# on-run-start: "{{ snowplow_utils.snowplow_incremental_pre_hook('snowplow_web') }}"
+# Teardown all web manifest tables if true.
+on-run-start: "{{ snowplow_utils.snowplow_teardown_all('snowplow_web', var('snowplow_web_teardown_all', false)) }}"
+
+# Update manifest table with last event consumed per sucessfully executed node/model
 on-run-end: "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 

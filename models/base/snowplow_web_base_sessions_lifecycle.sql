@@ -20,8 +20,8 @@ with sessions_this_run as (
 
   where
     {{ dbt_utils.datediff('dvce_created_tstamp', 'dvce_sent_tstamp', 'day') }} <= {{ var("snowplow__days_late_allowed", 3) }} -- don't process data that's too late
-    and e.collector_tstamp >= (select lower_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
-    and e.collector_tstamp <= (select upper_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
+    and e.collector_tstamp >= (select lower_limit from {{ ref('snowplow_web_base_new_event_limits') }})
+    and e.collector_tstamp <= (select upper_limit from {{ ref('snowplow_web_base_new_event_limits') }})
     and {{ snowplow_utils.app_id_filter() }}
     and {{ has_new_events }} --don't reprocess sessions that have already been processed.
 
@@ -35,7 +35,7 @@ with sessions_this_run as (
 
   from {{ this }}
 
-  where start_tstamp >= (select {{ dbt_utils.dateadd('hour', -var("snowplow__session_lookback_days", 365), 'lower_limit') }} AS session_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
+  where start_tstamp >= (select {{ dbt_utils.dateadd('hour', -var("snowplow__session_lookback_days", 365), 'lower_limit') }} AS session_limit from {{ ref('snowplow_web_base_new_event_limits') }})
   and {{ has_new_events }} --don't reprocess sessions that have already been processed.
 )
 

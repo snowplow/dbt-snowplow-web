@@ -17,11 +17,11 @@ with sessions_this_run as (
 
   where 
      (s.end_tstamp between 
-          (select lower_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
-      and (select upper_limit from {{ ref('snowplow_web_current_incremental_tstamp') }}) )
+          (select lower_limit from {{ ref('snowplow_web_base_new_event_limits') }})
+      and (select upper_limit from {{ ref('snowplow_web_base_new_event_limits') }}) )
   or (s.start_tstamp between 
-          (select lower_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
-      and (select upper_limit from {{ ref('snowplow_web_current_incremental_tstamp') }}) )
+          (select lower_limit from {{ ref('snowplow_web_base_new_event_limits') }})
+      and (select upper_limit from {{ ref('snowplow_web_base_new_event_limits') }}) )
 )
 
 , session_limits as (

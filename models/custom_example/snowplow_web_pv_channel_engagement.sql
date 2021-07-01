@@ -31,8 +31,8 @@ with link_clicks as (
   on lc.root_id = ev.event_id and lc.root_tstamp = ev.collector_tstamp
 
   where
-    lc.root_tstamp >= (select lower_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
-    and lc.root_tstamp <= (select upper_limit from {{ ref('snowplow_web_current_incremental_tstamp') }})
+    lc.root_tstamp >= (select lower_limit from {{ ref('snowplow_web_base_new_event_limits') }})
+    and lc.root_tstamp <= (select upper_limit from {{ ref('snowplow_web_base_new_event_limits') }})
 )
 
 , engagement as (
