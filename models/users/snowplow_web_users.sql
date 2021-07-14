@@ -6,10 +6,15 @@
     disable_upsert_lookback=true,
     sort='start_tstamp',
     dist='domain_userid',
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    },
+    cluster_by=["user_id","domain_userid"],
     tags=["derived"]
   ) 
 }}
-
 
 select * 
 from {{ ref('snowplow_web_users_this_run') }}

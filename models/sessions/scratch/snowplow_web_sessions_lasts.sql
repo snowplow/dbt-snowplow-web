@@ -1,5 +1,6 @@
 {{ 
   config(
+    cluster_by=["domain_sessionid"],
     sort='domain_sessionid',
     dist='domain_sessionid'
   ) 

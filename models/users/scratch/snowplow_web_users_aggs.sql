@@ -1,5 +1,11 @@
 {{ 
   config(
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    },
+    cluster_by=["domain_userid"],
     sort='domain_userid',
     dist='domain_userid'
   ) 

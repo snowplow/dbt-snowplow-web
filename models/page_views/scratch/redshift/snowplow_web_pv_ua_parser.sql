@@ -2,7 +2,7 @@
   config(
     sort='page_view_id',
     dist='page_view_id',
-    enabled=var('snowplow__enable_ua')
+    enabled=(var('snowplow__enable_ua') and target.type == 'redshift' | as_bool())
   ) 
 }}
 

@@ -7,7 +7,13 @@
     full_refresh=false,
     schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
-    dist='domain_userid'
+    dist='domain_userid',
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    },
+    cluster_by=["domain_userid"]
   ) 
 }}
 
@@ -18,7 +24,7 @@
 
   select
     utr.domain_userid,
-    least(utr.min_tstamp, self.start_tstamp) as start_tstamp
+    least(utr.min_tstamp, coalesce(self.start_tstamp, utr.min_tstamp)) as start_tstamp -- BQ: least inc. null returns null. Coalesce.
 
 
   from {{ ref('snowplow_web_sessions_users_this_run') }} utr
