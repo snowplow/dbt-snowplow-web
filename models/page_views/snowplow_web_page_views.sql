@@ -5,9 +5,16 @@
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='page_view_id',
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    },
+    cluster_by=["domain_userid","domain_sessionid"],
     tags=["derived"]
   ) 
 }}
+
 
 select * 
 from {{ ref('snowplow_web_page_views_this_run') }}

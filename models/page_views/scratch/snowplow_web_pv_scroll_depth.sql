@@ -1,5 +1,6 @@
 {{ 
   config(
+    cluster_by=["page_view_id"],
     sort='page_view_id',
     dist='page_view_id'
   ) 

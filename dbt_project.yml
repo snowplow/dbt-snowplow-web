@@ -37,6 +37,7 @@ vars:
   snowplow__enable_ua: false
   snowplow__enable_yauaa: false
   snowplow__ua_bot_filter: true
+  snowplow__derived_tstamp_partitioned: true
   # Variables - Advanced Config
   snowplow__lookback_window_hours: 6
   snowplow__session_lookback_days: 365
@@ -62,6 +63,8 @@ models:
       scratch:
         +schema: "scratch"
         +tags: "scratch"
+        bigquery:
+          enabled: "{{ target.type == 'bigquery' | as_bool() }}"
         redshift:
           enabled: "{{ target.type == 'redshift' | as_bool() }}"
     page_views:
@@ -70,6 +73,8 @@ models:
       scratch:
         +schema: "scratch"
         +tags: "scratch"
+        bigquery:
+          enabled: "{{ target.type == 'bigquery' | as_bool() }}"
         redshift:
           enabled: "{{ target.type == 'redshift' | as_bool() }}"
     sessions:

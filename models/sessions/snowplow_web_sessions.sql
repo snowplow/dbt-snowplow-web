@@ -5,6 +5,12 @@
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='domain_sessionid',
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    },
+    cluster_by=["domain_userid"],
     tags=["derived"]
   ) 
 }}

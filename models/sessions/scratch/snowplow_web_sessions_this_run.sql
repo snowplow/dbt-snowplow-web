@@ -1,5 +1,11 @@
 {{ 
   config(
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    },
+    cluster_by=["domain_userid"],
     sort='start_tstamp',
     dist='domain_sessionid',
     tags=["this_run"]
@@ -27,7 +33,7 @@ select
   -- engagement fields
   b.page_views,
   b.engaged_time_in_s,
-  datediff(second, b.start_tstamp, b.end_tstamp) as absolute_time_in_s,
+  {{ snowplow_utils.timestamp_diff('b.start_tstamp', 'b.end_tstamp', 'second') }} as absolute_time_in_s,
 
   -- first page fields
   a.page_title as first_page_title,
