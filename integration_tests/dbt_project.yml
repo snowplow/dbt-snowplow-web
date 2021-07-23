@@ -23,100 +23,293 @@ models:
   snowplow_web_integration_tests:
     bind: false
     +schema: "snowplow_int_tests"
+    source:
+      bigquery:
+        +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+      redshift:
+        +enabled: "{{ target.type == 'redshift' | as_bool() }}"
+
 
 vars:
   snowplow__enable_custom_example: false
   snowplow_web:
-    snowplow__events: "{{ ref('snowplow_web_events_it') }}"
-    snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_it') }}"
-    snowplow__start_date: '2021-01-04'
+    snowplow__events: "{{ ref('snowplow_web_events_stg') }}"
+    snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_stg') }}"
+    snowplow__start_date: "{{ '2021-01-04' if target.type == 'redshift' else '2021-03-01' }}" #RS and BQ have different test datasets. TODO: Replicate BQ dataset in RS.
     snowplow__backfill_limit_days: 2
+
 
 seeds:
   quote_columns: false
   snowplow_web_integration_tests:
     +schema: "snowplow_int_tests"
+    source:
+      bigquery:
+        +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        snowplow_web_events:
+          +column_types:
+            etl_tstamp: timestamp
+            collector_tstamp: timestamp
+            dvce_created_tstamp: timestamp
+            user_fingerprint: string
+            ip_isp: string
+            ip_organization: string
+            ip_domain: string
+            ip_netspeed: string
+            page_urlfragment: string
+            refr_urlfragment: string
+            refr_medium: string
+            refr_source: string
+            refr_term: string
+            mkt_term: string
+            mkt_content: string
+            se_label: string
+            se_property: string
+            se_value: float
+            tr_orderid: string
+            tr_affiliation: string
+            tr_total: float
+            tr_tax: float
+            tr_shipping: float
+            tr_city: string
+            tr_state: string
+            tr_country: string
+            ti_orderid: string
+            ti_sku: string
+            ti_name: string
+            ti_category: string
+            ti_price: float
+            br_name: string
+            br_family: string
+            br_version: string
+            br_type: string
+            br_renderengine: string
+            br_colordepth: string
+            os_name: string
+            os_family: string
+            os_manufacturer: string
+            dvce_type: string
+            dvce_ismobile: boolean
+            tr_currency: string
+            tr_total_base: float
+            tr_tax_base: float
+            tr_shipping_base: float
+            ti_currency: string
+            ti_price_base: float
+            base_currency: string
+            etl_tags: string
+            dvce_sent_tstamp: timestamp
+            refr_domain_userid: string
+            refr_dvce_tstamp: timestamp
+            derived_tstamp: timestamp
+            true_tstamp: timestamp
+      redshift:
+        +enabled: "{{ target.type == 'redshift' | as_bool() }}"
+
+
     expected:
-      snowplow_web_page_views_expected_it:
-        +column_types:
-          horizontal_percentage_scrolled: double precision
-          vertical_percentage_scrolled: double precision
-          category: varchar
-          primary_impact: varchar
-          reason: varchar
-          spider_or_robot: boolean
-          useragent_family: varchar
-          useragent_major: varchar
-          useragent_minor: varchar
-          useragent_patch: varchar
-          useragent_version: varchar
-          os_family: varchar
-          os_major: varchar
-          os_minor: varchar
-          os_patch: varchar
-          os_patch_minor: varchar
-          os_version: varchar
-          device_family: varchar
-          device_class: varchar
-          agent_class: varchar
-          agent_name: varchar
-          agent_name_version: varchar
-          agent_name_version_major: varchar
-          agent_version: varchar
-          agent_version_major: varchar
-          device_brand: varchar
-          device_name: varchar
-          device_version: varchar
-          layout_engine_class: varchar
-          layout_engine_name: varchar
-          layout_engine_name_version: varchar
-          layout_engine_name_version_major: varchar
-          layout_engine_version: varchar
-          layout_engine_version_major: varchar
-          operating_system_class: varchar
-          operating_system_name: varchar
-          operating_system_name_version: varchar
-          operating_system_version: varchar
-      snowplow_web_sessions_expected_it:
-        +column_types:
-          last_page_urlfragment: varchar
-          category: varchar
-          primary_impact: varchar
-          reason: varchar
-          spider_or_robot: boolean
-          useragent_family: varchar
-          useragent_major: varchar
-          useragent_minor: varchar
-          useragent_patch: varchar
-          useragent_version: varchar
-          os_family: varchar
-          os_major: varchar
-          os_minor: varchar
-          os_patch: varchar
-          os_patch_minor: varchar
-          os_version: varchar
-          device_family: varchar
-          device_class: varchar
-          agent_class: varchar
-          agent_name: varchar
-          agent_name_version: varchar
-          agent_name_version_major: varchar
-          agent_version: varchar
-          agent_version_major: varchar
-          device_brand: varchar
-          device_name: varchar
-          device_version: varchar
-          layout_engine_class: varchar
-          layout_engine_name: varchar
-          layout_engine_name_version: varchar
-          layout_engine_name_version_major: varchar
-          layout_engine_version: varchar
-          layout_engine_version_major: varchar
-          operating_system_class: varchar
-          operating_system_name: varchar
-          operating_system_name_version: varchar
-          operating_system_version: varchar
-      snowplow_web_users_expected_it:
-        +column_types:
-          engaged_time_in_s: bigint
-          last_page_urlfragment: varchar
+      bigquery:
+        +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        snowplow_web_page_views_expected:
+          +column_types:
+            horizontal_percentage_scrolled: float
+            vertical_percentage_scrolled: float
+            dvce_created_tstamp: timestamp
+            collector_tstamp: timestamp
+            derived_tstamp: timestamp
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            page_urlfragment: string
+            mkt_term: string
+            mkt_content: string
+            refr_urlfragment: string
+            refr_medium: string
+            refr_source: string
+            refr_term: string
+            br_colordepth: string
+            br_renderengine: string
+            category: string
+            primary_impact: string
+            reason: string
+            spider_or_robot: boolean
+            useragent_family: string
+            useragent_major: string
+            useragent_minor: string
+            useragent_patch: string
+            useragent_version: string
+            os_family: string
+            os_major: string
+            os_minor: string
+            os_patch: string
+            os_patch_minor: string
+            os_version: string
+            device_family: string
+            device_class: string
+            agent_class: string
+            agent_name: string
+            agent_name_version: string
+            agent_name_version_major: string
+            agent_version: string
+            agent_version_major: string
+            device_brand: string
+            device_name: string
+            device_version: string
+            layout_engine_class: string
+            layout_engine_name: string
+            layout_engine_name_version: string
+            layout_engine_name_version_major: string
+            layout_engine_version: string
+            layout_engine_version_major: string
+            operating_system_class: string
+            operating_system_name: string
+            operating_system_name_version: string
+            operating_system_version: string
+        snowplow_web_sessions_expected:
+          +column_types:
+            app_id: string
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            first_page_urlfragment: string
+            last_page_urlfragment: string
+            refr_urlquery: string
+            refr_urlfragment: string
+            refr_medium: string
+            refr_source: string
+            refr_term: string
+            mkt_term: string
+            mkt_content: string
+            br_renderengine: string
+            category: string
+            primary_impact: string
+            reason: string
+            spider_or_robot: boolean
+            useragent_family: string
+            useragent_major: string
+            useragent_minor: string
+            useragent_patch: string
+            useragent_version: string
+            os_family: string
+            os_major: string
+            os_minor: string
+            os_patch: string
+            os_patch_minor: string
+            os_version: string
+            device_family: string
+            device_class: string
+            agent_class: string
+            agent_name: string
+            agent_name_version: string
+            agent_name_version_major: string
+            agent_version: string
+            agent_version_major: string
+            device_brand: string
+            device_name: string
+            device_version: string
+            layout_engine_class: string
+            layout_engine_name: string
+            layout_engine_name_version: string
+            layout_engine_name_version_major: string
+            layout_engine_version: string
+            layout_engine_version_major: string
+            operating_system_class: string
+            operating_system_name: string
+            operating_system_name_version: string
+            operating_system_version: string
+        snowplow_web_users_expected:
+          +column_types:
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            first_page_urlfragment: string
+            last_page_urlfragment: string
+            refr_urlquery: string
+            refr_urlfragment: string
+            refr_medium: string
+            refr_source: string
+            refr_term: string
+            mkt_term: string
+            mkt_content: string
+      redshift:
+        +enabled: "{{ target.type == 'redshift' | as_bool() }}"
+        snowplow_web_page_views_expected:
+          +column_types:
+            horizontal_percentage_scrolled: double precision
+            vertical_percentage_scrolled: double precision
+            category: varchar
+            primary_impact: varchar
+            reason: varchar
+            spider_or_robot: boolean
+            useragent_family: varchar
+            useragent_major: varchar
+            useragent_minor: varchar
+            useragent_patch: varchar
+            useragent_version: varchar
+            os_family: varchar
+            os_major: varchar
+            os_minor: varchar
+            os_patch: varchar
+            os_patch_minor: varchar
+            os_version: varchar
+            device_family: varchar
+            device_class: varchar
+            agent_class: varchar
+            agent_name: varchar
+            agent_name_version: varchar
+            agent_name_version_major: varchar
+            agent_version: varchar
+            agent_version_major: varchar
+            device_brand: varchar
+            device_name: varchar
+            device_version: varchar
+            layout_engine_class: varchar
+            layout_engine_name: varchar
+            layout_engine_name_version: varchar
+            layout_engine_name_version_major: varchar
+            layout_engine_version: varchar
+            layout_engine_version_major: varchar
+            operating_system_class: varchar
+            operating_system_name: varchar
+            operating_system_name_version: varchar
+            operating_system_version: varchar
+        snowplow_web_sessions_expected:
+          +column_types:
+            last_page_urlfragment: varchar
+            category: varchar
+            primary_impact: varchar
+            reason: varchar
+            spider_or_robot: boolean
+            useragent_family: varchar
+            useragent_major: varchar
+            useragent_minor: varchar
+            useragent_patch: varchar
+            useragent_version: varchar
+            os_family: varchar
+            os_major: varchar
+            os_minor: varchar
+            os_patch: varchar
+            os_patch_minor: varchar
+            os_version: varchar
+            device_family: varchar
+            device_class: varchar
+            agent_class: varchar
+            agent_name: varchar
+            agent_name_version: varchar
+            agent_name_version_major: varchar
+            agent_version: varchar
+            agent_version_major: varchar
+            device_brand: varchar
+            device_name: varchar
+            device_version: varchar
+            layout_engine_class: varchar
+            layout_engine_name: varchar
+            layout_engine_name_version: varchar
+            layout_engine_name_version_major: varchar
+            layout_engine_version: varchar
+            layout_engine_version_major: varchar
+            operating_system_class: varchar
+            operating_system_name: varchar
+            operating_system_name_version: varchar
+            operating_system_version: varchar
+        snowplow_web_users_expected:
+          +column_types:
+            engaged_time_in_s: bigint
+            last_page_urlfragment: varchar
