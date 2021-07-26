@@ -1,5 +1,6 @@
 {{ 
   config(
+    materialized='table',
     partition_by = {
       "field": "collector_tstamp",
       "data_type": "timestamp",
