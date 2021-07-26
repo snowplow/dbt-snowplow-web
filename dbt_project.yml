@@ -58,7 +58,7 @@ on-run-end: "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}
 # and add their last sucessfull collector_tstamp to the manifest.
 models:
   snowplow_web:
-    +materialized: table
+    +materialized: view
     base:
       scratch:
         +schema: "scratch"
