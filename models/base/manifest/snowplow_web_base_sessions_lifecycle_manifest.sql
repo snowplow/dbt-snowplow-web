@@ -16,12 +16,16 @@
   ) 
 }}
 
+-- Known edge cases:
+-- 1: Rare case with multiple domain_userid per session.
+
 {% set lower_limit, upper_limit, session_lookback_limit = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
 {% set is_run_with_new_events = snowplow_utils.is_run_with_new_events('snowplow_web') %}
 
 with new_events_session_ids as (
   select
     e.domain_sessionid as session_id,
+    max(e.domain_userid) as domain_userid, -- Edge case 1: Arbitary selection to avoid window function like first_value.
     min(e.collector_tstamp) as start_tstamp,
     max(e.collector_tstamp) as end_tstamp
 
@@ -55,6 +59,7 @@ with new_events_session_ids as (
 
   select
     ns.session_id,
+    coalesce(self.domain_userid, ns.domain_userid) as domain_userid, -- Edge case 1: Take previous value to keep domain_userid consistent. Not deterministic but performant
     least(ns.start_tstamp, coalesce(self.start_tstamp, ns.start_tstamp)) as start_tstamp,
     greatest(ns.end_tstamp, coalesce(self.end_tstamp, ns.end_tstamp)) as end_tstamp -- BQ 1 NULL will return null hence coalesce
     

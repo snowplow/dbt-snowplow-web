@@ -23,3 +23,10 @@ For any given run, this table contains all required events to be consumed by sub
 **Note: This table should be used as the input to any custom modules that require event level data, rather than selecting straight from `atomic.events`**
 
 {% enddocs %}
+
+
+{% docs table_base_sessions_this_run %}
+
+For any given run, this table contains all the required sessions.
+
+{% enddocs %}

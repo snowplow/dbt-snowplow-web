@@ -10,7 +10,9 @@
   ) 
 }}
 
-{%- set lower_limit, upper_limit = snowplow_utils.return_base_session_limits(ref('snowplow_web_base_sessions_this_run')) %}
+{%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
+                                                                          'start_tstamp',
+                                                                          'end_tstamp') %}
 
 -- without downstream joins, it's safe to dedupe by picking the first event_id found.
 select
@@ -20,7 +22,8 @@ from (
 
   select
     a.contexts_com_snowplowanalytics_snowplow_web_page_1_0_0[safe_offset(0)].id as page_view_id,
-    a.* except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0)
+    b.domain_userid, -- take domain_userid from manifest. This ensures only 1 domain_userid per session.
+    a.* except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, domain_userid)
 
   from {{ var('snowplow__events') }} as a
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b

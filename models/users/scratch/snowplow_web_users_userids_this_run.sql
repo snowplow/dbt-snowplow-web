@@ -12,10 +12,16 @@
   ) 
 }}
 
+with user_ids_this_run as (
+select distinct domain_userid from {{ ref('snowplow_web_base_sessions_this_run') }}
+)
+
 select
   a.domain_userid,
-  b.start_tstamp
+  min(a.start_tstamp) as start_tstamp
 
-from {{ ref('snowplow_web_sessions_users_this_run') }}  a
-inner join {{ ref('snowplow_web_users_manifest') }} b
+from {{ ref('snowplow_web_base_sessions_lifecycle_manifest') }}  a
+inner join user_ids_this_run b
 on a.domain_userid = b.domain_userid
+
+group by 1
