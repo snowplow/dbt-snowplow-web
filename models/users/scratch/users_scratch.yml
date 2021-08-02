@@ -123,8 +123,6 @@ models:
         tests:
           - unique
           - not_null
-  - name: snowplow_web_users_limits
-    description: '{{ doc("table_users_limits") }}'
   - name: snowplow_web_users_sessions_this_run
     description: '{{ doc("table_users_sessions_this_run") }}'
     columns:

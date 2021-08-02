@@ -230,13 +230,3 @@ models:
         tests:
           - unique
           - not_null
-  - name: snowplow_web_sessions_users_this_run
-    description: '{{ doc("table_sessions_users_this_run") }}'
-    columns:
-      - name: domain_userid
-        description: '{{ doc("col_domain_userid") }}'
-        tags:
-          - primary-key
-        tests:
-          - unique
-          - not_null

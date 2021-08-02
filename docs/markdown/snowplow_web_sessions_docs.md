@@ -24,10 +24,3 @@ This model aggregates various metrics derived from page views to a session level
 This model identifies the last page view within a given session and returns various dimensions associated with that page view.
 
 {% enddocs %}
-
-
-{% docs table_sessions_users_this_run %}
-
-This model identifies all `domain_userid`'s for all sessions within a given run. This acts as an input to the users module.
-
-{% enddocs %}

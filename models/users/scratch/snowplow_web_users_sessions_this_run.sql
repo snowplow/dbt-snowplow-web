@@ -12,6 +12,10 @@
   ) 
 }}
 
+{%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(model=ref('snowplow_web_users_userids_this_run'),
+                                                                           lower_limit_col='start_tstamp',
+                                                                           upper_limit_col='start_tstamp') %}
+
 
 select
   a.*
@@ -20,5 +24,5 @@ from {{ var('snowplow__sessions_table') }} a
 inner join {{ ref('snowplow_web_users_userids_this_run') }} b
 on a.domain_userid = b.domain_userid
 
-where a.start_tstamp >= (select lower_limit from {{ ref('snowplow_web_users_limits') }})
-and   a.start_tstamp <= (select upper_limit from {{ ref('snowplow_web_users_limits') }})
+where a.start_tstamp >= {{ lower_limit }}
+and   a.start_tstamp <= {{ upper_limit }}
