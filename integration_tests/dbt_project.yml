@@ -35,7 +35,7 @@ vars:
   snowplow_web:
     snowplow__events: "{{ ref('snowplow_web_events_stg') }}"
     snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_stg') }}"
-    snowplow__start_date: "{{ '2021-01-04' if target.type == 'redshift' else '2021-03-01' }}" #RS and BQ have different test datasets. TODO: Replicate BQ dataset in RS.
+    snowplow__start_date: "2021-03-01"
     snowplow__backfill_limit_days: 2
 
 
@@ -44,67 +44,64 @@ seeds:
   snowplow_web_integration_tests:
     +schema: "snowplow_int_tests"
     source:
-      bigquery:
-        +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
-        snowplow_web_events:
-          +column_types:
-            etl_tstamp: timestamp
-            collector_tstamp: timestamp
-            dvce_created_tstamp: timestamp
-            user_fingerprint: string
-            ip_isp: string
-            ip_organization: string
-            ip_domain: string
-            ip_netspeed: string
-            page_urlfragment: string
-            refr_urlfragment: string
-            refr_medium: string
-            refr_source: string
-            refr_term: string
-            mkt_term: string
-            mkt_content: string
-            se_label: string
-            se_property: string
-            se_value: float
-            tr_orderid: string
-            tr_affiliation: string
-            tr_total: float
-            tr_tax: float
-            tr_shipping: float
-            tr_city: string
-            tr_state: string
-            tr_country: string
-            ti_orderid: string
-            ti_sku: string
-            ti_name: string
-            ti_category: string
-            ti_price: float
-            br_name: string
-            br_family: string
-            br_version: string
-            br_type: string
-            br_renderengine: string
-            br_colordepth: string
-            os_name: string
-            os_family: string
-            os_manufacturer: string
-            dvce_type: string
-            dvce_ismobile: boolean
-            tr_currency: string
-            tr_total_base: float
-            tr_tax_base: float
-            tr_shipping_base: float
-            ti_currency: string
-            ti_price_base: float
-            base_currency: string
-            etl_tags: string
-            dvce_sent_tstamp: timestamp
-            refr_domain_userid: string
-            refr_dvce_tstamp: timestamp
-            derived_tstamp: timestamp
-            true_tstamp: timestamp
-      redshift:
-        +enabled: "{{ target.type == 'redshift' | as_bool() }}"
+      snowplow_web_events:
+        +column_types:
+          app_id: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          etl_tstamp: timestamp
+          collector_tstamp: timestamp
+          dvce_created_tstamp: timestamp
+          user_fingerprint: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ip_isp: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ip_organization: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ip_domain: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ip_netspeed: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          page_urlfragment: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          refr_urlfragment: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          refr_medium: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          refr_source: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          refr_term: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          mkt_term: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          mkt_content: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          se_label: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          se_property: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          se_value: float
+          tr_orderid: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          tr_affiliation: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          tr_total: float
+          tr_tax: float
+          tr_shipping: float
+          tr_city: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          tr_state: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          tr_country: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ti_orderid: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ti_sku: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ti_name: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ti_category: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ti_price: float
+          br_name: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          br_family: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          br_version: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          br_type: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          br_renderengine: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          br_colordepth: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          os_name: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          os_family: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          os_manufacturer: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          dvce_type: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          dvce_ismobile: boolean
+          tr_currency: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          tr_total_base: float
+          tr_tax_base: float
+          tr_shipping_base: float
+          ti_currency: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          ti_price_base: float
+          base_currency: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          etl_tags: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          dvce_sent_tstamp: timestamp
+          refr_domain_userid: "{{ 'varchar' if target.type == 'redshift' else 'string' }}" 
+          refr_dvce_tstamp: timestamp
+          derived_tstamp: timestamp
+          true_tstamp: timestamp
 
 
     expected:
@@ -232,8 +229,23 @@ seeds:
         +enabled: "{{ target.type == 'redshift' | as_bool() }}"
         snowplow_web_page_views_expected:
           +column_types:
-            horizontal_percentage_scrolled: double precision
-            vertical_percentage_scrolled: double precision
+            app_id: varchar
+            horizontal_percentage_scrolled: float
+            vertical_percentage_scrolled: float
+            dvce_created_tstamp: timestamp
+            collector_tstamp: timestamp
+            derived_tstamp: timestamp
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            page_urlfragment: varchar
+            mkt_term: varchar
+            mkt_content: varchar
+            refr_urlfragment: varchar
+            refr_medium: varchar
+            refr_source: varchar
+            refr_term: varchar
+            br_colordepth: varchar
+            br_renderengine: varchar
             category: varchar
             primary_impact: varchar
             reason: varchar
@@ -272,7 +284,20 @@ seeds:
             operating_system_version: varchar
         snowplow_web_sessions_expected:
           +column_types:
+            app_id: varchar
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            first_page_urlfragment: varchar
             last_page_urlfragment: varchar
+            refr_urlquery: varchar
+            refr_urlfragment: varchar
+            refr_medium: varchar
+            refr_source: varchar
+            refr_term: varchar
+            mkt_term: varchar
+            mkt_content: varchar
+            last_page_urlquery: varchar
+            br_renderengine: varchar
             category: varchar
             primary_impact: varchar
             reason: varchar
@@ -311,5 +336,15 @@ seeds:
             operating_system_version: varchar
         snowplow_web_users_expected:
           +column_types:
-            engaged_time_in_s: bigint
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            first_page_urlfragment: varchar
             last_page_urlfragment: varchar
+            last_page_urlquery: varchar
+            refr_urlquery: varchar
+            refr_urlfragment: varchar
+            refr_medium: varchar
+            refr_source: varchar
+            refr_term: varchar
+            mkt_term: varchar
+            mkt_content: varchar
