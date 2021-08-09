@@ -29,8 +29,8 @@ from (
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
   on a.domain_sessionid = b.session_id
 
-  where timestamp_diff(a.collector_tstamp, b.start_tstamp, day) <= {{ var("snowplow__max_session_days", 3) }}
-  and timestamp_diff(a.dvce_sent_tstamp,  a.dvce_created_tstamp, day) <= {{ var("snowplow__days_late_allowed", 3) }}
+  where a.collector_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'b.start_tstamp') }}
+  and a.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'a.dvce_created_tstamp') }}
   and a.collector_tstamp >= {{ lower_limit }}
   and a.collector_tstamp <= {{ upper_limit }}
   {% if var('snowplow__derived_tstamp_partitioned', true) and target.type == 'bigquery' | as_bool() %}

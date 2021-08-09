@@ -146,8 +146,8 @@ with events_this_run AS (
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
   on a.domain_sessionid = b.session_id
 
-  where datediff(day, b.start_tstamp, a.collector_tstamp) <= {{ var("snowplow__max_session_days", 3) }}
-  and datediff(day, a.dvce_created_tstamp, a.dvce_sent_tstamp) <= {{ var("snowplow__days_late_allowed", 3) }}
+  where a.collector_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'b.start_tstamp') }}
+  and a.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'a.dvce_created_tstamp') }}
   and a.collector_tstamp >= {{ lower_limit }}
   and a.collector_tstamp <= {{ upper_limit }}
   and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
