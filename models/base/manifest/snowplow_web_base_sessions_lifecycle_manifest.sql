@@ -33,7 +33,7 @@ with new_events_session_ids as (
 
   where
     e.domain_sessionid is not null
-    and {{ dbt_utils.datediff('dvce_created_tstamp', 'dvce_sent_tstamp', 'day') }} <= {{ var("snowplow__days_late_allowed", 3) }} -- don't process data that's too late
+    and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}
     and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
@@ -69,7 +69,8 @@ with new_events_session_ids as (
 
   where
     self.session_id is null -- process all new sessions
-    or {{ dbt_utils.datediff('self.start_tstamp', 'self.end_tstamp', 'day') }} <= {{ var("snowplow__max_session_days", 3) }} --stop updating sessions exceeding 3 days
+    or self.end_tstamp < {{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'self.start_tstamp') }} --stop updating sessions exceeding 3 days
+  )
 
 {% else %}
 
