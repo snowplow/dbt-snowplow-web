@@ -19,7 +19,7 @@
 -- Known edge cases:
 -- 1: Rare case with multiple domain_userid per session.
 
-{% set lower_limit, upper_limit, session_lookback_limit = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set lower_limit, upper_limit, session_lookback_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
 {% set is_run_with_new_events = snowplow_utils.is_run_with_new_events('snowplow_web') %}
 
 with new_events_session_ids as (
@@ -57,6 +57,7 @@ with new_events_session_ids as (
   and {{ is_run_with_new_events }} --don't reprocess sessions that have already been processed.
 )
 
+, session_lifecycle as (
   select
     ns.session_id,
     coalesce(self.domain_userid, ns.domain_userid) as domain_userid, -- Edge case 1: Take previous value to keep domain_userid consistent. Not deterministic but performant
@@ -74,6 +75,18 @@ with new_events_session_ids as (
 
 {% else %}
 
+, session_lifecycle as (
+
   select * from new_events_session_ids
 
+)
+
 {% endif %}
+
+select
+  sl.session_id,
+  sl.domain_userid,
+  sl.start_tstamp,
+  least({{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'sl.start_tstamp') }}, sl.end_tstamp) as end_tstamp -- limit session length to max_session_days
+
+from session_lifecycle sl
