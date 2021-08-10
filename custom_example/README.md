@@ -4,13 +4,7 @@ This is a dummy dbt project demonstrating how to integrate custom modules into t
 We demonstrate two methods to add custom modules.
 
 ## Set Up
-- Install the Snowplow Web dbt package by [adding the package](https://docs.getdbt.com/docs/building-a-dbt-project/package-management) to the your package.yml file:
-```yml
-# package.yml
-packages:
-  - package: dbt-snowplow-web/snowplow_web
-    version: 0.1.0 # version number
-```
+- Install the Snowplow Web dbt package by [adding the package](https://docs.getdbt.com/docs/building-a-dbt-project/package-management) to the your package.yml file. See [dbt's package hub](https://hub.getdbt.com/snowplow/snowplow_web/latest/) for the latest instruction.
 - Create a sub directory under `/models` to contain all your custom modules. We recommend `snowplow_web_custom_modules`.
 - Add the tag `snowplow_web_incremental` to your custom modules directory. This ensures all models in this directory are included in the incremental logic of the Snowplow Web package.
 ```yml
