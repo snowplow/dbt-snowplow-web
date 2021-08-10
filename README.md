@@ -10,11 +10,12 @@ This dbt package:
 Please refer to the [doc site][snowplow-web-docs] for a full breakdown of the package.
 
 ### Adapter Support
-The snowplow-web v0.1.0 package currently only supports Redshift however BigQuery and Snowflake support will be added soon.
+The snowplow-web v0.2.0 package currently only supports Redshift & BigQuery. Snowflake support will be added soon.
 
 ### Requirements
 - A dataset of web events from the [Snowplow JavaScript tracker][tracker-docs] must be available in the database.
 - Have the [`webPage` context][webpage-context] enabled.
+- Running dbt versions >=0.18.0 to <0.20.0. dbt v.0.20.0+ support to follow soon.
 
 ### Installation
 Check dbt Hub for the latest installation instructions, or read the [dbt docs][dbt-package-docs] for more information on installing packages.

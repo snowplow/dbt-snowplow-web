@@ -18,10 +18,10 @@ The 'standard' modules can be thought of as source code for the core logic of th
 Each module produces a table which acts as the input to the subsequent module (the `_this_run` tables), and updates a derived table - with the exception of the Base module, which takes atomic data as its input, and does not update a derived table.
 
 ## Adapter Support
-The Snowplow Web v.0.1.0-beta.0 package currently only supports Redshift however BigQuery and Snowflake support will be added soon.
+The Snowplow Web v.0.2.0 package currently only supports Redshift & BigQuery. Snowflake support will be added soon.
 
 ## Installation
-Check dbt Hub for the latest installation instructions, or read the [dbt docs][dbt-package-docs] for more information on installing packages.
+Check [dbt Hub](https://hub.getdbt.com/snowplow/snowplow_web/latest/) for the latest installation instructions, or read the [dbt docs][dbt-package-docs] for more information on installing packages.
 
 ## Quick Start
 
@@ -63,6 +63,16 @@ vars:
   snowplow_web:
     snowplow__start_date: 'yyyy-mm-dd'
     snowplow__app_id: ['my_app_1','my_app_2']
+```
+
+#### BigQuery Only
+Verify which column your events table is partitioned on. Most likely it is partitioned on `derived_tstamp`, however if it is partition on `collector_tstamp` you should set `snowplow__derived_tstamp_partitioned` to `false`:
+```yml
+# dbt_project.yml
+...
+vars:
+  snowplow_web:
+    snowplow__derived_tstamp_partitioned: false
 ```
 
 ### 4 - Verify page ping variables
@@ -138,9 +148,9 @@ This package makes use of a series of other variables, which are all set to the 
 
 `snowplow__upsert_lookback_days`:   Default 30. Number of day to look back over the incremental derived tables during the upsert. Where performance is not a concern, should be set to as long a value as possible. Having too short a period can result in duplicates. Please see the incremental materialization section for more details.
 
-`snowplow__ua_bot_filter`:          Default `True`. Configuration to filter out bots via useragent string pattern match.
+`snowplow__ua_bot_filter`:          Default `True`. Configuration to filter out bots via the useragent string pattern match.
 
-`snowplow__sessions_table`:         Default `{{ ref('snowplow_web_sessions') }}`. The users module requires data from the derived sessions table. If you choose to disable the standard sessions table in favor of your own custom table, set this to reference your new table e.g. `{{ ref('snowplow_web_sessions_custom') }}`. Please see the README in the `custom_example` directory for more information on this sort of implementation.
+`snowplow__sessions_table`:         Default `{{ ref('snowplow_web_sessions') }}`. The users module requires data from the derived sessions table. If you choose to disable the standard sessions table in favor of your own custom table, set this to reference your new table e.g. `{{ ref('snowplow_web_sessions_custom') }}`. Please see the [README](https://github.com/snowplow/dbt-snowplow-web/tree/main/custom_example) in the `custom_example` directory for more information on this sort of implementation.
 
 `snowplow__has_log_enabled`:        Default `true`. When executed, the package logs information about the current run to the CLI. This can be disabled by setting to `false`.
 
@@ -170,16 +180,16 @@ During back-filling, the derived page views, sessions and users tables are block
 Back-filling a module can be performed either as part of the entire run of the Snowplow web package, or in isolation to reduce cost (recommended):
 ```bash
 dbt run --models snowplow_web tag:snowplow_web_incremental # Will execute all Snowplow web modules, as well as custom.
-dbt run --models +my_custom_module # Will execute your custom module + any upstream nodes. 
+dbt run --models +my_custom_module # Will execute your custom module + any downstream nodes. 
 ```
 
 ### Tearing down a subset of models
 As the code base for your custom modules evolves, you will likely need to replay events through a given module. In order to do so, the models within your custom module need to be removed from the `snowplow_web_incremental_manifest` table. See the 'Complete refresh' section for an explanation as to why. This removal can be achieved by passing the model's name to the `models_to_remove'` var at run time. If you want to replay events through a series of dependent models, you only need to pass the name of the endmost model within the run:
 ```bash
-dbt run --models +snowplow_web_custom_incremetal_model --full-refresh --vars 'models_to_remove: snowplow_web_custom_incremetal_model'
+dbt run --models +snowplow_web_custom_incremental_model --full-refresh --vars 'models_to_remove: snowplow_web_custom_incremental_model'
 ```
 
-By removing the `snowplow_web_custom_incremetal_model` model from the manifest the web packages will be in [state 2](#state-2-new-model-introduced) and replay all events.
+By removing the `snowplow_web_custom_incremental_model` model from the manifest the web packages will be in [state 2](#state-2-new-model-introduced) and will replay all events.
 
 ## Tests
 This package contains tests for both the scratch and derived models. Depending on your use case you might not want to run all tests in production, for example to save costs. There are several tags included in the package to help select sub sets of tests. Tags:
@@ -206,7 +216,7 @@ Example `snowplow_web_incremental_manifest`:
 | snowplow_web_page_views          | '2021-06-03' |
 | snowplow_web_sessions            | '2021-06-02' |
 
-In addition to the `snowplow_web_incremental_manifest` manifest table we also have the `snowplow_web_base_sessions_lifecycle_manifest` and `snowplow_web_users_manifest` manifests, which keep a record of the lifecycle of all sessions and users. These all sit in the `snowplow_manifest` schema and are protected from full refreshes.
+In addition to the `snowplow_web_incremental_manifest` manifest table we also have the `snowplow_web_base_sessions_lifecycle_manifest` manifest, which keep a record of the lifecycle of all sessions. Both tables sit within `snowplow_manifest` schema and are protected from full refreshes.
 
 ### Identification of events to process
 The identification of which events to process is performed by a pre-hook on the `snowplow_web_base_new_event_limits` model, which calls the `snowplow_incremental_pre_hook()` macro. This macro uses the metadata recorded in `snowplow_web_incremental_manifest` to determine the correct events to process next based on the current state of the Snowplow dbt Web model. The selection of these events is done by specifying a range of `collector_tstamp`'s to process, between `lower_limit` and `upper_limit`. The calculation of these limits is as follows. 
@@ -259,11 +269,11 @@ dbt run --models snowplow_web_base_new_event_limits
 ```
 
 ## Custom Modules
-This package is designed to be easily customised or extended within your own dbt project, by building your own 'custom modules'. The 'standard modules' we provide (base, page views, sessions and users) are not designed to be modified by you. An example dbt project with custom modules can be seen in the custom example directory of the snowplow-web repo.
+This package is designed to be easily customised or extended within your own dbt project, by building your own 'custom modules'. The 'standard modules' we provide (base, page views, sessions and users) are not designed to be modified by you. An example dbt project with custom modules can be seen in the [custom example directory](https://github.com/snowplow/dbt-snowplow-web/tree/main/custom_example) of the snowplow-web repo.
 
 ### Guidelines & Best Practice
 
-The Snowplow web package's modular structure allows for custom SQL modules to leverage the model's incrementalisation logic, and operate as 'plugins' to compliment the standard model. This can be achieved by using the `_this_run` tables as an input, and producing custom tables which may join too the standard model's main derived tables (for example, to aggregate custom contexts to a page_view level), or provide a separate level of aggregation (for example a custom user interaction).
+The Snowplow web package's modular structure allows for custom SQL modules to leverage the model's incrementalisation logic, and operate as 'plugins' to compliment the standard model. This can be achieved by using the `_this_run` tables as an input, and producing custom tables which may join to the standard model's main derived tables (for example, to aggregate custom contexts to a page_view level), or provide a separate level of aggregation (for example a custom user interaction).
 
 The standard modules carry out the heavy lifting in establishing an incremental structure and providing the core logic for the most common web aggregation use cases. It also allows custom modules to be plugged in without impeding the maintenance of standard modules.
 
@@ -275,12 +285,12 @@ The following best practices should be followed to ensure that updates and bug f
 
 In short, the standard modules can be treated as the source code for a distinct piece of software, and custom modules can be treated as self-maintained, additive plugins - in much the same way as a Java package may permit one to leverage public classes in their own API, and provide an entry point for custom programs to run, but will not permit one to modify the original API.
 
-The `_this_run` and derived (e.g. `snowplow_web_page_views`, `snowplow_web_sessions`, `snowplow_web_users`) tables are considered part of the 'public' class of tables in this model structure, and so we can give assurances that non-breaking releases (ie. any v1.X release) won't alter them. The other tables may be used in custom SQL, but their logic and structure may change from release to release, or they may be removed. If one does use a scratch table in custom logic, any breaking changes can be mitigated by either amending the custom logic to suit, or copying the relevant steps from an old version of the model into the custom module. (However this will rarely be necessary).
+The `_this_run` and derived (e.g. `snowplow_web_page_views`, `snowplow_web_sessions`, `snowplow_web_users`) tables are considered part of the 'public' class of tables in this model structure, and so we can give assurances that non-breaking releases won't alter them. The other tables may be used in custom SQL, but their logic and structure may change from release to release, or they may be removed. If one does use a scratch table in custom logic, any breaking changes can be mitigated by either amending the custom logic to suit, or copying the relevant steps from an old version of the model into the custom module. (However this will rarely be necessary).
 
 ### What denotes a custom module?
 
 **Does:**   
-In short, anything that plugs into the incremental framework provided by this package. Generally speaking any models you create that reference any of the `_this_run` tables from the standard modules are leveraging this framework and therefore need to be tagged with `snowplow_web_incremental` (see the tagging sectiom). Such models will typically be materialized as incremental, although for more complex custom modules there may be a series of staging models that ultimately produce an derived incremental model. In this case, all staging models also need to be tagged correctly.
+In short, anything that plugs into the incremental framework provided by this package. Generally speaking any models you create that reference any of the `_this_run` tables from the standard modules are leveraging this framework and therefore need to be tagged with `snowplow_web_incremental` (see the tagging section). Such models will typically be materialized as incremental, although for more complex custom modules there may be a series of staging models that ultimately produce an derived incremental model. In this case, all staging models also need to be tagged correctly.
 
 **Doesn't:**   
 Models that only reference a Snowplow web derived table as their input, rather than a `_this_run` table. Since these derived tables are materialized as incremental they contain all historic events. Any models you build that reference these tables can therefore by written in a drop and recompute manner i.e. materialized as a table. This means they do not leverage the incremental framework of this package and therefore **should not be tagged.**
@@ -308,19 +318,32 @@ If you want to retire a custom module, you should:
 - Not worry about removing the models from the `snowplow_web_incremental_manifest` manifest table. The package identifies **enabled** models tagged with `snowplow_web_incremental` within your project and selects these models from the manifest in order to calculate the state of the web model as described above.
 - Not simply exclude the retired models from your Snowplow web job in production. Currently the package is unable to identify which models are due to be executed in a given run. As a result, if you exclude a model the package will get stuck in State 3 as outlined in the identification of events to process section and continue to attempt to sync your excluded with the remaining models.
 
+### Backfilling
+We have created a macro `snowplow_utils.is_run_with_new_events(package_name)`, which will evaluate whether the particular model i.e. {{ this }} has already processed the events in the given run of the model. This is returned as a boolean and effectively blocks the upsert to incremental models if the run only contains old data. This protects against your derived incremental tables being temporarily updated with incomplete data during batched back-fills of other models. We recommend including this in the where clause of any incremental models you create within custom modules as follows:
+```sql
+select
+  ...
+from 
+where {{ snowplow_utisl.is_run_with_new_events("snowplow_web") }}
+```
+A full example of this can be seen in the `custom_example` directory.
+
 ### Tips for developing custom modules
 During the development of custom modules you might find it helpful to set `snowplow__backfill_limit_days` to 1 in your `dbt_project.yml` file. This will ensure only 1 day of data is processed in a run, saving costs and time. 
 
 ## Incremental Materialization
-This package makes use of the `snowplow_incremental` materialization from the `snowplow_utils` package. This builds upon the out-of-the-box delete and insert incremental materialization provided by dbt for the Redshift adapter. The upsert strategy is still delete and insert, however a limit has been imposed on how far to scan the destination table in order to improve performance:
+This package makes use of the `snowplow_incremental` materialization from the `snowplow_utils` package. This builds upon the out-of-the-box incremental materialization provided by dbt. As is the case with the native incremental materialization, the strategy varies between adapters.
+
+### Redshift
+Like the native materialization, the `snowplow_incremental` materialization strategy is delete and insert, however a limit has been imposed on how far to scan the destination table in order to improve performance:
 
 ```sql
 delete
-from {{ target_relation }}
+from {{ destination_table }}
 where {{ unique_key }} in (select {{ unique_key }} from {{ tmp_relation }})
 and {{ upsert_date_key }} >= (select dateadd('day', -{{ snowplow__upsert_lookback_days }}, min({{ upsert_date_key }})) as lower_limit from {{ tmp_relation }});
 
-insert into {{ target_relation }}
+insert into {{ destination_table }}
 (select * from {{ tmp_relation }});
 ```
 
@@ -334,20 +357,63 @@ This materialization can be implemented in your own custom modules as follows:
   ) 
 }}
 ```
-You can equally use the default incremental dbt materialization if you would rather.  
+You can equally use the default incremental dbt materialization if you would rather.
 
-Notes: 
-- If using this the `snowplow_incremental` materialization, the native `is_incremental()` macro will not recognise the model as incremental. Please use the `snowplow_utils.snowplow_is_incremental()` macro instead, which operates in the same way.
-- `snowplow__upsert_lookback_days` defaults to 30 days. If you set `snowplow__upsert_lookback_days` to too short a period, duplicates can occur in your incremental table. 
+### BigQuery
+Like the native materialization, the `snowplow_incremental` materialization strategy is [merge](https://docs.getdbt.com/reference/resource-configs/bigquery-configs#the-merge-strategy), however limits are calculated to allow for partition pruning on the destination table saving cost:
 
-We have also created a macro `snowplow_utils.is_run_with_new_events(package_name)`, which will evaluate whether the particular model i.e. {{ this }} has already processed the events in the given run of the model. This is returned as a boolean and effectively blocks the upsert to incremental models if the run only contains old data. This protects against your derived incremental tables being temporarily updated with incomplete data during batched back-fills of other models. We recommend including this in the where clause of any incremental models you create within custom modules as follows:
 ```sql
-select
-  ...
-from 
-where {{ snowplow_utisl.is_run_with_new_events("snowplow_web") }}
+/*
+  Create a temporary table from the model SQL
+*/
+create temporary table {{ model_name }}__dbt_tmp as (
+  {{ model_sql }}
+);
+
+/*
+  Find merge limits
+*/
+
+declare dbt_partition_lower_limit, dbt_partition_upper_limit date;
+set (dbt_partition_lower_limit, dbt_partition_upper_limit) = (
+    select as struct
+         dateadd('day', -{{ snowplow__upsert_lookback_days }}, min({{ partition_by_key }})) as dbt_partition_lower_limit,
+         max({{ partition_by_key }}) as dbt_partition_upper_limit
+    from {{ model_name }}__dbt_tmp
+);
+
+/*
+  Update or insert into destination table. Limit the table scan on the destination table.
+*/
+merge into {{ destination_table }} DEST
+using {{ model_name }}__dbt_tmp SRC
+on SRC.{{ unique_key }} = DEST.{{ unique_key }}
+and DEST.{{ partition_by_key }} between dbt_partition_lower_limit and dbt_partition_upper_limit -- Prune partitions on DEST
+
+when matched then update ...
+
+when not matched then insert ...
 ```
-A full example of this can be seen in the `custom_example` directory.
+
+This materialization can be implemented in your own custom modules as follows:
+```sql
+{{ 
+  config(
+    materialized='snowplow_incremental',
+    unique_key='page_view_id', # The primary key of your model
+    partition_by = {
+      "field": "start_tstamp",
+      "data_type": "timestamp",
+      "granularity": "day"
+    } # Adds partitions to destination table. This field is also used to determine the upsert limits dbt_partition_lower_limit, dbt_partition_upper_limit
+  ) 
+}}
+```
+*Note you must provide the `partition_by` clause to use this materialization. All `data_types` are supported except `int64`.*
+
+### Notes 
+- If using this the `snowplow_incremental` materialization, the native dbt `is_incremental()` macro will not recognise the model as incremental. Please use the `snowplow_utils.snowplow_is_incremental()` macro instead, which operates in the same way.
+- `snowplow__upsert_lookback_days` defaults to 30 days. If you set `snowplow__upsert_lookback_days` to too short a period, duplicates can occur in your incremental table. 
 
 ## Advanced Usage
 
@@ -363,11 +429,20 @@ dbt run --model +snowplow_web.page_views --vars "{'models_to_run': '$(dbt ls --m
 ```
 
 ## Duplicates
-This package performs de-duplication on both `event_id`'s and `page_view_id`'s, in the base and page views modules respectively. Using `event_id` de-duplication as an example, for duplicates we:
-- Keep the first row per `event_id` ordered by `collector_tstamp` i.e. the earliest occurring row.
-- If there are multiple rows with the same `collector_tstamp`, we discard the event all together. This is done to avoid 1:many joins when joining on context tables such as the page view context. 
+This package performs de-duplication on both `event_id`'s and `page_view_id`'s, in the base and page views modules respectively. The de-duplication method for Redshift is different to BigQuery due to Redshift's federated table design. The key difference between the two methodologies is that for Redshift an `event_id` may be removed entirely during de-duplication, where as for BigQuery we keep all `event_id`'s. See below for a detailed explanation.
 
-The same methodology is applied to `page_view_id`s, however we order by `derived_tstamp`. 
+### Redshift
+Using `event_id` de-duplication as an example, for duplicates we:
+- Keep the first row per `event_id` ordered by `collector_tstamp` i.e. the earliest occurring row.
+- If there are multiple rows with the same `collector_tstamp`, *we discard the event all together*. This is done to avoid 1:many joins when joining on context tables such as the page view context. 
+
+The same methodology is applied to `page_view_id`s, however we order by `derived_tstamp`.
+
+### BigQuery
+Using `event_id` de-duplication as an example, for duplicates we:
+- Keep the first row per `event_id` ordered by `collector_tstamp` i.e. the earliest occurring row.
+
+The same methodology is applied to `page_view_id`s, however we order by `derived_tstamp`.
 
 # Join the Snowplow community
 

@@ -12,3 +12,4 @@ bash integration_tests.sh -d {warehouse}
 ```
 Supported warehouses:
 - redshift
+- bigquery
