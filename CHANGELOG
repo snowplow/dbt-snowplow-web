@@ -1,3 +1,18 @@
+snowplow-web 0.2.0 (2021-08-20)
+---------------------------------------
+Add BigQuery adapter support (Close #15)
+Add BigQuery integration tests (Close #16)
+Retire the snowplow_web_users_manifest model (Close #7)
+Update Redshift integration test data (Close #8)
+Update datediff based filters to timestamp based (Close #11)
+Fix filters to determine sessions_this_run (Close #12)
+Materialize scratch models as views (Close #13)
+Fix package install instruction in custom_example directory (Close #10)
+Link to v3 Javascript Tracker (Close #6)
+Remove dbt_date dependancy (Close #18)
+Remove dbt_utils package import (Close #17)
+Update documentation (Close #21)
+
 snowplow-web 0.1.0 (2021-07-27)
 ---------------------------------------
 Add snowplow-web v0.1.0 (Close #4)
