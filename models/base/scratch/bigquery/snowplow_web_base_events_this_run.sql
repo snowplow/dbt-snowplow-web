@@ -3,8 +3,7 @@
     materialized='table',
     partition_by = {
       "field": "collector_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
     cluster_by=["event_name","page_view_id"],
     tags=["this_run"]
