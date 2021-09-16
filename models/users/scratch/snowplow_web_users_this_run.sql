@@ -3,8 +3,7 @@
     materialized='table',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
     cluster_by=["user_id"],
     sort='start_tstamp',

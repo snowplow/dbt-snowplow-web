@@ -404,7 +404,7 @@ This materialization can be implemented in your own custom modules as follows:
     partition_by = {
       "field": "start_tstamp",
       "data_type": "timestamp",
-      "granularity": "day"
+      "granularity": "day" # For dbt v0.19.0+. Defaults to 'day' for dbt v0.18 or earlier
     } # Adds partitions to destination table. This field is also used to determine the upsert limits dbt_partition_lower_limit, dbt_partition_upper_limit
   ) 
 }}

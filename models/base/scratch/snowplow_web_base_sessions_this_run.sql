@@ -5,8 +5,7 @@
     dist='session_id',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
     cluster_by=["session_id"],
     tags=["this_run"]
