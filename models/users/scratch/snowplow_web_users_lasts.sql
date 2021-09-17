@@ -22,6 +22,5 @@ select
 from {{ ref('snowplow_web_users_sessions_this_run') }} a
 
 inner join {{ ref('snowplow_web_users_aggs') }} b
-on a.domain_userid = b.domain_userid
-and a.end_tstamp = b.end_tstamp
+on a.domain_sessionid = b.last_domain_sessionid
 

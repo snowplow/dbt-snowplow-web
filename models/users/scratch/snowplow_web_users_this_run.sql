@@ -74,8 +74,8 @@ select
 from {{ ref('snowplow_web_users_aggs') }} as b
 
 inner join {{ ref('snowplow_web_users_sessions_this_run') }} as a
-on a.domain_userid = b.domain_userid
-and a.start_tstamp = b.start_tstamp
+on a.domain_sessionid = b.first_domain_sessionid
+--TODO: Check what join config is more performant
 
 inner join {{ ref('snowplow_web_users_lasts') }} c
 on b.domain_userid = c.domain_userid
