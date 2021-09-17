@@ -18,7 +18,9 @@
 
 
 select
-  a.*
+  a.*,
+  min(a.start_tstamp) over(partition by a.domain_userid) as user_start_tstamp,
+  max(a.end_tstamp) over(partition by a.domain_userid) as user_end_tstamp 
 
 from {{ var('snowplow__sessions_table') }} a
 inner join {{ ref('snowplow_web_users_userids_this_run') }} b
