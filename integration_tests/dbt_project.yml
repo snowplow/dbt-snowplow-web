@@ -28,6 +28,9 @@ models:
         +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
       redshift:
         +enabled: "{{ target.type == 'redshift' | as_bool() }}"
+      snowflake:
+        +enabled: "{{ target.type == 'snowflake' | as_bool() }}"
+
 
 
 vars:
@@ -348,3 +351,127 @@ seeds:
             refr_term: varchar
             mkt_term: varchar
             mkt_content: varchar
+      snowflake:
+        +enabled: "{{ target.type == 'snowflake' | as_bool() }}"
+        snowplow_web_page_views_expected:
+          +column_types:
+            app_id: varchar
+            horizontal_percentage_scrolled: float
+            vertical_percentage_scrolled: float
+            dvce_created_tstamp: timestamp
+            collector_tstamp: timestamp
+            derived_tstamp: timestamp
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            page_urlfragment: varchar
+            mkt_term: varchar
+            mkt_content: varchar
+            refr_urlfragment: varchar
+            refr_medium: varchar
+            refr_source: varchar
+            refr_term: varchar
+            br_colordepth: varchar
+            br_renderengine: varchar
+            category: varchar
+            primary_impact: varchar
+            reason: varchar
+            spider_or_robot: boolean
+            useragent_family: varchar
+            useragent_major: varchar
+            useragent_minor: varchar
+            useragent_patch: varchar
+            useragent_version: varchar
+            os_family: varchar
+            os_major: varchar
+            os_minor: varchar
+            os_patch: varchar
+            os_patch_minor: varchar
+            os_version: varchar
+            device_family: varchar
+            device_class: varchar
+            agent_class: varchar
+            agent_name: varchar
+            agent_name_version: varchar
+            agent_name_version_major: varchar
+            agent_version: varchar
+            agent_version_major: varchar
+            device_brand: varchar
+            device_name: varchar
+            device_version: varchar
+            layout_engine_class: varchar
+            layout_engine_name: varchar
+            layout_engine_name_version: varchar
+            layout_engine_name_version_major: varchar
+            layout_engine_version: varchar
+            layout_engine_version_major: varchar
+            operating_system_class: varchar
+            operating_system_name: varchar
+            operating_system_name_version: varchar
+            operating_system_version: varchar
+        snowplow_web_sessions_expected:
+          +column_types:
+            app_id: varchar
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            first_page_urlfragment: varchar
+            last_page_urlfragment: varchar
+            refr_urlquery: varchar
+            refr_urlfragment: varchar
+            refr_medium: varchar
+            refr_source: varchar
+            refr_term: varchar
+            mkt_term: varchar
+            mkt_content: varchar
+            last_page_urlquery: varchar
+            br_renderengine: varchar
+            category: varchar
+            primary_impact: varchar
+            reason: varchar
+            spider_or_robot: boolean
+            useragent_family: varchar
+            useragent_major: varchar
+            useragent_minor: varchar
+            useragent_patch: varchar
+            useragent_version: varchar
+            os_family: varchar
+            os_major: varchar
+            os_minor: varchar
+            os_patch: varchar
+            os_patch_minor: varchar
+            os_version: varchar
+            device_family: varchar
+            device_class: varchar
+            agent_class: varchar
+            agent_name: varchar
+            agent_name_version: varchar
+            agent_name_version_major: varchar
+            agent_version: varchar
+            agent_version_major: varchar
+            device_brand: varchar
+            device_name: varchar
+            device_version: varchar
+            layout_engine_class: varchar
+            layout_engine_name: varchar
+            layout_engine_name_version: varchar
+            layout_engine_name_version_major: varchar
+            layout_engine_version: varchar
+            layout_engine_version_major: varchar
+            operating_system_class: varchar
+            operating_system_name: varchar
+            operating_system_name_version: varchar
+            operating_system_version: varchar
+        snowplow_web_users_expected:
+          +column_types:
+            start_tstamp: timestamp
+            end_tstamp: timestamp
+            first_page_urlfragment: varchar
+            last_page_urlfragment: varchar
+            last_page_urlquery: varchar
+            refr_urlquery: varchar
+            refr_urlfragment: varchar
+            refr_medium: varchar
+            refr_source: varchar
+            refr_term: varchar
+            mkt_term: varchar
+            mkt_content: varchar
+
