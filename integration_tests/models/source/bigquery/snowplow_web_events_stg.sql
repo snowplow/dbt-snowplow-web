@@ -3,7 +3,7 @@ with prep as (
 select
   *
   except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0),
-  JSON_EXTRACT_ARRAY(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) AS contexts_com_snowplowanalytics_snowplow_web_page_1_0_0,
+  JSON_EXTRACT_ARRAY(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) AS contexts_com_snowplowanalytics_snowplow_web_page_1_0_0
 
 from {{ ref('snowplow_web_events') }}
 )

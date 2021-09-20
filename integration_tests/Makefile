@@ -14,5 +14,13 @@ test-bigquery:
 	dbt run --target bigquery
 	dbt test --target bigquery
 
-test-all: test-redshift test-bigquery
+test-snowflake:
+	dbt seed --target snowflake --full-refresh
+	dbt run --target snowflake --full-refresh --vars 'teardown_all: true'
+	dbt run --target snowflake
+	dbt run --target snowflake
+	dbt run --target snowflake
+	dbt test --target snowflake
+
+test-all: test-redshift test-bigquery test-snowflake
 	echo "Completed successfully"
