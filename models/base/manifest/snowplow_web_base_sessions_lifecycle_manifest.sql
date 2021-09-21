@@ -11,7 +11,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=["session_id"]
+    cluster_by=cluster_by_fields_sessions_lifecycle()
   ) 
 }}
 

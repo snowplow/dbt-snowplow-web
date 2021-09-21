@@ -7,7 +7,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=["session_id"],
+    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["session_id"]),
     tags=["this_run"]
   ) 
 }}

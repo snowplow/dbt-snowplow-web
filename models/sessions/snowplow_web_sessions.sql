@@ -9,7 +9,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=["domain_userid"],
+    cluster_by=cluster_by_fields_sessions(),
     tags=["derived"]
   ) 
 }}

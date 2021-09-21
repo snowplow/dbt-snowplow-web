@@ -10,7 +10,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=["user_id","domain_userid"],
+    cluster_by=cluster_by_fields_users(),
     tags=["derived"]
   ) 
 }}
