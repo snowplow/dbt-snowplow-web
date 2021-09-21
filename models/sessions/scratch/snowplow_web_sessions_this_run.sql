@@ -5,7 +5,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=["domain_userid"],
+    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_userid"]),
     sort='start_tstamp',
     dist='domain_sessionid',
     tags=["this_run"]
