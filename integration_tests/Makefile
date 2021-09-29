@@ -22,5 +22,13 @@ test-snowflake:
 	dbt run --target snowflake
 	dbt test --target snowflake
 
-test-all: test-redshift test-bigquery test-snowflake
+test-postgres:
+	dbt seed --target postgres --full-refresh
+	dbt run --target postgres --full-refresh --vars 'teardown_all: true'
+	dbt run --target postgres
+	dbt run --target postgres
+	dbt run --target postgres
+	dbt test --target postgres
+
+test-all: test-redshift test-bigquery test-snowflake test-postgres
 	echo "Completed successfully"

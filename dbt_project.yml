@@ -66,6 +66,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        postgres:
+          enabled: "{{ target.type == 'postgres' | as_bool() }}"
         redshift:
           enabled: "{{ target.type == 'redshift' | as_bool() }}"
         snowflake:
@@ -78,6 +80,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        postgres:
+          enabled: "{{ target.type == 'postgres' | as_bool() }}"
         redshift:
           enabled: "{{ target.type == 'redshift' | as_bool() }}"
         snowflake:
