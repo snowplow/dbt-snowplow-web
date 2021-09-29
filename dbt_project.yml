@@ -66,8 +66,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
-        redshift:
-          enabled: "{{ target.type == 'redshift' | as_bool() }}"
+        default:
+          enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
     page_views:
@@ -78,8 +78,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
-        redshift:
-          enabled: "{{ target.type == 'redshift' | as_bool() }}"
+        default:
+          enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
     sessions:
