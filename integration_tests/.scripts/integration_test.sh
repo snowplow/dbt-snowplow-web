@@ -10,7 +10,7 @@ do
   esac
 done
 
-declare -a SUPPORTED_DATABASES=("redshift" "bigquery" "snowflake")
+declare -a SUPPORTED_DATABASES=("redshift" "bigquery" "snowflake" "postgres")
 
 # set to lower case
 DATABASE="$(echo $DATABASE | tr '[:upper:]' '[:lower:]')"
