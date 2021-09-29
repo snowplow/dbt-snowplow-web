@@ -1,6 +1,6 @@
 {{ 
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='domain_sessionid',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',

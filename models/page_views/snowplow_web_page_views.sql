@@ -1,6 +1,6 @@
 {{ 
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',

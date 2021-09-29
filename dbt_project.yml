@@ -45,6 +45,7 @@ vars:
   snowplow__max_session_days: 3
   snowplow__upsert_lookback_days: 30
   snowplow__manifest_custom_schema: "snowplow_manifest"
+  snowplow__incremental_materialization: "snowplow_incremental"
 
 
 # Completely or partially remove models from the manifest during run start.
