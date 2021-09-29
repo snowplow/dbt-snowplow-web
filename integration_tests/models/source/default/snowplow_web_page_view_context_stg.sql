@@ -1,5 +1,5 @@
 -- test dataset includes page_view_id as part of events table. 
--- RS events table is federated so split out page_view_id into its own table
+-- RS and PG events tables are federated so split out page_view_id into its own table
 
 with prep as (
 select

@@ -21,7 +21,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v.0.3.0 package currently supports BigQuery, Redshift & Snowflake.
+The Snowplow Web v.0.3.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
 ## Installation
 
@@ -463,7 +463,7 @@ This package makes use of the `snowplow_incremental` materialization from the `s
 
 Please refer to the [snowplow-utils][snowplow-utils] docs for the full documentation on `snowplow_incremental` materialization.
 
-### Redshift
+### Redshift and Postgres
 
 Like the native materialization, the `snowplow_incremental` materialization strategy is delete and insert, however a limit has been imposed on how far to scan the destination table in order to improve performance:
 
@@ -615,11 +615,9 @@ All the incremental models in the Snowplow web package have recommended cluster 
 - `cluster_by_fields_users()`
 
 ## Duplicates
+This package performs de-duplication on both `event_id`'s and `page_view_id`'s, in the base and page views modules respectively. The de-duplication method for Redshift and Postgres is different to BigQuery & Snowflake due to their federated table design. The key difference between the two methodologies is that for Redshift and Postgres an `event_id` may be removed entirely during de-duplication, where as for BigQuery & Snowflake we keep all `event_id`'s. See below for a detailed explanation.
 
-This package performs de-duplication on both `event_id`'s and `page_view_id`'s, in the base and page views modules respectively. The de-duplication method for Redshift is different to BigQuery & Snowflake due to Redshift's federated table design. The key difference between the two methodologies is that for Redshift an `event_id` may be removed entirely during de-duplication, where as for BigQuery & Snowflake we keep all `event_id`'s. See below for a detailed explanation.
-
-### Redshift
-
+### Redshift and Postgres
 Using `event_id` de-duplication as an example, for duplicates we:
 
 - Keep the first row per `event_id` ordered by `collector_tstamp` i.e. the earliest occurring row.
