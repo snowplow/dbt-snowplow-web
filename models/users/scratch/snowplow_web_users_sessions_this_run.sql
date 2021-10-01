@@ -12,10 +12,9 @@
   ) 
 }}
 
-{%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(model=ref('snowplow_web_users_userids_this_run'),
-                                                                           lower_limit_col='start_tstamp',
-                                                                           upper_limit_col='start_tstamp') %}
-
+with user_ids_this_run as (
+select distinct domain_userid from {{ ref('snowplow_web_base_sessions_this_run') }}
+)
 
 select
   a.*,
@@ -23,8 +22,5 @@ select
   max(a.end_tstamp) over(partition by a.domain_userid) as user_end_tstamp 
 
 from {{ var('snowplow__sessions_table') }} a
-inner join {{ ref('snowplow_web_users_userids_this_run') }} b
+inner join user_ids_this_run b
 on a.domain_userid = b.domain_userid
-
-where a.start_tstamp >= {{ lower_limit }}
-and   a.start_tstamp <= {{ upper_limit }}
