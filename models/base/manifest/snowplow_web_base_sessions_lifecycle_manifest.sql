@@ -24,7 +24,7 @@
 
 with new_events_session_ids as (
   select
-    e.domain_sessionid as session_id,
+    coalesce(e.domain_sessionid, e.round_id) as session_id, -- Attest added coalesce to take into account round_id for Taker
     max(e.domain_userid) as domain_userid, -- Edge case 1: Arbitary selection to avoid window function like first_value.
     min(e.collector_tstamp) as start_tstamp,
     max(e.collector_tstamp) as end_tstamp
@@ -32,7 +32,7 @@ with new_events_session_ids as (
   from {{ var('snowplow__events') }} e
 
   where
-    e.domain_sessionid is not null
+    coalesce(e.domain_sessionid, e.round_id) is not null -- Attest added coalesce to take into account round_id for Taker
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}

@@ -133,7 +133,7 @@ with events_this_run AS (
     a.dvce_sent_tstamp,
     a.refr_domain_userid,
     a.refr_dvce_tstamp,
-    a.domain_sessionid,
+    coalesce(a.domain_sessionid, a.round_id) as domain_sessionid, -- Attest added coalesce to take into account round_id for Taker
     a.derived_tstamp,
     a.event_vendor,
     a.event_name,
@@ -145,7 +145,7 @@ with events_this_run AS (
 
   from {{ var('snowplow__events') }} as a
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
-  on a.domain_sessionid = b.session_id
+  on coalesce(a.domain_sessionid, a.round_id) = b.session_id -- Attest added coalesce to take into account round_id for Taker
 
   where a.collector_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'b.start_tstamp') }}
   and a.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'a.dvce_created_tstamp') }}
