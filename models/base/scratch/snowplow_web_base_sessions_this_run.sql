@@ -13,7 +13,7 @@
         session_start_limit = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
 
 select
-  s.session_id,
+  coalesce(a.domain_sessionid, a.round_id) as domain_sessionid, -- Attest added coalesce to take into account round_id for Taker,
   s.domain_userid,
   s.start_tstamp,
   -- end_tstamp used in next step to limit events. When backfilling, set end_tstamp to upper_limit if end_tstamp > upper_limit.
