@@ -7,7 +7,7 @@ config:
     use_colors: True
 
 integration_tests:
-  target: postgres
+  target: bigquery
   outputs:
     postgres:
       type: postgres
@@ -16,8 +16,8 @@ integration_tests:
       pass: "{{ env_var('POSTGRES_TEST_PASS') }}"
       port: "{{ env_var('POSTGRES_TEST_PORT') | as_number }}"
       dbname: "{{ env_var('POSTGRES_TEST_DBNAME') }}"
-      schema: snowplow_web_int_tests
-      threads: 1
+      schema: github
+      threads: 4
 
     redshift:
       type: redshift
@@ -26,16 +26,17 @@ integration_tests:
       pass: "{{ env_var('REDSHIFT_TEST_PASS') }}"
       dbname: "{{ env_var('REDSHIFT_TEST_DBNAME') }}"
       port: "{{ env_var('REDSHIFT_TEST_PORT') | as_number }}"
-      schema: snowplow_web_int_tests
-      threads: 1
+      schema: github
+      threads: 4
 
     bigquery:
       type: bigquery
       method: service-account
       keyfile: "{{ env_var('BIGQUERY_SERVICE_KEY_PATH') }}"
       project: "{{ env_var('BIGQUERY_TEST_DATABASE') }}"
-      schema: snowplow_web_int_tests
-      threads: 1
+      location: "{{ env_var('BIGQUERY_LOCATION') }}"
+      schema: github
+      threads: 4
 
     snowflake:
       type: snowflake
@@ -45,5 +46,5 @@ integration_tests:
       role: "{{ env_var('SNOWFLAKE_TEST_ROLE') }}"
       database: "{{ env_var('SNOWFLAKE_TEST_DATABASE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_TEST_WAREHOUSE') }}"
-      schema: snowplow_web_int_tests
-      threads: 1
+      schema: github
+      threads: 4

@@ -10,23 +10,38 @@ do
   esac
 done
 
-echo "Snowplow web integration tests: Seeding data"
+declare -a SUPPORTED_DATABASES=("redshift" "bigquery" "snowflake")
 
-eval "dbt seed --target $DATABASE --full-refresh" || exit 1;
+# set to lower case
+DATABASE="$(echo $DATABASE | tr '[:upper:]' '[:lower:]')"
 
-echo "Snowplow web integration tests: Execute models - run 1/4"
+if [[ $DATABASE == "all" ]]; then
+  DATABASES=( "${SUPPORTED_DATABASES[@]}" )
+else
+  DATABASES=$DATABASE
+fi
 
-eval "dbt run --target $DATABASE --full-refresh --vars 'teardown_all: true'" || exit 1;
+for db in ${DATABASES[@]}; do
 
-for i in {2..4}
-do
-	echo "Snowplow web integration tests: Execute models - run $i/4"
+  echo "Snowplow web integration tests: Seeding data"
 
-  eval "dbt run --target $DATABASE" || exit 1;
+  eval "dbt seed --target $db --full-refresh" || exit 1;
+
+  echo "Snowplow web integration tests: Execute models - run 1/4"
+
+  eval "dbt run --target $db --full-refresh --vars 'teardown_all: true'" || exit 1;
+
+  for i in {2..4}
+  do
+    echo "Snowplow web integration tests: Execute models - run $i/4"
+
+    eval "dbt run --target $db" || exit 1;
+  done
+
+  echo "Snowplow web integration tests: Test models"
+
+  eval "dbt test --target $db" || exit 1;
+
+  echo "Snowplow web integration tests: All tests passed"
+
 done
-
-echo "Snowplow web integration tests: Test models"
-
-eval "dbt test --target $DATABASE" || exit 1;
-
-echo "Snowplow web integration tests: All tests passed"
