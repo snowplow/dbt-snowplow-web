@@ -1,8 +1,11 @@
 [![early-release]][tracker-classificiation] [![License][license-image]][license] [![Discourse posts][discourse-image]][discourse]
 
 ![snowplow-logo](https://raw.githubusercontent.com/snowplow/dbt-snowplow-utils/main/assets/snowplow_logo.png)
+
 # snowplow-web
-This dbt package:  
+
+This dbt package:
+
 - Transforms and aggregates raw web event data collected from the [Snowplow JavaScript tracker][tracker-docs] into a set of derived tables: page views, sessions and users.
 - Processes events incrementally.
 - Is designed in a modular manner, allowing you to easily integrate your own custom SQL into the incremental framework provided by the package.
@@ -10,20 +13,25 @@ This dbt package:
 Please refer to the [doc site][snowplow-web-docs] for a full breakdown of the package.
 
 ### Adapter Support
-The snowplow-web v0.2.0 package currently only supports Redshift & BigQuery. Snowflake support will be added soon.
+
+The snowplow-web v0.3.0 package currently supports BigQuery, Redshift & Snowflake.
 
 ### Requirements
+
 - A dataset of web events from the [Snowplow JavaScript tracker][tracker-docs] must be available in the database.
 - Have the [`webPage` context][webpage-context] enabled.
 - Running dbt versions >=0.18.0 to <0.20.0. dbt v.0.20.0+ support to follow soon.
 
 ### Installation
+
 Check dbt Hub for the latest installation instructions, or read the [dbt docs][dbt-package-docs] for more information on installing packages.
 
 ### Configuration & Operation
+
 Please refer to the [doc site][snowplow-web-docs] for details on how to configure and run the package.
 
 ### Models
+
 The package contains multiple staging models however the mart models are as follows:
 
 | Model                             | Description                                                                                |
