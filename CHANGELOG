@@ -1,3 +1,15 @@
+snowplow-web 0.3.0 (2021-10-12)
+---------------------------------------
+Update documentation (Close #32)
+Update integration tests for Github Actions (Close #31)
+Fix users run limits timestamp mismatch (Close #28)
+Add ability to use alternative incremental materializations (Close #23)
+Add predefined YAML selector file (Close #14)
+Add Snowflake integration tests (Close #27)
+Add Snowflake adapter support (Close #24)
+Fix timestamp joins in users module (Close #26)
+Fix dbt 0.18.0 support (Close #22)
+
 snowplow-web 0.2.0 (2021-08-20)
 ---------------------------------------
 Add BigQuery adapter support (Close #15)
