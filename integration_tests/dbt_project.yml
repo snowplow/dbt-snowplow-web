@@ -22,7 +22,7 @@ quoting:
 models:
   snowplow_web_integration_tests:
     bind: false
-    +schema: "snowplow_int_tests"
+    +schema: "snplw_web_int_tests"
     source:
       bigquery:
         +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
@@ -45,7 +45,7 @@ vars:
 seeds:
   quote_columns: false
   snowplow_web_integration_tests:
-    +schema: "snowplow_int_tests"
+    +schema: "snplw_web_int_tests"
     source:
       snowplow_web_events:
         +column_types:
