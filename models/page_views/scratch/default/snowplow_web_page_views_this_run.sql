@@ -1,11 +1,12 @@
-{{
+{{ 
   config(
     materialized='table',
     sort='start_tstamp',
     dist='page_view_id',
     tags=["this_run"]
-  )
+  ) 
 }}
+
 
 select
   ev.page_view_id,
@@ -34,7 +35,7 @@ select
   {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
-  abs(extract(epoch from (ev.derived_tstamp - coalesce(t.end_tstamp, ev.derived_tstamp)))) as absolute_time_in_s,
+  {{ dbt_utils.datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
 
   sd.hmax as horizontal_pixels_scrolled,
   sd.vmax as vertical_pixels_scrolled,
@@ -209,3 +210,5 @@ on ev.page_view_id = sd.page_view_id
   on ev.page_view_id = ya.page_view_id
 
 {%- endif -%}
+
+

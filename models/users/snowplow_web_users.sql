@@ -11,7 +11,10 @@
       "data_type": "timestamp"
     },
     cluster_by=cluster_by_fields_users(),
-    tags=["derived"]
+    tags=["derived"],
+    indexes=[
+      {'columns': ['start_tstamp'], 'type': 'btree'}
+    ] if target.type == 'postgres' else []
   ) 
 }}
 
