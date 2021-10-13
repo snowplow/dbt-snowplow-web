@@ -1,0 +1,94 @@
+name: pr_to_main 
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  # Set profiles.yml directory
+  DBT_PROFILES_DIR: ./ci
+
+  # Redshift Connection
+  REDSHIFT_TEST_HOST: ${{ secrets.REDSHIFT_TEST_HOST }}
+  REDSHIFT_TEST_USER: ${{ secrets.REDSHIFT_TEST_USER }}
+  REDSHIFT_TEST_PASS: ${{ secrets.REDSHIFT_TEST_PASS }}
+  REDSHIFT_TEST_DBNAME: ${{ secrets.REDSHIFT_TEST_DBNAME }}
+  REDSHIFT_TEST_PORT: ${{ secrets.REDSHIFT_TEST_PORT }}
+
+  # BigQuery Connection
+  BIGQUERY_SERVICE_KEYFILE: ${{ secrets.BIGQUERY_SERVICE_KEYFILE }}
+  BIGQUERY_SERVICE_KEY_PATH: ./dbt-service-account.json
+  BIGQUERY_TEST_DATABASE: ${{ secrets.BIGQUERY_TEST_DATABASE }}
+  BIGQUERY_LOCATION: ${{ secrets.BIGQUERY_LOCATION }}
+
+  # Snowflake Connection
+  SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+  SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+  SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+  SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+  SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+  SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+
+jobs:
+  pr_to_main:
+    name: pr_to_main
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # Run tests from integration_tests sub dir
+        working-directory: ./integration_tests
+    strategy:
+      matrix:
+        dbt_version: ["0.18.*", "0.19.*"]
+        warehouse: ["bigquery", "snowflake"]
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@master
+
+      # Remove '*' and replace '.' with '_' in DBT_VERSION & set as SCHEMA_SUFFIX.
+      # SCHEMA_SUFFIX allows us to run multiple versions of dbt in parallel without overwriting the output tables
+      - name: Set SCHEMA_SUFFIX env
+        run: echo "SCHEMA_SUFFIX=$(echo ${DBT_VERSION%.*} | tr . _)" >> $GITHUB_ENV
+        env:
+          DBT_VERSION: ${{ matrix.dbt_version }}
+
+      - name: Write BigQuery creds to json file
+        run: |
+         echo "$BIGQUERY_SERVICE_KEYFILE" > ./dbt-service-account.json
+
+      - name: Python setup
+        uses: actions/setup-python@v2
+        with:
+         python-version: "3.8.x"
+
+      - name: Pip cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.dbt_version }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.dbt_version }}
+
+      # Install latest patch version. Upgrade if cache contains old patch version.
+      - name: Install dependencies
+        run: |
+          pip install -Iv dbt==${{ matrix.dbt_version }} --upgrade
+          dbt deps
+
+      - name: Block concurrent executions tests
+        uses: softprops/turnstyle@v1
+        with:
+          poll-interval-seconds: 20
+          same-branch-only: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run tests
+        working-directory: ./integration_tests/.scripts
+        run: ./integration_test.sh -d ${{ matrix.warehouse }}
+
+      - name: Drop ci schemas
+        run: |
+          dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}

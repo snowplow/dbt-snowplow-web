@@ -16,7 +16,7 @@ integration_tests:
       pass: "{{ env_var('POSTGRES_TEST_PASS') }}"
       port: "{{ env_var('POSTGRES_TEST_PORT') | as_number }}"
       dbname: "{{ env_var('POSTGRES_TEST_DBNAME') }}"
-      schema: github
+      schema: "github_dbt_web_{{ env_var('SCHEMA_SUFFIX') }}"
       threads: 4
 
     redshift:
@@ -26,7 +26,7 @@ integration_tests:
       pass: "{{ env_var('REDSHIFT_TEST_PASS') }}"
       dbname: "{{ env_var('REDSHIFT_TEST_DBNAME') }}"
       port: "{{ env_var('REDSHIFT_TEST_PORT') | as_number }}"
-      schema: github
+      schema: "github_dbt_web_{{ env_var('SCHEMA_SUFFIX') }}"
       threads: 4
 
     bigquery:
@@ -35,7 +35,7 @@ integration_tests:
       keyfile: "{{ env_var('BIGQUERY_SERVICE_KEY_PATH') }}"
       project: "{{ env_var('BIGQUERY_TEST_DATABASE') }}"
       location: "{{ env_var('BIGQUERY_LOCATION') }}"
-      schema: github
+      schema: "github_dbt_web_{{ env_var('SCHEMA_SUFFIX') }}"
       threads: 4
 
     snowflake:
@@ -46,5 +46,5 @@ integration_tests:
       role: "{{ env_var('SNOWFLAKE_TEST_ROLE') }}"
       database: "{{ env_var('SNOWFLAKE_TEST_DATABASE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_TEST_WAREHOUSE') }}"
-      schema: github
+      schema: "github_dbt_web_{{ env_var('SCHEMA_SUFFIX') }}"
       threads: 4
