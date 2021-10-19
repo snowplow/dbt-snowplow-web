@@ -3,8 +3,6 @@
     materialized=var("snowplow__incremental_materialization"),
     unique_key='session_id',
     upsert_date_key='start_tstamp',
-    full_refresh=false,
-    schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
     partition_by = {
@@ -12,6 +10,7 @@
       "data_type": "timestamp"
     },
     cluster_by=cluster_by_fields_sessions_lifecycle(),
+    full_refresh=snowplow_web.allow_refresh(),
     tags=["manifest"]
   ) 
 }}
