@@ -29,7 +29,7 @@ for db in ${DATABASES[@]}; do
 
   echo "Snowplow web integration tests: Run 1: standard modules"
 
-  eval "dbt run --target $db --full-refresh --vars 'teardown_all: true'" || exit 1;
+  eval "dbt run --target $db --full-refresh --vars 'snowplow__allow_refresh: true'" || exit 1;
 
   echo "Snowplow web integration tests: Run 2: standard modules"
 

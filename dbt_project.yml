@@ -44,12 +44,14 @@ vars:
   snowplow__days_late_allowed: 3
   snowplow__max_session_days: 3
   snowplow__upsert_lookback_days: 30
-  snowplow__manifest_custom_schema: "snowplow_manifest"
   snowplow__incremental_materialization: "snowplow_incremental"
+  snowplow__dev_target_name: 'dev'
+  snowplow__allow_refresh: false
 
 
 # Completely or partially remove models from the manifest during run start.
-on-run-start: "{{ snowplow_utils.snowplow_run_start_cleanup('snowplow_web', var('teardown_all', false), var('models_to_remove',[])) }}"
+on-run-start:
+  - "{{ snowplow_utils.snowplow_delete_from_manifest(var('models_to_remove',[]), ref('snowplow_web_incremental_manifest')) }}"
 
 # Update manifest table with last event consumed per sucessfully executed node/model
 on-run-end: "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
@@ -61,6 +63,8 @@ models:
   snowplow_web:
     +materialized: view
     base:
+      manifest:
+        +schema: "snowplow_manifest"
       scratch:
         +schema: "scratch"
         +tags: "scratch"
