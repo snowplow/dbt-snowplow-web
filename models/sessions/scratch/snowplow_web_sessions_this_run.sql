@@ -28,6 +28,14 @@ select
   -- user fields
   a.user_id,
   a.domain_userid,
+
+  {% if var('snowplow__session_stitching') %}
+    -- updated with mapping as part of post hook on derived sessions table
+    a.domain_userid as stitched_user_id, 
+  {% else %}
+    cast(null as {{ dbt_utils.type_string() }}) as stitched_user_id,
+  {% endif %}
+  
   a.network_userid,
 
   -- engagement fields
