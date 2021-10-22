@@ -38,6 +38,7 @@ vars:
   snowplow__enable_yauaa: false
   snowplow__ua_bot_filter: true
   snowplow__derived_tstamp_partitioned: true
+  snowplow__session_stitching: true
   # Variables - Advanced Config
   snowplow__lookback_window_hours: 6
   snowplow__session_lookback_days: 365
@@ -54,7 +55,8 @@ on-run-start:
   - "{{ snowplow_utils.snowplow_web_delete_from_manifest(var('models_to_remove',[])) }}"
 
 # Update manifest table with last event consumed per sucessfully executed node/model
-on-run-end: "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
+on-run-end: 
+  - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 
 # Tag 'snowplow_web_incremental' allows snowplow_incremental_post_hook to identify Snowplow models
@@ -92,6 +94,9 @@ models:
       scratch:
         +schema: "scratch"
         +tags: "scratch"
+    user_mapping:
+      +schema: "derived"
+      +tags: "snowplow_web_incremental"
     users:
       +schema: "derived"
       +tags: "snowplow_web_incremental"
