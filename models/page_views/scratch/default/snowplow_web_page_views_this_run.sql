@@ -210,5 +210,3 @@ on ev.page_view_id = sd.page_view_id
   on ev.page_view_id = ya.page_view_id
 
 {%- endif -%}
-
-

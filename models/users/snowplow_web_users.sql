@@ -13,8 +13,8 @@
     cluster_by=cluster_by_fields_users(),
     tags=["derived"],
     indexes=[
-      {'columns': ['start_tstamp'], 'type': 'btree'}
-    ] if target.type == 'postgres' else []
+      {'columns': ['start_tstamp']}
+    ]
   ) 
 }}
 

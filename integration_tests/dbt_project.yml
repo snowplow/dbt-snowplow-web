@@ -27,7 +27,7 @@ models:
       bigquery:
         +enabled: "{{ target.type == 'bigquery' | as_bool() }}"
       default:
-        +enabled: "{{ target.type IN ('redshift', 'postgres') | as_bool() }}"
+        +enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
       snowflake:
         +enabled: "{{ target.type == 'snowflake' | as_bool() }}"
 
@@ -229,7 +229,7 @@ seeds:
             mkt_term: string
             mkt_content: string
       default:
-        +enabled: "{{ target.type IN ('redshift', 'postgres') | as_bool() }}"
+        +enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowplow_web_page_views_expected:
           +column_types:
             app_id: varchar
