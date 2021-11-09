@@ -30,6 +30,13 @@ env:
   SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
   SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
 
+  # Postgres Connection
+  POSTGRES_TEST_HOST: ${{ secrets.POSTGRES_TEST_HOST }} 
+  POSTGRES_TEST_USER: ${{ secrets.POSTGRES_TEST_USER }} 
+  POSTGRES_TEST_PASS: ${{ secrets.POSTGRES_TEST_PASS }} 
+  POSTGRES_TEST_PORT: ${{ secrets.POSTGRES_TEST_PORT }} 
+  POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }} 
+
 jobs:
   pr_to_main:
     name: pr_to_main
@@ -41,11 +48,27 @@ jobs:
     strategy:
       matrix:
         dbt_version: ["0.18.*", "0.19.*"]
-        warehouse: ["bigquery", "snowflake"]
+        warehouse: ["postgres", "bigquery", "snowflake"] # TODO: Add RS self-hosted runner
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_TEST_DBNAME }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_TEST_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_TEST_PASS }}
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
     steps:
       - name: Check out
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       # Remove '*' and replace '.' with '_' in DBT_VERSION & set as SCHEMA_SUFFIX.
       # SCHEMA_SUFFIX allows us to run multiple versions of dbt in parallel without overwriting the output tables
