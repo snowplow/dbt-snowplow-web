@@ -167,8 +167,6 @@ This package makes use of a series of other variables, which are all set to the 
 
 `snowplow__backfill_limit_days`:    Default 30. The maximum numbers of days of new data to be processed since the latest event processed. Please refer to the back-filling section for more details.
 
-`snowplow__session_lookback_days`:  Default 365. Number of days to limit scan on `snowplow_web_base_sessions_lifecycle_manifest` manifest. Exists to improve performance of model when we have a lot of sessions. Should be set to as large a number as practical.
-
 `snowplow__days_late_allowed`:      Default 3. The maximum allowed number of days between the event creation and it being sent to the collector. Exists to reduce lengthy table scans that can occur as a result of late arriving data.
 
 `snowplow__max_session_days`:       Default 3. The maximum allowed session length in days. For a session exceeding this length, all events after this limit will stop being processed. Exists to reduce lengthy table scans that can occur due to long sessions which are usually a result of bots.
