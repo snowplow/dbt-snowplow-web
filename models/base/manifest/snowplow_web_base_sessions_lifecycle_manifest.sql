@@ -18,7 +18,7 @@
 -- Known edge cases:
 -- 1: Rare case with multiple domain_userid per session.
 
-{% set lower_limit, upper_limit, session_lookback_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set lower_limit, upper_limit, session_lookback_limit = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
 {% set is_run_with_new_events = snowplow_utils.is_run_with_new_events('snowplow_web') %}
 
 with new_events_session_ids as (
@@ -32,6 +32,7 @@ with new_events_session_ids as (
 
   where
     e.domain_sessionid is not null
+    and e.domain_sessionid not in (select session_id from {{ ref('snowplow_web_base_quarantined_sessions') }}) -- don't continue processing v.long sessions
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}
