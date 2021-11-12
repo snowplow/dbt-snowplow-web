@@ -32,3 +32,12 @@ For any given run, this table contains all required events to be consumed by sub
 For any given run, this table contains all the required sessions.
 
 {% enddocs %}
+
+
+{% docs table_base_quarantined_sessions %}
+
+This table contains any sessions that have been quarantined. Sessions are quarantined once they exceed the maximum allowed session length, defined by `snowplow__max_session_days`.
+Once quarantined, no further events from these sessions will be processed. Events up until the point of quarantine remain in your derived tables.
+The reason for removing long sessions is to reduce table scans on both the events table and all derived tables. This improves performance greatly.
+
+{% enddocs %}

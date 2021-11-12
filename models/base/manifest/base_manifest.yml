@@ -33,3 +33,13 @@ models:
           - not_null
       - name: last_success
         description: The latest event consumed by the model, based on `collector_tstamp`
+  - name: snowplow_web_base_quarantined_sessions
+    description: '{{ doc("table_base_quarantined_sessions") }}'
+    columns:
+      - name: session_id
+        description: The `session_id` of the quarantined session
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
