@@ -9,7 +9,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=cluster_by_fields_page_views(),
+    cluster_by=snowplow_web.cluster_by_fields_page_views(),
     tags=["derived"]
   ) 
 }}
