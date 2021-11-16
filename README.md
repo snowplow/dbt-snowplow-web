@@ -7,14 +7,20 @@
 This dbt package:
 
 - Transforms and aggregates raw web event data collected from the [Snowplow JavaScript tracker][tracker-docs] into a set of derived tables: page views, sessions and users.
-- Processes events incrementally.
+- Derives a mapping between user identifiers, allowing for 'session stitching' and the development of a single customer view.
+- Processes **all web events incrementally**. It is not just constrained to page view events - any custom events you are tracking will also be incrementally processed.
 - Is designed in a modular manner, allowing you to easily integrate your own custom SQL into the incremental framework provided by the package.
 
 Please refer to the [doc site][snowplow-web-docs] for a full breakdown of the package.
 
 ### Adapter Support
 
-The snowplow-web v0.3.0 package currently supports BigQuery, Redshift & Snowflake.
+The snowplow-web v0.4.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+
+|            Warehouse           |     dbt versions    | snowplow-web version |
+|:------------------------------:|:-------------------:|:--------------------:|
+| BigQuery, Redshift & Snowflake | >=0.18.0 to <0.20.0 |         0.4.0        |
+|            Postgres            | >=0.19.0 to <0.20.0 |         0.4.0        |
 
 ### Requirements
 
@@ -39,6 +45,7 @@ The package contains multiple staging models however the mart models are as foll
 | snowplow_web_page_views           | A table of page views, including engagement metrics such as scroll depth and engaged time. |
 | snowplow_web_sessions             | An aggregated table of page views, grouped on `domain_sessionid`.                          |
 | snowplow_web_users                | An aggregated table of sessions to a user level, grouped on `domain_userid`.               |
+| snowplow_web_user_mapping         | Provides a mapping between user identifiers, `domain_userid` and `user_id`.                |
 
 # Join the Snowplow community
 
