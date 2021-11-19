@@ -49,6 +49,10 @@ jobs:
       matrix:
         dbt_version: ["0.18.*", "0.19.*"]
         warehouse: ["postgres", "bigquery", "snowflake"] # TODO: Add RS self-hosted runner
+        exclude:
+          # Issue w. tmp table name lengths (https://github.com/dbt-labs/dbt-core/pull/2850/files)
+          - warehouse: postgres 
+            dbt_version: "0.18.*"
     services:
       postgres:
         image: postgres:latest
