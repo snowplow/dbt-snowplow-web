@@ -112,6 +112,7 @@ jobs:
         working-directory: ./integration_tests/.scripts
         run: ./integration_test.sh -d ${{ matrix.warehouse }}
 
+      # post_ci_cleanup sits in utils package 
       - name: Drop ci schemas
         run: |
           dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
