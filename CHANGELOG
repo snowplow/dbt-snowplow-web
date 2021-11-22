@@ -1,3 +1,15 @@
+snowplow-web 0.4.0 (2021-11-30)
+---------------------------------------
+Update documentation (Close #44)
+Add CI Github Action (Close #43)
+Fix cluster_by_fields macros to allow overriding (Close #35)
+Improve filtering of long sessions (Close #41)
+Add user mapping module (Close #42)
+Improve Redshift event dedupe logic (Close #33)
+Refactor BigQuery page view enrichments (Close #40)
+Create manifest table using native dbt (Close #39)
+Add Postgres adapter support (Close #45)
+
 snowplow-web 0.3.0 (2021-10-12)
 ---------------------------------------
 Update documentation (Close #32)
