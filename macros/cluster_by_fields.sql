@@ -1,6 +1,6 @@
 {% macro cluster_by_fields_sessions_lifecycle() %}
 
-  {{ return(adapter.dispatch('cluster_by_fields_sessions_lifecycle', snowplow_web._get_namespaces())()) }}
+  {{ return(adapter.dispatch('cluster_by_fields_sessions_lifecycle', 'snowplow_web')()) }}
 
 {% endmacro %}
 
@@ -13,7 +13,7 @@
 
 {% macro cluster_by_fields_page_views() %}
 
-  {{ return(adapter.dispatch('cluster_by_fields_page_views', snowplow_web._get_namespaces())()) }}
+  {{ return(adapter.dispatch('cluster_by_fields_page_views', 'snowplow_web')()) }}
 
 {% endmacro %}
 
@@ -26,7 +26,7 @@
 
 {% macro cluster_by_fields_sessions() %}
 
-  {{ return(adapter.dispatch('cluster_by_fields_sessions', snowplow_web._get_namespaces())()) }}
+  {{ return(adapter.dispatch('cluster_by_fields_sessions', 'snowplow_web')()) }}
 
 {% endmacro %}
 
@@ -39,7 +39,7 @@
 
 {% macro cluster_by_fields_users() %}
 
-  {{ return(adapter.dispatch('cluster_by_fields_users', snowplow_web._get_namespaces())()) }}
+  {{ return(adapter.dispatch('cluster_by_fields_users', 'snowplow_web')()) }}
 
 {% endmacro %}
 

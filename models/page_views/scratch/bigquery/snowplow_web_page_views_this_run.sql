@@ -87,7 +87,7 @@ select
 
   -- iab enrichment fields: set iab variable to true to enable
   {{ snowplow_utils.get_optional_fields(
-        enabled=var('snowplow__enable_iab'),
+        enabled=var('snowplow__enable_iab', false),
         fields=iab_fields(),
         col_prefix='contexts_com_iab_snowplow_spiders_and_robots_1',
         relation=ref('snowplow_web_base_events_this_run'),
@@ -95,7 +95,7 @@ select
 
   -- ua parser enrichment fields: set ua_parser variable to true to enable
   {{ snowplow_utils.get_optional_fields(
-        enabled=var('snowplow__enable_ua'),
+        enabled=var('snowplow__enable_ua', false),
         fields=ua_fields(),
         col_prefix='contexts_com_snowplowanalytics_snowplow_ua_parser_context_1',
         relation=ref('snowplow_web_base_events_this_run'),
@@ -103,7 +103,7 @@ select
 
   -- yauaa enrichment fields: set yauaa variable to true to enable
   {{ snowplow_utils.get_optional_fields(
-        enabled=var('snowplow__enable_yauaa'),
+        enabled=var('snowplow__enable_yauaa', false),
         fields=yauaa_fields(),
         col_prefix='contexts_nl_basjes_yauaa_context_1',
         relation=ref('snowplow_web_base_events_this_run'),

@@ -1,9 +1,10 @@
-name: pr_to_main 
+name: pr_tests 
 
 on:
   pull_request:
     branches:
       - main
+      - 'release/**'
 
 env:
   # Set profiles.yml directory
@@ -38,8 +39,8 @@ env:
   POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }} 
 
 jobs:
-  pr_to_main:
-    name: pr_to_main
+  pr_tests:
+    name: pr_tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -47,12 +48,9 @@ jobs:
         working-directory: ./integration_tests
     strategy:
       matrix:
-        dbt_version: ["0.18.*", "0.19.*"]
+        dbt_version: ["0.20.*", "0.21.*", "1.0.*"]
         warehouse: ["postgres", "bigquery", "snowflake"] # TODO: Add RS self-hosted runner
-        exclude:
-          # Issue w. tmp table name lengths (https://github.com/dbt-labs/dbt-core/pull/2850/files)
-          - warehouse: postgres 
-            dbt_version: "0.18.*"
+
     services:
       postgres:
         image: postgres:latest
@@ -81,6 +79,10 @@ jobs:
         env:
           DBT_VERSION: ${{ matrix.dbt_version }}
 
+      - name: Set DEFAULT_TARGET env
+        run: |
+         echo "DEFAULT_TARGET=${{ matrix.warehouse }}" >> $GITHUB_ENV
+
       - name: Write BigQuery creds to json file
         run: |
          echo "$BIGQUERY_SERVICE_KEYFILE" > ./dbt-service-account.json
@@ -94,14 +96,15 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.dbt_version }}
+          key: ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.dbt_version }}
+            ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
 
       # Install latest patch version. Upgrade if cache contains old patch version.
       - name: Install dependencies
         run: |
-          pip install -Iv dbt==${{ matrix.dbt_version }} --upgrade
+          pip install --upgrade pip wheel setuptools
+          pip install -Iv dbt-${{ matrix.warehouse }}==${{ matrix.dbt_version }} --upgrade
           dbt deps
 
       - name: Block concurrent executions tests
@@ -117,8 +120,7 @@ jobs:
           dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
 
       - name: Run tests
-        working-directory: ./integration_tests/.scripts
-        run: ./integration_test.sh -d ${{ matrix.warehouse }}
+        run: ./.scripts/integration_test.sh -d ${{ matrix.warehouse }}
 
       # post_ci_cleanup sits in utils package 
       - name: "Post-test: Drop ci schemas"

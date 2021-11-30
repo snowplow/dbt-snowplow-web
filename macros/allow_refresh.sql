@@ -1,7 +1,7 @@
 {# Default: Allow refresh in dev, block refresh otherwise. dev defined by snowplow__dev_target_name #}
 
 {% macro allow_refresh() %}
-  {{ return(adapter.dispatch('allow_refresh', snowplow_web._get_namespaces())()) }}
+  {{ return(adapter.dispatch('allow_refresh', 'snowplow_web')()) }}
 {% endmacro %}
 
 {% macro default__allow_refresh() %}

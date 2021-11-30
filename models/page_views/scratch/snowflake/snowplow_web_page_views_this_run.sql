@@ -79,7 +79,7 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {% if var('snowplow__enable_iab') %}
+  {% if var('snowplow__enable_iab', false) %}
 
   ev.contexts_com_iab_snowplow_spiders_and_robots_1[0]:category::VARCHAR AS category,
   ev.contexts_com_iab_snowplow_spiders_and_robots_1[0]:primaryImpact::VARCHAR AS primary_impact,
@@ -96,7 +96,7 @@ select
   {% endif %}
 
   -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {% if var('snowplow__enable_ua') %}
+  {% if var('snowplow__enable_ua', false) %}
 
   ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentFamily::VARCHAR AS useragent_family,
   ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentMajor::VARCHAR AS useragent_major,
@@ -129,7 +129,7 @@ select
   {% endif %}
 
   -- yauaa enrichment fields: set yauaa variable to true to enable
-  {% if var('snowplow__enable_yauaa') %}
+  {% if var('snowplow__enable_yauaa', false) %}
 
   ev.contexts_nl_basjes_yauaa_context_1[0]:deviceClass::VARCHAR AS device_class,
   ev.contexts_nl_basjes_yauaa_context_1[0]:agentClass::VARCHAR AS agent_class,

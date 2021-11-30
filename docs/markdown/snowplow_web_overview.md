@@ -24,7 +24,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v0.4.1 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+The Snowplow Web v0.5.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
 ## Installation
 
@@ -559,24 +559,7 @@ All the incremental models in the Snowplow web package have recommended cluster 
 
 ### Overriding Macros
 
-Both the cluster key macros (see above) and the `allow_refresh()` macro can be overridden. These are both [dispatched macros](https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch) and can be overridden by creating your own version of the macro with a `default__`, within your projects own macro dir. For example to override `cluster_by_fields_page_views`:
-
-```SQL
-# macros/your_version_of_cluster_by_fields_page_views.sql
-{% default__cluster_by_fields_page_views %}
-  {{ return(["<your_cluster_field>"]) }}
-{% endmacro %}
-```
-
-In addition you will need to add the following to your `project.yml` file:
-
-```yml
-vars:
-  snowplow_web_dispatch_list:
-    - <your_project_name> 
-```
-
-For more details on how this works please [read this](https://github.com/dbt-labs/dbt-utils/tree/0.6.6#dispatch-macros). Note this method of overriding dispatch macros is specific to dbt v0.18-0.19. The methodology has changed in later versions of dbt, so the documentation on dbt's doc site is not applicable here.
+Both the cluster key macros (see above) and the `allow_refresh()` macro can be overridden. These are both [dispatched macros](https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch) and can be overridden by creating your own version of the macro and setting a project level dispatch config. More details can be found in [dbt's docs](https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch#overriding-package-macros)
 
 ## Duplicates
 
