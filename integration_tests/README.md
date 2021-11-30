@@ -18,3 +18,5 @@ Supported warehouses:
 - redshift
 - bigquery
 - snowflake
+- postgres
+- all (iterates through all supported warehouses)

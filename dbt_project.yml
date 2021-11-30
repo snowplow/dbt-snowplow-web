@@ -2,7 +2,7 @@ name: 'snowplow_web'
 version: '0.4.1'
 config-version: 2
 
-require-dbt-version: [">=0.18.0", "<0.20.0"]
+require-dbt-version: [">=0.20.0", "<1.1.0"]
 
 profile: 'default'
 
@@ -16,6 +16,7 @@ target-path: "target"
 clean-targets:
     - "target"
     - "dbt_modules"
+    - "dbt_packages"
 
 vars:
   # Sources
@@ -33,9 +34,12 @@ vars:
   snowplow__heartbeat: 10
   snowplow__backfill_limit_days: 30
   snowplow__app_id: []
-  snowplow__enable_iab: false
-  snowplow__enable_ua: false
-  snowplow__enable_yauaa: false
+  # Setting default values for 3 enrichments below throughout package rather than here
+  # Workaround for a bug (https://github.com/dbt-labs/dbt-core/issues/3698). 
+  # TODO: Return to having default values here once fixed.
+  # snowplow__enable_iab: false
+  # snowplow__enable_ua: false
+  # snowplow__enable_yauaa: false
   snowplow__ua_bot_filter: true
   snowplow__derived_tstamp_partitioned: true
   snowplow__session_stitching: true

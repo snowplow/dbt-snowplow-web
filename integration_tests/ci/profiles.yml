@@ -7,7 +7,7 @@ config:
     use_colors: True
 
 integration_tests:
-  target: bigquery
+  target: "{{ env_var('DEFAULT_TARGET') }}"
   outputs:
     postgres:
       type: postgres
