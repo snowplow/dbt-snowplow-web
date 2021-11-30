@@ -246,8 +246,10 @@ models:
         tags:
           - primary-key
         tests:
-          - unique
-          - not_null
+          - unique:
+              enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
+          - not_null:
+              enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
   - name: snowplow_web_pv_iab
     description: '{{ doc("table_pv_iab") }}'
     columns:
@@ -256,8 +258,10 @@ models:
         tags:
           - primary-key
         tests:
-          - unique
-          - not_null
+          - unique:
+              enabled: "{{ var('snowplow__enable_iab') and target.type in ['redshift', 'postgres'] | as_bool() }}"
+          - not_null:
+              enabled: "{{ var('snowplow__enable_iab') and target.type in ['redshift', 'postgres'] | as_bool() }}"
   - name: snowplow_web_pv_ua_parser
     description: '{{ doc("table_pv_ua_parser") }}'
     columns:
@@ -266,8 +270,10 @@ models:
         tags:
           - primary-key
         tests:
-          - unique
-          - not_null
+          - unique:
+              enabled: "{{ var('snowplow__enable_ua') and target.type in ['redshift', 'postgres'] | as_bool() }}"
+          - not_null:
+              enabled: "{{ var('snowplow__enable_ua') and target.type in ['redshift', 'postgres'] | as_bool() }}"
   - name: snowplow_web_pv_yauaa
     description: '{{ doc("table_pv_yauaa") }}'
     columns:
@@ -276,8 +282,10 @@ models:
         tags:
           - primary-key
         tests:
-          - unique
-          - not_null
+          - unique:
+              enabled: "{{ var('snowplow__enable_yauaa') and target.type in ['redshift', 'postgres'] | as_bool() }}"
+          - not_null:
+              enabled: "{{ var('snowplow__enable_yauaa') and target.type in ['redshift', 'postgres'] | as_bool() }}"
   - name: snowplow_web_pv_engaged_time
     description: '{{ doc("table_pv_engaged_time") }}'
     columns:
@@ -300,4 +308,3 @@ models:
         tests:
           - unique
           - not_null
-

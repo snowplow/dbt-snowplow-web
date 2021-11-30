@@ -2,7 +2,7 @@ name: 'snowplow_web'
 version: '0.4.1'
 config-version: 2
 
-require-dbt-version: [">=0.18.0", "<0.20.0"]
+require-dbt-version: [">=0.20.0", "<1.1.0"]
 
 profile: 'default'
 
@@ -16,6 +16,7 @@ target-path: "target"
 clean-targets:
     - "target"
     - "dbt_modules"
+    - "dbt_packages"
 
 vars:
   # Sources

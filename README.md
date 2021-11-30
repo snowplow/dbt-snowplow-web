@@ -15,18 +15,18 @@ Please refer to the [doc site][snowplow-web-docs] for a full breakdown of the pa
 
 ### Adapter Support
 
-The snowplow-web v0.4.1 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+The snowplow-web v0.5.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
-|            Warehouse           |     dbt versions    | snowplow-web version |
-|:------------------------------:|:-------------------:|:--------------------:|
-| BigQuery, Redshift & Snowflake | >=0.18.0 to <0.20.0 |         0.4.1        |
-|            Postgres            | >=0.19.0 to <0.20.0 |         0.4.1        |
+|                 Warehouse                |     dbt versions    | snowplow-web version |
+|:----------------------------------------:|:-------------------:|:--------------------:|
+| BigQuery, Redshift, Snowflake & Postgres | >=0.20.0 to <1.1.0  |         0.5.0        |
+|      BigQuery, Redshift & Snowflake      | >=0.18.0 to <0.20.0 |         0.4.1        |
+|                 Postgres                 | >=0.19.0 to <0.20.0 |         0.4.1        |
 
 ### Requirements
 
 - A dataset of web events from the [Snowplow JavaScript tracker][tracker-docs] must be available in the database.
 - Have the [`webPage` context][webpage-context] enabled.
-- Running dbt versions >=0.18.0 to <0.20.0. dbt v.0.20.0+ support to follow soon.
 
 ### Installation
 
