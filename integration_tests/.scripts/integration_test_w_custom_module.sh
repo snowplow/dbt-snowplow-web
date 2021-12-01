@@ -29,7 +29,7 @@ for db in ${DATABASES[@]}; do
 
   echo "Snowplow web integration tests: Run 1: standard modules"
 
-  eval "dbt run --target $db --full-refresh --vars 'snowplow__allow_refresh: true'" || exit 1;
+  eval "dbt run --target $db --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243}'" || exit 1;
 
   echo "Snowplow web integration tests: Run 2: standard modules"
 
@@ -42,7 +42,7 @@ for db in ${DATABASES[@]}; do
   # - then the user manually runs a job in dbt cloud to just backfill new custom module.
   # This results in the derived tables being partially backfilled
 
-  eval "dbt run --target $db --vars 'snowplow__enable_custom_example: true'" || exit 1;
+  eval "dbt run --target $db --vars '{snowplow__enable_custom_example: true, snowplow__backfill_limit_days: 243}'" || exit 1;
 
   echo "Snowplow web integration tests: Run 4: Partial backfill of custom module only"
 

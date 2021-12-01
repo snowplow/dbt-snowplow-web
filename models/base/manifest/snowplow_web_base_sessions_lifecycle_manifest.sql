@@ -18,7 +18,8 @@
 -- Known edge cases:
 -- 1: Rare case with multiple domain_userid per session.
 
-{% set lower_limit, upper_limit, session_lookback_limit = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set lower_limit, upper_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set session_lookback_limit = snowplow_utils.get_session_lookback_limit(lower_limit) %}
 {% set is_run_with_new_events = snowplow_utils.is_run_with_new_events('snowplow_web') %}
 
 with new_events_session_ids as (
