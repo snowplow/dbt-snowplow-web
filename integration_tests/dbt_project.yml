@@ -38,7 +38,7 @@ vars:
   snowplow_web:
     snowplow__events: "{{ ref('snowplow_web_events_stg') }}"
     snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_stg') }}"
-    snowplow__start_date: "2021-03-01"
+    snowplow__start_date: "2020-07-03"
     snowplow__backfill_limit_days: 2
 
 
