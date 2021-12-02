@@ -64,6 +64,7 @@ on-run-end:
 models:
   snowplow_web:
     +materialized: view
+    +bind: false
     base:
       manifest:
         +schema: "snowplow_manifest"
