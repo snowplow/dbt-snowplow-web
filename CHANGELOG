@@ -1,3 +1,9 @@
+snowplow-web 0.4.1 (2021-12-06)
+---------------------------------------
+Update docs (Close #51)
+Update all views in Redshift to late binding (Close #48)
+Fix for unexpired sessions (Close #47)
+
 snowplow-web 0.4.0 (2021-11-30)
 ---------------------------------------
 Update documentation (Close #44)
