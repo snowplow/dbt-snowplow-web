@@ -24,7 +24,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v0.4.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+The Snowplow Web v0.4.1 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
 ## Installation
 
@@ -155,6 +155,8 @@ This package makes use of a series of other variables, which are all set to the 
 `snowplow__lookback_window_hours`:  Default 6. The number of hours to look before the latest event processed - to account for late arriving data, which comes out of order.
 
 `snowplow__backfill_limit_days`:    Default 30. The maximum numbers of days of new data to be processed since the latest event processed. Please refer to the back-filling section for more details.
+
+`snowplow__session_lookback_days`:  Default 365. Number of days to limit scan on snowplow_web_base_sessions_lifecycle_manifest manifest. Exists to improve performance of model when we have a lot of sessions. Should be set to as large a number as practical.
 
 `snowplow__days_late_allowed`:      Default 3. The maximum allowed number of days between the event creation and it being sent to the collector. Exists to reduce lengthy table scans that can occur as a result of late arriving data.
 
