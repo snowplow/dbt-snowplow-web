@@ -1,3 +1,8 @@
+snowplow-web 0.5.0 (2021-12-17)
+---------------------------------------
+Regenerate doc site (Close #52)
+Add dbt v1 compatibility (Close #38)
+
 snowplow-web 0.4.1 (2021-12-06)
 ---------------------------------------
 Update docs (Close #51)
