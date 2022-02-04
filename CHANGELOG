@@ -1,3 +1,8 @@
+snowplow-web 0.5.1 (2022-02-04)
+---------------------------------------
+Bump copyright to 2022 (Close #57)
+Bump snowplow utils version (Close #55)
+
 snowplow-web 0.5.0 (2021-12-17)
 ---------------------------------------
 Regenerate doc site (Close #52)
