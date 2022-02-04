@@ -15,11 +15,11 @@ Please refer to the [doc site][snowplow-web-docs] for a full breakdown of the pa
 
 ### Adapter Support
 
-The snowplow-web v0.5.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+The snowplow-web v0.5.1 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
 |                 Warehouse                |     dbt versions    | snowplow-web version |
 |:----------------------------------------:|:-------------------:|:--------------------:|
-| BigQuery, Redshift, Snowflake & Postgres | >=0.20.0 to <1.1.0  |         0.5.0        |
+| BigQuery, Redshift, Snowflake & Postgres | >=0.20.0 to <1.1.0  |         0.5.1        |
 |      BigQuery, Redshift & Snowflake      | >=0.18.0 to <0.20.0 |         0.4.1        |
 |                 Postgres                 | >=0.19.0 to <0.20.0 |         0.4.1        |
 
