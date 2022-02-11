@@ -19,7 +19,8 @@ The snowplow-web v0.5.1 package currently supports BigQuery, Redshift, Snowflake
 
 |                 Warehouse                |     dbt versions    | snowplow-web version |
 |:----------------------------------------:|:-------------------:|:--------------------:|
-| BigQuery, Redshift, Snowflake & Postgres | >=0.20.0 to <1.1.0  |         0.5.1        |
+| BigQuery, Redshift, Snowflake & Postgres | >=1.0.0 to <2.0.0   |         0.6.0        |
+| BigQuery, Redshift, Snowflake & Postgres | >=0.20.0 to <1.0.0  |         0.5.1        |
 |      BigQuery, Redshift & Snowflake      | >=0.18.0 to <0.20.0 |         0.4.1        |
 |                 Postgres                 | >=0.19.0 to <0.20.0 |         0.4.1        |
 
