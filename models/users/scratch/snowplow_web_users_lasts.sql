@@ -1,6 +1,5 @@
 {{ 
   config(
-    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_sessionid"]),
     sort='domain_userid',
     dist='domain_userid'
   ) 
