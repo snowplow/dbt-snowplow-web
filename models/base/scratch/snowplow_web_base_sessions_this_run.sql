@@ -1,6 +1,5 @@
 {{ 
   config(
-    materialized='table',
     sort='start_tstamp',
     dist='session_id',
     partition_by = {

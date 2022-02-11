@@ -1,9 +1,3 @@
--- Materialize as table since limits used in many subsequent queries.
-{{ 
-  config(
-    materialized='table'
-  ) 
-}}
 
 select
   min(collector_tstamp) as lower_limit,

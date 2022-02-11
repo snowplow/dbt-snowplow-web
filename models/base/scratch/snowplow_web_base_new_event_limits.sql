@@ -1,5 +1,4 @@
 {{ config(
-   materialized="table",
    post_hook=["{{snowplow_utils.print_run_limits(this)}}"]
    )
 }}
