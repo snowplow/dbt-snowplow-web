@@ -1,6 +1,5 @@
 {{ 
   config(
-    materialized='table',
     sort='start_tstamp',
     dist='page_view_id',
     tags=["this_run"]
