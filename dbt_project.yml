@@ -67,7 +67,7 @@ on-run-end:
 # and add their last sucessfull collector_tstamp to the manifest.
 models:
   snowplow_web:
-    +materialized: view
+    +materialized: table
     +bind: false
     base:
       manifest:

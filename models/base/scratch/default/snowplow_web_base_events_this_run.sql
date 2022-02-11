@@ -1,6 +1,5 @@
 {{ 
   config(
-    materialized='table',
     sort='collector_tstamp',
     dist='event_id',
     tags=["this_run"]

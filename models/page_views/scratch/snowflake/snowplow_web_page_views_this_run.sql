@@ -1,6 +1,5 @@
 {{ 
   config(
-    materialized='table',
     tags=["this_run"]
   ) 
 }}
