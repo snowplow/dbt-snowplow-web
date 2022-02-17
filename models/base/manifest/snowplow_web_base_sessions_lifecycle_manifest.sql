@@ -33,7 +33,7 @@ with new_events_session_ids as (
 
   where
     e.domain_sessionid is not null
-    and e.domain_sessionid not in (select session_id from {{ ref('snowplow_web_base_quarantined_sessions') }}) -- don't continue processing v.long sessions
+    and not exists (select 1 from {{ ref('snowplow_web_base_quarantined_sessions') }} as a where a.session_id = e.domain_sessionid) -- don't continue processing v.long sessions
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}
