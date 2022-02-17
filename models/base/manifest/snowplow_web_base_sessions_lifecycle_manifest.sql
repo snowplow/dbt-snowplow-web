@@ -9,7 +9,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=snowplow_web.cluster_by_fields_sessions_lifecycle(),
+    cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
     full_refresh=snowplow_web.allow_refresh(),
     tags=["manifest"]
   ) 
