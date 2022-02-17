@@ -9,7 +9,7 @@
       "field": "start_tstamp",
       "data_type": "timestamp"
     },
-    cluster_by=snowplow_web.cluster_by_fields_sessions(),
+    cluster_by=snowplow_web.web_cluster_by_fields_sessions(),
     tags=["derived"],
     post_hook="{{ snowplow_web.stitch_user_identifiers(
       enabled=var('snowplow__session_stitching')
