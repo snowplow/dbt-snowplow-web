@@ -552,10 +552,10 @@ dbt run --model +snowplow_web.page_views --vars "{'models_to_run': '$(dbt ls --m
 
 All the incremental models in the Snowplow web package have recommended cluster keys applied to them. Depending on your specific use case, you may want to change or disable these all together. This can be achieved by overriding the following macros with your own version within your project:
 
-- `cluster_by_fields_sessions_lifecycle()`
-- `cluster_by_fields_page_views()`
-- `cluster_by_fields_sessions()`
-- `cluster_by_fields_users()`
+- `web_cluster_by_fields_sessions_lifecycle()`
+- `web_cluster_by_fields_page_views()`
+- `web_cluster_by_fields_sessions()`
+- `web_cluster_by_fields_users()`
 
 ### Overriding Macros
 
