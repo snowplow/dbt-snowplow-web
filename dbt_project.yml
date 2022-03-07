@@ -46,7 +46,7 @@ vars:
     snowplow__session_stitching: true
     # Variables - Advanced Config
     snowplow__lookback_window_hours: 6
-    snowplow__session_lookback_days: 365
+    snowplow__session_lookback_days: 730
     snowplow__days_late_allowed: 3
     snowplow__max_session_days: 3
     snowplow__upsert_lookback_days: 30
