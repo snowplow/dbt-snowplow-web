@@ -1,3 +1,14 @@
+snowplow-web 0.6.0 (2022-03-11)
+---------------------------------------
+Drop support for dbt versions before 1.0.0 (Close #62)
+Set default materialisation to tables (Close #61)
+Fix configuration bug when materialisation set to table (Close #59)
+Improve quarantined sessions exclusion logic (Close #60)
+Fix cluster by fields bug when customising and using both web and mobile packages (Close #65)
+Increase `session_lookback_days` limit to be aligned with mobile model (Close #68)
+Fix user stitching bug if `domain_userid` is smaller than `user_id` (Close #66)
+Clean up `incremental_manifest` and `quarantined_sessions` tables varchar logic (Close #70)
+
 snowplow-web 0.5.1 (2022-02-04)
 ---------------------------------------
 Bump copyright to 2022 (Close #57)
