@@ -13,13 +13,9 @@ Once quarantined, any subsequent events from the session will not be processed.
 This significantly reduces table scans
 */
 
-{# Redshift produces varchar(1) column. Fixing char limit #}
-{% set type_string = dbt_utils.type_string() %}
-{% set type_string = 'varchar(64)' if type_string == 'varchar' else type_string %}
-
 with prep as (
   select
-    cast(null as {{ type_string }}) session_id
+    cast(null as {{ snowplow_utils.type_string(64) }}) session_id
 )
 
 select *
