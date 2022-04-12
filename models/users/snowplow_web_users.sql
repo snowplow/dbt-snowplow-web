@@ -1,6 +1,6 @@
 {{ 
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='domain_userid',
     upsert_date_key='start_tstamp',
     disable_upsert_lookback=true,
@@ -8,10 +8,9 @@
     dist='domain_userid',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["user_id","domain_userid"],
+    cluster_by=snowplow_web.web_cluster_by_fields_users(),
     tags=["derived"]
   ) 
 }}

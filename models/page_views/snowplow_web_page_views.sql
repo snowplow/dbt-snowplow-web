@@ -1,16 +1,15 @@
 {{ 
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='page_view_id',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["domain_userid","domain_sessionid"],
+    cluster_by=snowplow_web.web_cluster_by_fields_page_views(),
     tags=["derived"]
   ) 
 }}

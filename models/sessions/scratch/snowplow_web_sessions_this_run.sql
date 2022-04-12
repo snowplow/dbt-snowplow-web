@@ -1,12 +1,10 @@
 {{ 
   config(
-    materialized='table',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["domain_userid"],
+    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_userid"]),
     sort='start_tstamp',
     dist='domain_sessionid',
     tags=["this_run"]
@@ -29,6 +27,14 @@ select
   -- user fields
   a.user_id,
   a.domain_userid,
+
+  {% if var('snowplow__session_stitching') %}
+    -- updated with mapping as part of post hook on derived sessions table
+    cast(a.domain_userid as {{ snowplow_utils.type_string(255) }}) as stitched_user_id,
+  {% else %}
+    cast(null as {{ snowplow_utils.type_string(255) }}) as stitched_user_id,
+  {% endif %}
+  
   a.network_userid,
 
   -- engagement fields

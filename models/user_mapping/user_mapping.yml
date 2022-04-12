@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: snowplow_web_user_mapping
+    description: A mapping table between `domain_userid` and `user_id`.
+    columns:
+      - name: domain_userid
+        description: '{{ doc("col_domain_userid") }}'
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+        tests:
+          - not_null
+      - name: end_tstamp
+        description: The `collector_tstamp` when the user was last active
+        tests:
+          - not_null

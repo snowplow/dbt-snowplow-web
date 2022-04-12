@@ -1,12 +1,10 @@
 {{ 
   config(
-    materialized='table',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["user_id"],
+    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["user_id"]),
     sort='start_tstamp',
     dist='domain_userid',
     tags=["this_run"]
@@ -75,8 +73,7 @@ select
 from {{ ref('snowplow_web_users_aggs') }} as b
 
 inner join {{ ref('snowplow_web_users_sessions_this_run') }} as a
-on a.domain_userid = b.domain_userid
-and a.start_tstamp = b.start_tstamp
+on a.domain_sessionid = b.first_domain_sessionid
 
 inner join {{ ref('snowplow_web_users_lasts') }} c
 on b.domain_userid = c.domain_userid

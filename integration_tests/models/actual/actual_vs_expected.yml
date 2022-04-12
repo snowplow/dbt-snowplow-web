@@ -1,15 +1,27 @@
 version: 2
 
 models:
+  - name: snowplow_web_base_quarantined_sessions_actual
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('snowplow_web_base_quarantined_sessions_expected_stg')
+      - dbt_utils.equality:
+          compare_model: ref('snowplow_web_base_quarantined_sessions_expected_stg')
   - name: snowplow_web_page_views_actual
     tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('snowplow_web_page_views_expected_stg')
       - dbt_utils.equality:
           compare_model: ref('snowplow_web_page_views_expected_stg')
   - name: snowplow_web_sessions_actual
     tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('snowplow_web_sessions_expected_stg')
       - dbt_utils.equality:
           compare_model: ref('snowplow_web_sessions_expected_stg')
   - name: snowplow_web_users_actual
     tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('snowplow_web_users_expected_stg')
       - dbt_utils.equality:
           compare_model: ref('snowplow_web_users_expected_stg')

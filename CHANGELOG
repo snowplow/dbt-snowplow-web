@@ -1,3 +1,54 @@
+snowplow-web 0.6.0 (2022-03-11)
+---------------------------------------
+Drop support for dbt versions before 1.0.0 (Close #62)
+Set default materialisation to tables (Close #61)
+Fix configuration bug when materialisation set to table (Close #59)
+Improve quarantined sessions exclusion logic (Close #60)
+Fix cluster by fields bug when customising and using both web and mobile packages (Close #65)
+Increase `session_lookback_days` limit to be aligned with mobile model (Close #68)
+Fix user stitching bug if `domain_userid` is smaller than `user_id` (Close #66)
+Clean up `incremental_manifest` and `quarantined_sessions` tables varchar logic (Close #70)
+
+snowplow-web 0.5.1 (2022-02-04)
+---------------------------------------
+Bump copyright to 2022 (Close #57)
+Bump snowplow utils version (Close #55)
+
+snowplow-web 0.5.0 (2021-12-17)
+---------------------------------------
+Regenerate doc site (Close #52)
+Add dbt v1 compatibility (Close #38)
+
+snowplow-web 0.4.1 (2021-12-06)
+---------------------------------------
+Update docs (Close #51)
+Update all views in Redshift to late binding (Close #48)
+Fix for unexpired sessions (Close #47)
+
+snowplow-web 0.4.0 (2021-11-30)
+---------------------------------------
+Update documentation (Close #44)
+Add CI Github Action (Close #43)
+Fix cluster_by_fields macros to allow overriding (Close #35)
+Improve filtering of long sessions (Close #41)
+Add user mapping module (Close #42)
+Improve Redshift event dedupe logic (Close #33)
+Refactor BigQuery page view enrichments (Close #40)
+Create manifest table using native dbt (Close #39)
+Add Postgres adapter support (Close #45)
+
+snowplow-web 0.3.0 (2021-10-12)
+---------------------------------------
+Update documentation (Close #32)
+Update integration tests for Github Actions (Close #31)
+Fix users run limits timestamp mismatch (Close #28)
+Add ability to use alternative incremental materializations (Close #23)
+Add predefined YAML selector file (Close #14)
+Add Snowflake integration tests (Close #27)
+Add Snowflake adapter support (Close #24)
+Fix timestamp joins in users module (Close #26)
+Fix dbt 0.18.0 support (Close #22)
+
 snowplow-web 0.2.0 (2021-08-20)
 ---------------------------------------
 Add BigQuery adapter support (Close #15)

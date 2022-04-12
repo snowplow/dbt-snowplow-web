@@ -1,29 +1,44 @@
 [![early-release]][tracker-classificiation] [![License][license-image]][license] [![Discourse posts][discourse-image]][discourse]
 
 ![snowplow-logo](https://raw.githubusercontent.com/snowplow/dbt-snowplow-utils/main/assets/snowplow_logo.png)
+
 # snowplow-web
-This dbt package:  
+
+This dbt package:
+
 - Transforms and aggregates raw web event data collected from the [Snowplow JavaScript tracker][tracker-docs] into a set of derived tables: page views, sessions and users.
-- Processes events incrementally.
+- Derives a mapping between user identifiers, allowing for 'session stitching' and the development of a single customer view.
+- Processes **all web events incrementally**. It is not just constrained to page view events - any custom events you are tracking will also be incrementally processed.
 - Is designed in a modular manner, allowing you to easily integrate your own custom SQL into the incremental framework provided by the package.
 
 Please refer to the [doc site][snowplow-web-docs] for a full breakdown of the package.
 
 ### Adapter Support
-The snowplow-web v0.2.0 package currently only supports Redshift & BigQuery. Snowflake support will be added soon.
+
+The snowplow-web v0.6.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+
+|                 Warehouse                |     dbt versions    | snowplow-web version |
+|:----------------------------------------:|:-------------------:|:--------------------:|
+| BigQuery, Redshift, Snowflake & Postgres | >=1.0.0 to <2.0.0   |         0.6.0        |
+| BigQuery, Redshift, Snowflake & Postgres | >=0.20.0 to <1.0.0  |         0.5.1        |
+|      BigQuery, Redshift & Snowflake      | >=0.18.0 to <0.20.0 |         0.4.1        |
+|                 Postgres                 | >=0.19.0 to <0.20.0 |         0.4.1        |
 
 ### Requirements
+
 - A dataset of web events from the [Snowplow JavaScript tracker][tracker-docs] must be available in the database.
 - Have the [`webPage` context][webpage-context] enabled.
-- Running dbt versions >=0.18.0 to <0.20.0. dbt v.0.20.0+ support to follow soon.
 
 ### Installation
+
 Check dbt Hub for the latest installation instructions, or read the [dbt docs][dbt-package-docs] for more information on installing packages.
 
 ### Configuration & Operation
+
 Please refer to the [doc site][snowplow-web-docs] for details on how to configure and run the package.
 
 ### Models
+
 The package contains multiple staging models however the mart models are as follows:
 
 | Model                             | Description                                                                                |
@@ -31,6 +46,7 @@ The package contains multiple staging models however the mart models are as foll
 | snowplow_web_page_views           | A table of page views, including engagement metrics such as scroll depth and engaged time. |
 | snowplow_web_sessions             | An aggregated table of page views, grouped on `domain_sessionid`.                          |
 | snowplow_web_users                | An aggregated table of sessions to a user level, grouped on `domain_userid`.               |
+| snowplow_web_user_mapping         | Provides a mapping between user identifiers, `domain_userid` and `user_id`.                |
 
 # Join the Snowplow community
 
@@ -42,7 +58,7 @@ If you find a bug, please report an issue on GitHub.
 
 # Copyright and license
 
-The snowplow-web package is Copyright 2021 Snowplow Analytics Ltd.
+The snowplow-web package is Copyright 2021-2022 Snowplow Analytics Ltd.
 
 Licensed under the [Apache License, Version 2.0][license] (the "License");
 you may not use this software except in compliance with the License.

@@ -14,6 +14,7 @@ select
   -- user fields
   user_id,
   domain_userid,
+  stitched_user_id,
   network_userid,
 
   -- engagement fields

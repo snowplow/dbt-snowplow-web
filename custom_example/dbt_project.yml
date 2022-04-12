@@ -1,14 +1,14 @@
 name: 'snowplow_custom_example'
-version: '0.2.0'
+version: '0.6.0'
 config-version: 2
 
 
 profile: 'default'
 
-source-paths: ["models"]
+model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
-data-paths: ["data"]
+seed-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 

@@ -1,10 +1,8 @@
 {{ 
   config(
-    materialized='table',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
     cluster_by=["domain_sessionid"],
     tags=["this_run"]
@@ -87,13 +85,28 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {{ get_iab_fields(var('snowplow__enable_iab')) }},
+  {{ snowplow_utils.get_optional_fields(
+        enabled=var('snowplow__enable_iab', false),
+        fields=iab_fields(),
+        col_prefix='contexts_com_iab_snowplow_spiders_and_robots_1',
+        relation=ref('snowplow_web_base_events_this_run'),
+        relation_alias='ev') }},
 
   -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {{ get_ua_fields(var('snowplow__enable_ua')) }},
+  {{ snowplow_utils.get_optional_fields(
+        enabled=var('snowplow__enable_ua', false),
+        fields=ua_fields(),
+        col_prefix='contexts_com_snowplowanalytics_snowplow_ua_parser_context_1',
+        relation=ref('snowplow_web_base_events_this_run'),
+        relation_alias='ev') }},
 
   -- yauaa enrichment fields: set yauaa variable to true to enable
-  {{ get_yauaa_fields(var('snowplow__enable_yauaa')) }}
+  {{ snowplow_utils.get_optional_fields(
+        enabled=var('snowplow__enable_yauaa', false),
+        fields=yauaa_fields(),
+        col_prefix='contexts_nl_basjes_yauaa_context_1',
+        relation=ref('snowplow_web_base_events_this_run'),
+        relation_alias='ev') }}
 
 from (
   select

@@ -6,12 +6,14 @@ By knowing the lifecycle of a session the model is able to able to determine whi
 
 {% enddocs %}
 
+{% docs table_base_incremental_manifest %}
+
+This incremental table is a manifest of the timestamp of the latest event consumed per model within the `snowplow-web` package as well as any models leveraging the incremental framework provided by the package. The latest event's timestamp is based off `collector_tstamp`. This table is used to determine what events should be processed in the next run of the model.
+{% enddocs %}
 
 {% docs table_base_new_event_limits %}
 
-This table contains the lower and upper timestamp limits for the given run of the web model. These limits are used to select new events from the events table. 
-
-It is updated at the start of each run of the model by the `snowplow_incremental_pre_hook()` macro, which runs as an `on-run-start` hook. Please refer to the documentation for details on how this macro determines the run limits.
+This table contains the lower and upper timestamp limits for the given run of the web model. These limits are used to select new events from the events table.
 
 {% enddocs %}
 
@@ -28,5 +30,14 @@ For any given run, this table contains all required events to be consumed by sub
 {% docs table_base_sessions_this_run %}
 
 For any given run, this table contains all the required sessions.
+
+{% enddocs %}
+
+
+{% docs table_base_quarantined_sessions %}
+
+This table contains any sessions that have been quarantined. Sessions are quarantined once they exceed the maximum allowed session length, defined by `snowplow__max_session_days`.
+Once quarantined, no further events from these sessions will be processed. Events up until the point of quarantine remain in your derived tables.
+The reason for removing long sessions is to reduce table scans on both the events table and all derived tables. This improves performance greatly.
 
 {% enddocs %}
