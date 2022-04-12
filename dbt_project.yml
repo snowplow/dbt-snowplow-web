@@ -4,7 +4,7 @@ config-version: 2
 
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 
-profile: 'default'
+profile: 'dwh'
 
 model-paths: ["models"]
 test-paths: ["tests"]
@@ -23,7 +23,7 @@ vars:
     # Sources
     # snowplow__atomic_schema: 'atomic_data_sample' # Only set if not using 'atomic' schema for Snowplow events data
     # snowplow__database: Only set if not using target.database for Snowplow events data
-    snowplow__events: "{{ source('atomic', 'events') }}"
+    snowplow__events: "{{ref('events_with_round_id')}}"
     snowplow__page_view_context: "{{ source('atomic','com_snowplowanalytics_snowplow_web_page_1') }}"
     snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
     snowplow__ua_parser_context: "{{ source('atomic','com_snowplowanalytics_snowplow_ua_parser_context_1') }}"
