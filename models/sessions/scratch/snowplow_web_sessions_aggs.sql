@@ -2,10 +2,9 @@
   config(
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["domain_sessionid"],
+    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_sessionid"]),
     sort='domain_sessionid',
     dist='domain_sessionid'
   ) 

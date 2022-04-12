@@ -32,9 +32,3 @@ This model identifies the last page view for a user and returns various dimensio
 This model contains all sessions data related to users contained in the given run of the Web model 
 
 {% enddocs %}
-
-{% docs table_users_userids_this_run %}
-
-This model contains the first time a user was observed, `start_date`, for all users in a given run of the Web model.
-
-{% enddocs %}

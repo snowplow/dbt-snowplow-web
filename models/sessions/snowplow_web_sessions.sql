@@ -1,17 +1,19 @@
 {{ 
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='domain_sessionid',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='domain_sessionid',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["domain_userid"],
-    tags=["derived"]
+    cluster_by=snowplow_web.web_cluster_by_fields_sessions(),
+    tags=["derived"],
+    post_hook="{{ snowplow_web.stitch_user_identifiers(
+      enabled=var('snowplow__session_stitching')
+      ) }}"
   ) 
 }}
 

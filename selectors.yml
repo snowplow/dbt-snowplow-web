@@ -1,0 +1,53 @@
+selectors:
+  - name: snowplow_web
+    # Description field added dbt v0.19. Commenting out for compatibility.
+    # description: >
+    #   Suggested node selection when running the Snowplow Web package. 
+    #   Runs:
+    #     - All Snowplow Web models.
+    #     - All custom models in your dbt project, tagged with `snowplow_web_incremental`.
+    definition:
+      union:
+        - method: package
+          value: snowplow_web
+        - method: tag
+          value: snowplow_web_incremental
+  - name: snowplow_web_lean_tests
+    # Description field added dbt v0.19. Commenting out for compatibility.
+    # description: >
+    #   Suggested testing implementation for the Snowplow Web package. Lean approach, essential tests rather than full suite to save cost.
+    #   Tests:
+    #     - All tests on Snowplow Web this_run and manifest tables.
+    #     - Primary key and data tests on the Snowplow Web derived tables (page_views, sessions and users)
+    #     - All tests on any custom models in your dbt project, tagged with `snowplow_web_incremental`.
+    definition:
+      union:
+        - intersection:
+          - method: package
+            value: snowplow_web
+          - method: tag
+            value: this_run
+        - intersection:
+          - method: package
+            value: snowplow_web
+          - method: tag
+            value: manifest
+        - intersection:
+          - method: package
+            value: snowplow_web
+          - method: tag
+            value: derived
+          - method: tag
+            value: primary-key
+        - intersection:
+          - method: package
+            value: snowplow_web
+          - method: tag
+            value: derived
+          - method: test_type
+            value: data
+        - intersection:
+          - method: path
+            value: models
+          - method: tag
+            value: snowplow_web_incremental

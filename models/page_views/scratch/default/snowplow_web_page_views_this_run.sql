@@ -1,11 +1,11 @@
 {{ 
   config(
-    materialized='table',
     sort='start_tstamp',
     dist='page_view_id',
     tags=["this_run"]
   ) 
 }}
+
 
 select
   ev.page_view_id,
@@ -34,7 +34,7 @@ select
   {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
-  datediff(second, ev.derived_tstamp, coalesce(t.end_tstamp, ev.derived_tstamp)) as absolute_time_in_s,
+  {{ dbt_utils.datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
 
   sd.hmax as horizontal_pixels_scrolled,
   sd.vmax as vertical_pixels_scrolled,
@@ -95,7 +95,7 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {% if var('snowplow__enable_iab') %}
+  {% if var('snowplow__enable_iab', false) %}
     iab.category,
     iab.primary_impact,
     iab.reason,
@@ -108,7 +108,7 @@ select
   {% endif %}
 
   -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {% if var('snowplow__enable_ua') %}
+  {% if var('snowplow__enable_ua', false) %}
     ua.useragent_family,
     ua.useragent_major,
     ua.useragent_minor,
@@ -137,7 +137,7 @@ select
   {% endif %}
 
   -- yauaa enrichment fields: set yauaa variable to true to enable
-  {% if var('snowplow__enable_yauaa') %}
+  {% if var('snowplow__enable_yauaa', false) %}
     ya.device_class,
     ya.agent_class,
     ya.agent_name,
@@ -189,21 +189,21 @@ on ev.page_view_id = t.page_view_id
 left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
 on ev.page_view_id = sd.page_view_id
 
-{% if var('snowplow__enable_iab') -%}
+{% if var('snowplow__enable_iab', false) -%}
 
   left join {{ ref('snowplow_web_pv_iab') }} iab
   on ev.page_view_id = iab.page_view_id
 
 {% endif -%}
 
-{% if var('snowplow__enable_ua') -%}
+{% if var('snowplow__enable_ua', false) -%}
 
   left join {{ ref('snowplow_web_pv_ua_parser') }} ua
   on ev.page_view_id = ua.page_view_id
 
 {% endif -%}
 
-{% if var('snowplow__enable_yauaa') -%}
+{% if var('snowplow__enable_yauaa', false) -%}
 
   left join {{ ref('snowplow_web_pv_yauaa') }} ya
   on ev.page_view_id = ya.page_view_id

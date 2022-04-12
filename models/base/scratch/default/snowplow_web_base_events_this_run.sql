@@ -1,6 +1,5 @@
 {{ 
   config(
-    materialized='table',
     sort='collector_tstamp',
     dist='event_id',
     tags=["this_run"]
@@ -10,6 +9,9 @@
 {%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
                                                                           'start_tstamp',
                                                                           'end_tstamp') %}
+
+/* Dedupe logic: Per dupe event_id keep earliest row ordered by collector_tstamp.
+   If multiple earliest rows, i.e. matching collector_tstamp, remove entirely. */
 
 with events_this_run AS (
   select
@@ -141,7 +143,7 @@ with events_this_run AS (
     a.event_version,
     a.event_fingerprint,
     a.true_tstamp,
-    dense_rank() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index --dense_rank to catch dupe events with dupe tstamps later
+    dense_rank() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index --dense_rank so rows with equal tstamps assigned same number
 
   from {{ var('snowplow__events') }} as a
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
@@ -154,7 +156,7 @@ with events_this_run AS (
   and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
 )
 
-, events_deduped as (
+, events_dedupe as (
   select
     *,
     count(*) over(partition by e.event_id) as row_count
@@ -165,27 +167,29 @@ with events_this_run AS (
     e.event_id_dedupe_index = 1 -- Keep row(s) with earliest collector_tstamp per dupe event
 )
 
-, page_context as (
-select
-  root_id,
-  root_tstamp,
-  id as page_view_id
+, cleaned_events as (
+  select *
+  from events_dedupe
+  where row_count = 1 -- Only keep dupes with single row per earliest collector_tstamp
+)
 
-from {{ var('snowplow__page_view_context') }}
-where 
-  root_tstamp >= {{ lower_limit }}
-  and root_tstamp <= {{ upper_limit }}
+, page_context as (
+  select
+    root_id,
+    root_tstamp,
+    id as page_view_id
+
+  from {{ var('snowplow__page_view_context') }}
+  where 
+    root_tstamp >= {{ lower_limit }}
+    and root_tstamp <= {{ upper_limit }}
 )
 
 select
-  ed.*,
+  ce.*,
   pc.page_view_id
 
-from 
-  events_deduped as ed
-left join 
-  page_context as pc
-on ed.event_id = pc.root_id
-and ed.collector_tstamp = pc.root_tstamp
-
-where row_count = 1 -- Remove dupe events with more than 1 row
+from cleaned_events as ce
+left join page_context as pc
+on ce.event_id = pc.root_id
+and ce.collector_tstamp = pc.root_tstamp

@@ -1,25 +1,25 @@
 {{ 
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='session_id',
     upsert_date_key='start_tstamp',
-    full_refresh=false,
-    schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
+      "data_type": "timestamp"
     },
-    cluster_by=["session_id"]
+    cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
+    full_refresh=snowplow_web.allow_refresh(),
+    tags=["manifest"]
   ) 
 }}
 
 -- Known edge cases:
 -- 1: Rare case with multiple domain_userid per session.
 
-{% set lower_limit, upper_limit, session_lookback_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set lower_limit, upper_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set session_lookback_limit = snowplow_utils.get_session_lookback_limit(lower_limit) %}
 {% set is_run_with_new_events = snowplow_utils.is_run_with_new_events('snowplow_web') %}
 
 with new_events_session_ids as (
@@ -32,7 +32,8 @@ with new_events_session_ids as (
   from {{ var('snowplow__events') }} e
 
   where
-    coalesce(e.domain_sessionid, e.round_id) is not null -- Attest added coalesce to take into account round_id for Taker
+    e.domain_sessionid is not null
+    and not exists (select 1 from {{ ref('snowplow_web_base_quarantined_sessions') }} as a where a.session_id = e.domain_sessionid) -- don't continue processing v.long sessions
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}
