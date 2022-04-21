@@ -1,17 +1,18 @@
 {{ 
   config(
-    materialized=var("snowplow__incremental_materialization"),
+    materialized='snowplow_incremental',
     unique_key='session_id',
     upsert_date_key='start_tstamp',
+    full_refresh=snowplow_web.allow_refresh(),
+    schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
     partition_by = {
       "field": "start_tstamp",
-      "data_type": "timestamp"
+      "data_type": "timestamp",
+      "granularity": "day"
     },
-    cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
-    full_refresh=snowplow_web.allow_refresh(),
-    tags=["manifest"]
+    cluster_by=["session_id"]
   ) 
 }}
 
@@ -24,7 +25,7 @@
 
 with new_events_session_ids as (
   select
-    coalesce(e.domain_sessionid, e.round_id) as session_id, -- Attest added coalesce to take into account round_id for Taker
+    e.domain_sessionid as session_id,
     max(e.domain_userid) as domain_userid, -- Edge case 1: Arbitary selection to avoid window function like first_value.
     min(e.collector_tstamp) as start_tstamp,
     max(e.collector_tstamp) as end_tstamp
