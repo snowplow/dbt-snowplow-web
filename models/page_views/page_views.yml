@@ -23,27 +23,27 @@ models:
       - name: domain_userid
         description: '{{ doc("col_domain_userid") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: network_userid
         description: '{{ doc("col_network_userid") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: domain_sessionid
         description: '{{ doc("col_domain_sessionid") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: domain_sessionidx
         description: '{{ doc("col_domain_sessionidx") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: page_view_in_session_index
         description: A page view index within a single session
         tests:
-          - taker_not_null
+          - not_null
       - name: page_views_in_session
         description: Distinct count of `page_view_id` within a session
         tests:
-          - taker_not_null
+          - not_null
       - name: dvce_created_tstamp
         description: '{{ doc("col_dvce_created_tstamp") }}'
         tests:
