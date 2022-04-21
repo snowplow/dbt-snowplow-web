@@ -11,11 +11,11 @@ models:
           - primary-key
         tests:
           - unique
-          - taker_not_null
+          - not_null
       - name: domain_sessionidx
         description: '{{ doc("col_domain_sessionidx") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: start_tstamp
         description: Timestamp for the start of the session, based on `derived_tstamp`
         tests:
@@ -31,11 +31,11 @@ models:
       - name: domain_userid
         description: '{{ doc("col_domain_userid") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: network_userid
         description: '{{ doc("col_network_userid") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: page_views
         description: The number of distinct page views within a session
         tests:
@@ -43,7 +43,7 @@ models:
       - name: engaged_time_in_s
         description: The total time engaged by a user within a session
         tests:
-          - taker_not_null
+          - not_null
       - name: absolute_time_in_s
         description: The time in seconds between the `start_tstamp` and `end_tstamp`
         tests:

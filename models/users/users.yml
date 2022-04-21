@@ -12,39 +12,39 @@ models:
           - primary-key
         tests:
           - unique
-          - taker_not_null
+          - not_null
       - name: network_userid
         description: '{{ doc("col_network_userid") }}'
         tests:
-          - taker_not_null
+          - not_null
       - name: start_tstamp
         description: Timestamp for the start of the users lifecycle, based on `derived_tstamp`
         tests:
-          - taker_not_null
+          - not_null
       - name: end_tstamp
         description: Timestamp for the last time the user was seen, based on `derived_tstamp`
         tests:
-          - taker_not_null
+          - not_null
       - name: model_tstamp
         description: '{{ doc("col_model_tstamp") }}'
       - name: page_views
         description: The total page views by the user
         tests:
-          - taker_not_null
+          - not_null
       - name: sessions
         description: The total sessions by the user
         tests:
-          - taker_not_null
+          - not_null
       - name: engaged_time_in_s
         description: The total engaged time in seconds by the user
         tests:
-          - taker_not_null
+          - not_null
       - name: first_page_title
         description: The title of the first page visited by the user
       - name: first_page_url
         description: The url of the first page visited by the user
         tests:
-          - taker_not_null
+          - not_null
       - name: first_page_urlscheme
         description: The urlscheme of the first page visited by the user
       - name: first_page_urlhost
