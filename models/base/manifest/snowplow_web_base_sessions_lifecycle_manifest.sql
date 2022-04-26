@@ -11,7 +11,8 @@
     },
     cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
     full_refresh=snowplow_web.allow_refresh(),
-    tags=["manifest"]
+    tags=["manifest"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 

@@ -10,8 +10,9 @@
     tags=["this_run"],
     post_hook=[
     "{{ snowplow_utils.quarantine_sessions('snowplow_web', var('snowplow__max_session_days')) }}"
-    ]
-  ) 
+    ],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 {%- set lower_limit, 

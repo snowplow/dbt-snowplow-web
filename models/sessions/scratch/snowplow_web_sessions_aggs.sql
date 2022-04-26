@@ -6,7 +6,8 @@
     },
     cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_sessionid"]),
     sort='domain_sessionid',
-    dist='domain_sessionid'
+    dist='domain_sessionid',
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 

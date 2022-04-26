@@ -178,6 +178,8 @@ This package makes use of a series of other variables, which are all set to the 
 
 `snowplow__session_stitching`:      Default: `True`. Determines whether to apply the user mapping to the sessions table. Please see the 'User Mapping' section for more details.
 
+`snowplow__query_tag`:      Default: `snowplow_dbt`. This sets the value of the query_tag for Snowflake database use. This can be used to gather metadata around queries and Snowflake usage.
+
 ## YAML Selectors
 
 Within this package we have provided a suite of suggested selectors to run and test the models within the package. This leverages dbt's [selector flag][dbt-selectors].
