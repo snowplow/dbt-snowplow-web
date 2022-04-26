@@ -11,7 +11,8 @@
       "data_type": "timestamp"
     },
     cluster_by=snowplow_web.web_cluster_by_fields_users(),
-    tags=["derived"]
+    tags=["derived"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 

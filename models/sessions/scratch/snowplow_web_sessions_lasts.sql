@@ -2,7 +2,8 @@
   config(
     cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_sessionid"]),
     sort='domain_sessionid',
-    dist='domain_sessionid'
+    dist='domain_sessionid',
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 
@@ -24,4 +25,3 @@ inner join {{ ref('snowplow_web_sessions_aggs') }} b
 on a.domain_sessionid = b.domain_sessionid
 -- don't join on timestamp because people can return to a page after previous page view is complete.
 and a.page_view_in_session_index = b.page_views
-

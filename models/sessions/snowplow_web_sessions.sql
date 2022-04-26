@@ -13,7 +13,8 @@
     tags=["derived"],
     post_hook="{{ snowplow_web.stitch_user_identifiers(
       enabled=var('snowplow__session_stitching')
-      ) }}"
+      ) }}",
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 

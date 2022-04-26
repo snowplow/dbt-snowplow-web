@@ -1,6 +1,7 @@
 {{ 
   config(
-    tags=["this_run"]
+    tags=["this_run"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 
@@ -29,4 +30,3 @@ and a.collector_tstamp <= {{ upper_limit }}
 and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
 
 qualify row_number() over (partition by a.event_id order by a.collector_tstamp) = 1
-

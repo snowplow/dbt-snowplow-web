@@ -7,7 +7,8 @@
     partition_by = {
       "field": "end_tstamp",
       "data_type": "timestamp"},
-    tags=["derived"]
+    tags=["derived"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 
