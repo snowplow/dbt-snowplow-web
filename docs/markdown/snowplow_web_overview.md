@@ -170,6 +170,8 @@ This package makes use of a series of other variables, which are all set to the 
 
 `snowplow__has_log_enabled`:        Default `True`. When executed, the package logs information about the current run to the CLI. This can be disabled by setting to `false`.
 
+`snowplow__query_tag`:      Default: `snowplow_dbt`. This sets the value of the query_tag for Snowflake database use. This is used internally for metric gathering in Snowflake and its value should not be changed.
+
 `snowplow__incremental_materialization`: Default `snowplow_incremental`. The materialization used for all incremental models within the package. `snowplow_incremental` builds upon the default incremental materialization provided by dbt, improving performance when modeling event data. If however you prefer to use the native dbt incremental materialization, or any other, then adjust accordingly.
 
 `snowplow__allow_refresh`:          Default `False`. Used as the default value to return from the `allow_refresh()` macro. This macro determines whether the manifest tables can be refreshed or not, depending on your environment. See the 'Manifest Tables' section for more details.
@@ -177,8 +179,6 @@ This package makes use of a series of other variables, which are all set to the 
 `snowplow__dev_target_name`:        Default: `dev`. The [target name](https://docs.getdbt.com/reference/profiles.yml) of your development environment as defined in your `profiles.yml` file. See the 'Manifest Tables' section for more details.
 
 `snowplow__session_stitching`:      Default: `True`. Determines whether to apply the user mapping to the sessions table. Please see the 'User Mapping' section for more details.
-
-`snowplow__query_tag`:      Default: `snowplow_dbt`. This sets the value of the query_tag for Snowflake database use. This can be used to gather metadata around queries and Snowflake usage.
 
 ## YAML Selectors
 
@@ -593,7 +593,7 @@ If you find a bug, please report an issue on GitHub.
 
 # Copyright and license
 
-The snowplow-web package is Copyright 2021 Snowplow Analytics Ltd.
+The snowplow-web package is Copyright 2021-2022 Snowplow Analytics Ltd.
 
 Licensed under the [Apache License, Version 2.0][license] (the "License");
 you may not use this software except in compliance with the License.
