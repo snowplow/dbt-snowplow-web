@@ -1,5 +1,5 @@
 name: 'snowplow_custom_example'
-version: '0.6.0'
+version: '0.6.1'
 config-version: 2
 
 
@@ -28,4 +28,3 @@ models:
     sessions:
       snowplow_web_sessions:
         +enabled: false # Disable the snowplow_web_sessions model as we have our custom version, snowplow_web_sessions_custom
-

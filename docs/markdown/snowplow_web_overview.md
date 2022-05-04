@@ -24,7 +24,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v0.6.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+The Snowplow Web v0.6.1 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
 ## Installation
 
