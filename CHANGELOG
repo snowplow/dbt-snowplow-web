@@ -1,3 +1,9 @@
+snowplow-web 0.6.1 (2022-05-04)
+---------------------------------------
+Add `query_tag` to Snowflake (Close #74)
+Clarify that some tables are Redshift & Postgres only (Close #75)
+Update the codeowner file (Close #77)
+
 snowplow-web 0.6.0 (2022-03-11)
 ---------------------------------------
 Drop support for dbt versions before 1.0.0 (Close #62)

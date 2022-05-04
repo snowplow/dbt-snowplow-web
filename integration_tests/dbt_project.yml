@@ -1,5 +1,5 @@
 name: 'snowplow_web_integration_tests'
-version: '0.6.0'
+version: '0.6.1'
 config-version: 2
 
 profile: 'integration_tests'
@@ -477,4 +477,3 @@ seeds:
             refr_term: varchar
             mkt_term: varchar
             mkt_content: varchar
-
