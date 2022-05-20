@@ -1,5 +1,5 @@
 name: 'snowplow_web'
-version: '0.6.0'
+version: '0.6.1'
 config-version: 2
 
 require-dbt-version: [">=1.0.0", "<2.0.0"]
@@ -50,9 +50,11 @@ vars:
     snowplow__days_late_allowed: 3
     snowplow__max_session_days: 3
     snowplow__upsert_lookback_days: 30
+    snowplow__query_tag: "snowplow_dbt"
     snowplow__incremental_materialization: "snowplow_incremental"
     snowplow__dev_target_name: 'dev'
     snowplow__allow_refresh: false
+
 
 
 # Completely or partially remove models from the manifest during run start.

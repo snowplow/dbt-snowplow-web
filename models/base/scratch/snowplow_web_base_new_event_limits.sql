@@ -1,5 +1,6 @@
 {{ config(
-   post_hook=["{{snowplow_utils.print_run_limits(this)}}"]
+   post_hook=["{{snowplow_utils.print_run_limits(this)}}"],
+   sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
    )
 }}
 
