@@ -7,7 +7,8 @@
     cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_userid"]),
     sort='start_tstamp',
     dist='domain_sessionid',
-    tags=["this_run"]
+    tags=["this_run"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 

@@ -24,7 +24,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v0.6.0 package currently supports BigQuery, Redshift, Snowflake & Postgres.
+The Snowplow Web v0.6.1 package currently supports BigQuery, Redshift, Snowflake & Postgres.
 
 ## Installation
 
@@ -169,6 +169,8 @@ This package makes use of a series of other variables, which are all set to the 
 `snowplow__sessions_table`:         Default `{{ ref('snowplow_web_sessions') }}`. The users module requires data from the derived sessions table. If you choose to disable the standard sessions table in favor of your own custom table, set this to reference your new table e.g. `{{ ref('snowplow_web_sessions_custom') }}`. Please see the [README](https://github.com/snowplow/dbt-snowplow-web/tree/main/custom_example) in the `custom_example` directory for more information on this sort of implementation.
 
 `snowplow__has_log_enabled`:        Default `True`. When executed, the package logs information about the current run to the CLI. This can be disabled by setting to `false`.
+
+`snowplow__query_tag`:      Default: `snowplow_dbt`. This sets the value of the query_tag for Snowflake database use. This is used internally for metric gathering in Snowflake and its value should not be changed.
 
 `snowplow__incremental_materialization`: Default `snowplow_incremental`. The materialization used for all incremental models within the package. `snowplow_incremental` builds upon the default incremental materialization provided by dbt, improving performance when modeling event data. If however you prefer to use the native dbt incremental materialization, or any other, then adjust accordingly.
 
@@ -591,7 +593,7 @@ If you find a bug, please report an issue on GitHub.
 
 # Copyright and license
 
-The snowplow-web package is Copyright 2021 Snowplow Analytics Ltd.
+The snowplow-web package is Copyright 2021-2022 Snowplow Analytics Ltd.
 
 Licensed under the [Apache License, Version 2.0][license] (the "License");
 you may not use this software except in compliance with the License.
