@@ -27,15 +27,16 @@
 
 with new_events_session_ids as (
   select
-    e.domain_sessionid as session_id,
+    COALESCE(e.domain_sessionid, r.id) as session_id,
     max(e.domain_userid) as domain_userid, -- Edge case 1: Arbitary selection to avoid window function like first_value.
     min(e.collector_tstamp) as start_tstamp,
     max(e.collector_tstamp) as end_tstamp
 
   from {{ var('snowplow__events') }} e
+  left join snowplow_atomic.com_askattest_round_1 r on e.event_id = r.root_id and e.collector_tstamp = r.root_tstamp
 
   where
-    e.domain_sessionid is not null
+    COALESCE(e.domain_sessionid, r.id) IS NOT null
     and not exists (select 1 from {{ ref('snowplow_web_base_quarantined_sessions') }} as a where a.session_id = e.domain_sessionid) -- don't continue processing v.long sessions
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
