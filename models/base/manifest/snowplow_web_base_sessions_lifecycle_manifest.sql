@@ -24,12 +24,13 @@
 
 with new_events_session_ids as (
   select
-    e.domain_sessionid as session_id,
+    COALESCE(e.domain_sessionid, r.id) as session_id,
     max(e.domain_userid) as domain_userid, -- Edge case 1: Arbitary selection to avoid window function like first_value.
     min(e.collector_tstamp) as start_tstamp,
     max(e.collector_tstamp) as end_tstamp
 
   from {{ var('snowplow__events') }} e
+  left join snowplow_atomic.com_askattest_round_1 r on e.event_id = r.root_id and e.collector_tstamp = r.root_tstamp
 
   where
     coalesce(e.domain_sessionid, e.round_id) is not null -- Attest added coalesce to take into account round_id for Taker
