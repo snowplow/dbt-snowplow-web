@@ -3,7 +3,6 @@
     materialized='snowplow_incremental',
     unique_key='session_id',
     upsert_date_key='start_tstamp',
-    full_refresh=snowplow_web.allow_refresh(),
     schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
