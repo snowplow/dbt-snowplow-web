@@ -1,6 +1,21 @@
 [![early-release]][tracker-classificiation] [![License][license-image]][license] [![Discourse posts][discourse-image]][discourse]
 
-![snowplow-logo](https://raw.githubusercontent.com/snowplow/dbt-snowplow-utils/main/assets/snowplow_logo.png)
+# Attest Fork Changes
+
+Attest have created a fork of this package to allow tracking of events which cannot drop the cookies to generate a `domain_sessionid` - Taker events.
+
+Instead of `domain_sessionid`, we substitute `round_id` where `domain_sessionid` is NULL. We are happy to substitute one round as one session and consider them equivalent.
+
+There are two main models which have beenaltered.
+
+1. models/base/manifest/snowplow_web_base_sessions_lifecycle_manifest.sql
+
+    This model generates the lifecycle (start and finish time) of each session so we can determine which sessions (and therefore events) should be processed for *this run*.
+    The CTE `new_events_session_ids` has been updated to join to the `round` entity so that we can `COALESCE(domain_sessionid, round_id)` where applicable. So that taker data can be included in this calculation, and those session IDs can be identified as valid sessions. They are otherwise lost by a `WHERE` which requires `domain_sessionid IS NOT NULL`.
+
+2. models/base/scratch/default/snowplow_web_base_events_this_run.sql
+
+    This model contains all required events which are used in all downstream nodes. Data is taken from `snowplow_atomic.events` and joined to `round` entity again to enrich the dataset where `domain_sessionid` is NULL. This is required because the model also joins to `snowplow_web_base_sessions_lifecycle_manifest` using `domain_sessionid` which was previously enriched with `round_id`.
 
 # snowplow-web
 
