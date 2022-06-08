@@ -1,6 +1,6 @@
 {% macro stitch_user_identifiers(enabled, relation=this, user_mapping_relation=ref('snowplow_web_user_mapping')) %}  
   
-  {% if enabled %}
+  {% if enabled and target.type != 'databricks' | as_bool() %}
   
     -- Update sessions table with mapping
     update {{ relation }} as s
