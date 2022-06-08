@@ -40,4 +40,3 @@ from (
 
 ) e
 group by e.event_id
-

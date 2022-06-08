@@ -22,7 +22,7 @@ vars:
   snowplow_web:
     # Sources
     # snowplow__atomic_schema: 'atomic_data_sample' # Only set if not using 'atomic' schema for Snowplow events data
-    # snowplow__database: Only set if not using target.database for Snowplow events data
+    # snowplow__database:  # Only set if not using target.database for Snowplow events data -- WILL BE IGNORED FOR DATABRICKS
     snowplow__events: "{{ source('atomic', 'events') }}"
     snowplow__page_view_context: "{{ source('atomic','com_snowplowanalytics_snowplow_web_page_1') }}"
     snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
@@ -80,6 +80,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type == 'databricks' | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
@@ -92,6 +94,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type == 'databricks' | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:

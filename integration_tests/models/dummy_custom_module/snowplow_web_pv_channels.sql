@@ -6,10 +6,10 @@
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='page_view_id',
-    partition_by = {
+    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
       "data_type": "timestamp"
-    },
+    }),
     cluster_by=["page_view_id"]
   ) 
 }}
