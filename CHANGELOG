@@ -1,3 +1,7 @@
+snowplow-web 0.6.2 (2022-06-08)
+---------------------------------------
+Fix bot filter regex for BigQuery page views (Close #81) (Thanks to @James-Fallon)
+
 snowplow-web 0.6.1 (2022-05-04)
 ---------------------------------------
 Add `query_tag` to Snowflake (Close #74)
