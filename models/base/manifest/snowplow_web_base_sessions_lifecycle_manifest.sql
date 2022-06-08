@@ -5,10 +5,10 @@
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='session_id',
-    partition_by = {
+    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
       "data_type": "timestamp"
-    },
+    }, databricks_partition_by='start_tstamp'),
     cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
     full_refresh=snowplow_web.allow_refresh(),
     tags=["manifest"],
