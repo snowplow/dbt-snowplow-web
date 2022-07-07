@@ -5,7 +5,7 @@
     partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
       "data_type": "timestamp"
-    }, databricks_partition_by='start_tstamp'),
+    }),
     cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["session_id"]),
     tags=["this_run"],
     post_hook=[
