@@ -1,4 +1,4 @@
-name: pr_tests 
+name: pr_tests
 
 on:
   pull_request:
@@ -32,16 +32,17 @@ env:
   SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
 
   # Postgres Connection
-  POSTGRES_TEST_HOST: ${{ secrets.POSTGRES_TEST_HOST }} 
-  POSTGRES_TEST_USER: ${{ secrets.POSTGRES_TEST_USER }} 
-  POSTGRES_TEST_PASS: ${{ secrets.POSTGRES_TEST_PASS }} 
-  POSTGRES_TEST_PORT: ${{ secrets.POSTGRES_TEST_PORT }} 
-  POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }} 
+  POSTGRES_TEST_HOST: ${{ secrets.POSTGRES_TEST_HOST }}
+  POSTGRES_TEST_USER: ${{ secrets.POSTGRES_TEST_USER }}
+  POSTGRES_TEST_PASS: ${{ secrets.POSTGRES_TEST_PASS }}
+  POSTGRES_TEST_PORT: ${{ secrets.POSTGRES_TEST_PORT }}
+  POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }}
 
   # Databricks Connection
-  DATABRICKS_TEST_HOST: ${{ secrets.DATABRICKS_TEST_HOST }} 
-  DATABRICKS_TEST_HTTP_PATH: ${{ secrets.DATABRICKS_TEST_HTTP_PATH }} 
-  DATABRICKS_TEST_TOKEN: ${{ secrets.DATABRICKS_TEST_TOKEN }} 
+  DATABRICKS_TEST_HOST: ${{ secrets.DATABRICKS_TEST_HOST }}
+  DATABRICKS_TEST_HTTP_PATH: ${{ secrets.DATABRICKS_TEST_HTTP_PATH }}
+  DATABRICKS_TEST_TOKEN: ${{ secrets.DATABRICKS_TEST_TOKEN }}
+  DATABRICKS_TEST_ENDPOINT: ${{ secrets.DATABRICKS_TEST_ENDPOINT }}
 
 jobs:
   pr_tests:
@@ -111,6 +112,14 @@ jobs:
           pip install --upgrade pip wheel setuptools
           pip install -Iv dbt-${{ matrix.warehouse }}==${{ matrix.dbt_version }} --upgrade
           dbt deps
+        if: ${{matrix.warehouse != 'spark'}}
+
+      - name: Install spark dependencies
+        run: |
+          pip install --upgrade pip wheel setuptools
+          pip install -Iv "dbt-${{ matrix.warehouse }}[ODBC]"==${{ matrix.dbt_version }} --upgrade
+          dbt deps
+        if: ${{matrix.warehouse == 'spark'}}
 
       - name: Block concurrent executions tests
         uses: softprops/turnstyle@v1
@@ -127,7 +136,7 @@ jobs:
       - name: Run tests
         run: ./.scripts/integration_test.sh -d ${{ matrix.warehouse }}
 
-      # post_ci_cleanup sits in utils package 
+      # post_ci_cleanup sits in utils package
       - name: "Post-test: Drop ci schemas"
         run: |
           dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}

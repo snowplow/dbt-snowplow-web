@@ -36,7 +36,7 @@ vars:
     snowplow__backfill_limit_days: 30
     snowplow__app_id: []
     # Setting default values for 3 enrichments below throughout package rather than here
-    # Workaround for a bug (https://github.com/dbt-labs/dbt-core/issues/3698). 
+    # Workaround for a bug (https://github.com/dbt-labs/dbt-core/issues/3698).
     # TODO: Return to having default values here once fixed.
     # snowplow__enable_iab: false
     # snowplow__enable_ua: false
@@ -62,7 +62,7 @@ on-run-start:
   - "{{ snowplow_utils.snowplow_web_delete_from_manifest(var('models_to_remove',[])) }}"
 
 # Update manifest table with last event consumed per sucessfully executed node/model
-on-run-end: 
+on-run-end:
   - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 
@@ -71,6 +71,7 @@ on-run-end:
 models:
   snowplow_web:
     +materialized: table
+    +file_format: delta
     +bind: false
     base:
       manifest:
@@ -81,7 +82,7 @@ models:
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
         databricks:
-          enabled: "{{ target.type == 'databricks' | as_bool() }}"
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
@@ -95,7 +96,7 @@ models:
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
         databricks:
-          enabled: "{{ target.type == 'databricks' | as_bool() }}"
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:

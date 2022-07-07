@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized=var("snowplow__incremental_materialization"),
     unique_key='session_id',
@@ -13,7 +13,7 @@
     full_refresh=snowplow_web.allow_refresh(),
     tags=["manifest"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 -- Known edge cases:
@@ -48,7 +48,7 @@ with new_events_session_ids as (
   group by 1
   )
 
-{% if snowplow_utils.snowplow_is_incremental() %} 
+{% if snowplow_utils.snowplow_is_incremental() %}
 
 , previous_sessions as (
   select *
@@ -65,7 +65,7 @@ with new_events_session_ids as (
     coalesce(self.domain_userid, ns.domain_userid) as domain_userid, -- Edge case 1: Take previous value to keep domain_userid consistent. Not deterministic but performant
     least(ns.start_tstamp, coalesce(self.start_tstamp, ns.start_tstamp)) as start_tstamp,
     greatest(ns.end_tstamp, coalesce(self.end_tstamp, ns.end_tstamp)) as end_tstamp -- BQ 1 NULL will return null hence coalesce
-    
+
   from new_events_session_ids ns
   left join previous_sessions as self
     on ns.session_id = self.session_id
