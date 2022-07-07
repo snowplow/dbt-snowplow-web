@@ -1,8 +1,8 @@
-{{ 
+{{
   config(
     tags=["this_run"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 with prep as (
@@ -178,7 +178,7 @@ select
   {% endif %}
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
-  
+
   where ev.event_name = 'page_view'
   and ev.page_view_id is not null
 

@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized=var("snowplow__incremental_materialization"),
     unique_key='domain_userid',
@@ -13,11 +13,11 @@
     cluster_by=snowplow_web.web_cluster_by_fields_users(),
     tags=["derived"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
-select * 
-  {% if target.type == 'databricks' -%}
+select *
+  {% if target.type in ['databricks', 'spark'] -%}
   , DATE(start_tstamp) as start_tstamp_date
   {%- endif %}
 from {{ ref('snowplow_web_users_this_run') }}

@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized=var("snowplow__incremental_materialization"),
     unique_key='domain_sessionid',
@@ -15,12 +15,12 @@
       enabled=var('snowplow__session_stitching')
       ) }}",
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 
-select * 
-  {% if target.type == 'databricks' -%}
+select *
+  {% if target.type in ['databricks', 'spark'] -%}
   , DATE(start_tstamp) as start_tstamp_date
   {%- endif %}
 from {{ ref('snowplow_web_sessions_this_run') }}

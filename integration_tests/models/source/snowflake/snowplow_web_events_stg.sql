@@ -9,7 +9,7 @@ from {{ ref('snowplow_web_events') }}
 
 
 select
-  * 
+  *
 
 from prep
 
