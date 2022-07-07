@@ -1,12 +1,7 @@
-{{ 
+{{
   config(
-    partition_by = {
-      "field": "start_tstamp",
-      "data_type": "timestamp"
-    },
-    cluster_by=["domain_sessionid"],
     tags=["this_run"]
-  ) 
+  )
 }}
 
 with page_view_events as (
@@ -116,7 +111,7 @@ from (
   from {{ ref('snowplow_web_base_events_this_run') }} as e
   where e.event_name = 'page_view'
   and e.page_view_id is not null
-  
+
   group by e.page_view_id
 )
 
@@ -215,7 +210,7 @@ select
   ev.primary_impact,
   ev.reason,
   ev.spider_or_robot,
-  
+
   ev.useragent_family,
   ev.useragent_major,
   ev.useragent_minor,
