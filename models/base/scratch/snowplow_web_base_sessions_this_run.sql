@@ -1,12 +1,5 @@
 {{
   config(
-    sort='start_tstamp',
-    dist='session_id',
-    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
-      "field": "start_tstamp",
-      "data_type": "timestamp"
-    }),
-    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["session_id"]),
     tags=["this_run"],
     post_hook=[
     "{{ snowplow_utils.quarantine_sessions('snowplow_web', var('snowplow__max_session_days')) }}"
