@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized=var("snowplow__incremental_materialization"),
     unique_key='page_view_id',
@@ -16,8 +16,8 @@
 }}
 
 
-select * 
-  {% if target.type == 'databricks' -%}
+select *
+  {% if target.type in ['databricks', 'spark'] -%}
   , DATE(start_tstamp) as start_tstamp_date
   {%- endif %}
 from {{ ref('snowplow_web_page_views_this_run') }}

@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized='incremental',
     unique_key='domain_userid',
@@ -9,20 +9,16 @@
       "data_type": "timestamp"
     }),
     tags=["derived"],
-    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt')),
-    tblproperties={
-      "delta.autoOptimize.optimizeWrite": "true",
-      "delta.autoOptimize.autoCompact" : "true"
-    }
-  ) 
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 
 select distinct
   domain_userid,
   last_value(user_id) over(
-    partition by domain_userid 
-    order by collector_tstamp 
+    partition by domain_userid
+    order by collector_tstamp
     rows between unbounded preceding and unbounded following
   ) as user_id,
   max(collector_tstamp) over (partition by domain_userid) as end_tstamp

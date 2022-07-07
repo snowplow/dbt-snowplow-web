@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
@@ -8,7 +8,7 @@
     sort='domain_userid',
     dist='domain_userid',
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 select
