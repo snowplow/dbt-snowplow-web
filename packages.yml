@@ -1,3 +1,5 @@
 packages:
-  - package: snowplow/snowplow_utils
-    version: [">=0.11.0", "<0.12.0"]
+  # - package: snowplow/snowplow_utils
+  #   version: [">=0.11.0", "<0.12.0"]
+  - git: "https://github.com/snowplow/dbt-snowplow-utils.git"
+    revision: "feature/databricks-spark-support"
