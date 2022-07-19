@@ -1,3 +1,10 @@
+snowplow-web 0.8.0 (2022-07-19)
+---------------------------------------
+Add missing mention of Databricks to README (Close #89)
+Add support for Databricks through dbt-spark (Close #91)
+Improve performance in Databricks (Close #92)
+Improve performance of scratch tables (Close #94)
+
 snowplow-web 0.7.0 (2022-06-22)
 ---------------------------------------
 Add support for Databricks (Close #86)
