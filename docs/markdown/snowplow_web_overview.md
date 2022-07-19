@@ -24,7 +24,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v0.7.0 package currently supports BigQuery, Databricks, Redshift, Snowflake & Postgres.
+The Snowplow Web v0.8.0 package currently supports BigQuery, Databricks, Redshift, Snowflake & Postgres.
 
 ## Installation
 
@@ -347,29 +347,29 @@ Based on the results the web model enters 1 of 4 states.
 
 The query returns `models = 0` indicating that no models exist in the manifest.
 
-`lower_limit: snowplow__start_date`  
-`upper_limit: least(current_tstamp, snowplow__start_date + snowplow__backfill_limit_days)`  
+`lower_limit: snowplow__start_date`
+`upper_limit: least(current_tstamp, snowplow__start_date + snowplow__backfill_limit_days)`
 
 #### State 2: New model introduced
 
 `models < size(array_of_snowplow_tagged_enabled_models)` and therefore a new model, tagged with `snowplow_web_incremental`, has been added since the last run. The package will replay all previously processed events in order to back-fill the new model.
 
-`lower_limit: snowplow__start_date`  
-`upper_limit: least(max_last_success, snowplow__start_date + snowplow__backfill_limit_days)`  
+`lower_limit: snowplow__start_date`
+`upper_limit: least(max_last_success, snowplow__start_date + snowplow__backfill_limit_days)`
 
 #### State 3: Models out of sync
 
 `min_last_success < max_last_success` and therefore the tagged models are out of sync, for example due to a particular model failing to execute successfully during the previous run. The package will attempt to sync all models.
 
-`lower_limit: min_last_success - snowplow__lookback_window_hours`  
-`upper_limit: least(max_last_success, min_last_success + snowplow__backfill_limit_days)`  
+`lower_limit: min_last_success - snowplow__lookback_window_hours`
+`upper_limit: least(max_last_success, min_last_success + snowplow__backfill_limit_days)`
 
 #### State 4: Standard run
 
 If none of the above criteria are met, then we consider it a 'standard run' and we carry on from the last processed event.
 
-`lower_limit: max_last_success - snowplow__lookback_window_hours`  
-`upper_limit: least(current_tstamp, max_last_success + snowplow__backfill_limit_days)`  
+`lower_limit: max_last_success - snowplow__lookback_window_hours`
+`upper_limit: least(current_tstamp, max_last_success + snowplow__backfill_limit_days)`
 
 **Note in all cases the `upper_limit` is limited by the `snowplow__backfill_limit_days` variable. This protects against back-fills with many rows causing very long run times.**
 
@@ -405,10 +405,10 @@ The `_this_run` and derived (e.g. `snowplow_web_page_views`, `snowplow_web_sessi
 
 ### What denotes a custom module?
 
-**Does:**  
+**Does:**
 In short, anything that plugs into the incremental framework provided by this package. Generally speaking any models you create that reference any of the `_this_run` tables from the standard modules are leveraging this framework and therefore need to be tagged with `snowplow_web_incremental` (see the tagging section). Such models will typically be materialized as incremental, although for more complex custom modules there may be a series of staging models that ultimately produce a derived incremental model. In this case, all staging models also need to be tagged correctly.
 
-**Doesn't:**  
+**Doesn't:**
 Models that only reference a Snowplow web derived table as their input, rather than a `_this_run` table. Since these derived tables are materialized as incremental they contain all historic events. Any models you build that reference these tables can therefore by written in a drop and recompute manner i.e. materialized as a table. This means they do not leverage the incremental framework of this package and therefore **should not be tagged.**
 
 ### Inputs for custom modules
@@ -447,7 +447,7 @@ We have created a macro `snowplow_utils.is_run_with_new_events(package_name)`, w
 ```sql
 select
   ...
-from 
+from
 where {{ snowplow_utils.is_run_with_new_events("snowplow_web") }}
 ```
 
@@ -489,7 +489,7 @@ vars:
   snowplow_web:
     snowplow__start_date: "{{ snowplow_utils.get_value_by_target(
                                       dev_value=snowplow_utils.n_timedeltas_ago(1, 'weeks'),
-                                      default_value='2020-01-01', 
+                                      default_value='2020-01-01',
                                       dev_target_name='dev') }}"
 ```
 

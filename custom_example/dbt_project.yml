@@ -1,5 +1,5 @@
 name: 'snowplow_custom_example'
-version: '0.7.0'
+version: '0.8.0'
 config-version: 2
 
 
@@ -13,7 +13,7 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 target-path: "target"
-clean-targets:  
+clean-targets:
     - "target"
     - "dbt_modules"
 
