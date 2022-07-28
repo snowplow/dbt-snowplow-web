@@ -33,7 +33,8 @@ with new_events_session_ids as (
   left join snowplow_atomic.com_askattest_round_1 r on e.event_id = r.root_id and e.collector_tstamp = r.root_tstamp
 
   where
-    coalesce(e.domain_sessionid, e.round_id) is not null -- Attest added coalesce to take into account round_id for Taker
+    COALESCE(e.domain_sessionid, r.id) IS NOT null
+    and not exists (select 1 from {{ ref('snowplow_web_base_quarantined_sessions') }} as a where a.session_id = e.domain_sessionid) -- don't continue processing v.long sessions
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}
