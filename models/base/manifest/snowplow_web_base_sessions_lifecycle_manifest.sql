@@ -1,21 +1,19 @@
-{{ 
+{{
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='session_id',
     upsert_date_key='start_tstamp',
-    schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
-    partition_by = {
+    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
-    },
+      "data_type": "timestamp"
+    }, databricks_partition_by='start_tstamp'),
     cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
     full_refresh=snowplow_web.allow_refresh(),
     tags=["manifest"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 -- Known edge cases:
@@ -51,7 +49,7 @@ with new_events_session_ids as (
   group by 1
   )
 
-{% if snowplow_utils.snowplow_is_incremental() %} 
+{% if snowplow_utils.snowplow_is_incremental() %}
 
 , previous_sessions as (
   select *
@@ -68,7 +66,7 @@ with new_events_session_ids as (
     coalesce(self.domain_userid, ns.domain_userid) as domain_userid, -- Edge case 1: Take previous value to keep domain_userid consistent. Not deterministic but performant
     least(ns.start_tstamp, coalesce(self.start_tstamp, ns.start_tstamp)) as start_tstamp,
     greatest(ns.end_tstamp, coalesce(self.end_tstamp, ns.end_tstamp)) as end_tstamp -- BQ 1 NULL will return null hence coalesce
-    
+
   from new_events_session_ids ns
   left join previous_sessions as self
     on ns.session_id = self.session_id

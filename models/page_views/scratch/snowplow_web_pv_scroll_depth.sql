@@ -1,10 +1,7 @@
-{{ 
+{{
   config(
-    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["page_view_id"]),
-    sort='page_view_id',
-    dist='page_view_id',
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 with prep as (

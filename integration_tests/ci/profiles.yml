@@ -48,3 +48,21 @@ integration_tests:
       warehouse: "{{ env_var('SNOWFLAKE_TEST_WAREHOUSE') }}"
       schema: "github_snwplow_web_dbt_{{ env_var('SCHEMA_SUFFIX') }}"
       threads: 4
+
+    databricks:
+      type: databricks
+      schema: "github_snwplow_web_dbt_{{ env_var('SCHEMA_SUFFIX') }}"
+      host: "{{ env_var('DATABRICKS_TEST_HOST') }}"
+      http_path: "{{ env_var('DATABRICKS_TEST_HTTP_PATH') }}"
+      token: "{{ env_var('DATABRICKS_TEST_TOKEN') }}"
+      threads: 4
+
+    spark:
+      type: spark
+      method: odbc
+      driver: "{{ env_var('DATABRICKS_TEST_HTTP_PATH') }}"
+      schema: "github_snwplow_web_dbt_{{ env_var('SCHEMA_SUFFIX') }}"
+      host: "{{ env_var('DATABRICKS_TEST_HOST') }}"
+      token: "{{ env_var('DATABRICKS_TEST_TOKEN') }}"
+      endpoint: "{{ env_var('DATABRICKS_TEST_ENDPOINT') }}"
+      threads: 4

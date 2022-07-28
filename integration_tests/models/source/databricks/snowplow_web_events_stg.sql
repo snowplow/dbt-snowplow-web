@@ -2,14 +2,14 @@
 with prep as (
 select
   *,
-  parse_json(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) as contexts_com_snowplowanalytics_snowplow_web_page_1
+  from_json(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_web_page_1
 
 from {{ ref('snowplow_web_events') }}
 )
 
 
 select
-  *
+  * 
 
 from prep
 

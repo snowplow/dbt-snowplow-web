@@ -1,5 +1,5 @@
 name: 'snowplow_web'
-version: '0.6.1'
+version: '0.8.0'
 config-version: 2
 
 require-dbt-version: [">=1.0.0", "<2.0.0"]
@@ -17,7 +17,6 @@ clean-targets:
     - "target"
     - "dbt_modules"
     - "dbt_packages"
-
 vars:
   snowplow_web:
     # Sources
@@ -56,13 +55,12 @@ vars:
     snowplow__allow_refresh: false
 
 
-
 # Completely or partially remove models from the manifest during run start.
 on-run-start:
   - "{{ snowplow_utils.snowplow_web_delete_from_manifest(var('models_to_remove',[])) }}"
 
 # Update manifest table with last event consumed per sucessfully executed node/model
-on-run-end: 
+on-run-end:
   - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 
@@ -71,6 +69,7 @@ on-run-end:
 models:
   snowplow_web:
     +materialized: table
+    +file_format: delta
     +bind: false
     base:
       manifest:
@@ -80,6 +79,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
@@ -92,6 +93,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:

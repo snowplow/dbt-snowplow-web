@@ -1,12 +1,7 @@
-{{ 
+{{
   config(
-    partition_by = {
-      "field": "start_tstamp",
-      "data_type": "timestamp"
-    },
-    cluster_by=["domain_sessionid"],
     tags=["this_run"]
-  ) 
+  )
 }}
 
 with page_view_events as (
@@ -116,12 +111,12 @@ from (
   from {{ ref('snowplow_web_base_events_this_run') }} as e
   where e.event_name = 'page_view'
   and e.page_view_id is not null
-  
+
   group by e.page_view_id
 )
 
 {% if var("snowplow__ua_bot_filter", true) %}
-   where not regexp_contains(ev.useragent, '%(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt)%')
+   where not regexp_contains(ev.useragent, '(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt)')
 {% endif %}
 )
 
@@ -215,7 +210,7 @@ select
   ev.primary_impact,
   ev.reason,
   ev.spider_or_robot,
-  
+
   ev.useragent_family,
   ev.useragent_major,
   ev.useragent_minor,

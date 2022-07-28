@@ -1,12 +1,7 @@
-{{ 
+{{
   config(
-    partition_by = {
-      "field": "collector_tstamp",
-      "data_type": "timestamp"
-    },
-    cluster_by=["event_name","page_view_id"],
     tags=["this_run"]
-  ) 
+  )
 }}
 
 {%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
@@ -40,4 +35,3 @@ from (
 
 ) e
 group by e.event_id
-
