@@ -1,18 +1,19 @@
 {{
   config(
-    materialized='snowplow_incremental',
+    materialized=var("snowplow__incremental_materialization"),
     unique_key='session_id',
     upsert_date_key='start_tstamp',
-    schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
     partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
-      "data_type": "timestamp",
-      "granularity": "day"
-    },
-    cluster_by=["session_id"]
-  ) 
+      "data_type": "timestamp"
+    }, databricks_partition_by='start_tstamp'),
+    cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
+    full_refresh=snowplow_web.allow_refresh(),
+    tags=["manifest"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 -- Known edge cases:
