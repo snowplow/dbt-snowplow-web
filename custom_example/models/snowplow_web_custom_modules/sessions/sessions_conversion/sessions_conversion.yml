@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: snowplow_web_sessions_conversion_this_run
-    description: Table the calculates intent to convert and conversion
+    description: Table that calculates intent to convert and conversion
     columns:
       - name: domain_sessionid
         tests:

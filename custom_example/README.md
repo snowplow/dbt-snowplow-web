@@ -36,7 +36,7 @@ This method takes your custom SQL and produces an incremental 'derived' custom t
 
 Another advantage of this method is if you want to change the logic in your custom module and replay all events through the new version, you don't have to also tear down the 'standard' table with corresponding level of aggregation  as the two are independent.
 
-An example of such a set up can be seen in [snowplow_web_pv_channel_engagement.sql](models/snowplow_web_custom_modules/page_views/page_view_channel_engagement/snowplow_web_pv_channel_engagement.sql). This model calculates page view engagement by channel by using metrics derived from link click events.
+An example of such a set up for Redshift can be seen in [snowplow_web_pv_channel_engagement.sql](models/snowplow_web_custom_modules/page_views/page_view_channel_engagement/default/snowplow_web_pv_channel_engagement.sql). This model calculates page view engagement by channel by using metrics derived from link click events. Similar examples for BigQuery, Snowflake and Databricks can be found under [page_view_channel_engagement](models/snowplow_web_custom_modules/page_views/page_view_channel_engagement).
 
 ### Points to note
 
