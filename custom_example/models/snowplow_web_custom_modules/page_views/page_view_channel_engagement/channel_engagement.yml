@@ -18,3 +18,11 @@ models:
         description: Was the page view a bounce visit
       - name: engagement_score
         description: Engagement score based on time engaged and vertical scrolling
+      - name: channel
+        description: Rule based groupings of traffic sources and mediums
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['search', 'paidsearch', 'advertising', 'display', 'direct', 
+                'organicsearch', 'social', 'email', 'affiliate', 'referral', 'internal', 
+                'others']
