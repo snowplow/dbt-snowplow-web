@@ -54,6 +54,10 @@ vars:
     snowplow__incremental_materialization: "snowplow_incremental"
     snowplow__dev_target_name: 'dev'
     snowplow__allow_refresh: false
+    # Variables - Databricks Only
+    # Add the following variable to your dbt project's dbt_project.yml file
+    # Depending on the use case it should either be the catalog (for Unity Catalog users from databricks connector 1.1.1 onwards) or the same value as your snowplow__atomic_schema (unless changed it should be 'atomic')
+    # snowplow__databricks_catalog: 'hive_metastore'
 
 
 

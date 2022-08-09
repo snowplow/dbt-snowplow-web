@@ -45,7 +45,7 @@ vars:
     snowplow__page_view_context: "{{ ref('snowplow_web_page_view_context_stg') }}"
     snowplow__start_date: "2020-07-03"
     snowplow__backfill_limit_days: 2
-
+    snowplow__databricks_catalog: 'atomic'
 
 seeds:
   quote_columns: false

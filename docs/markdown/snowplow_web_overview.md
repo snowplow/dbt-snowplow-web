@@ -105,6 +105,19 @@ vars:
     snowplow__heartbeat: 10 # Default value
 ```
 
+### 5 - Databricks only - setting the databricks_catalog
+
+Add the following variable to your dbt project's `dbt_project.yml` file
+
+```yml
+# dbt_project.yml
+...
+vars:
+  snowplow_web:
+    snowplow__databricks_catalog: 'hive_metastore'
+```
+Depending on the use case it should either be the catalog (for Unity Catalog users from databricks connector 1.1.1 onwards, defaulted to 'hive_metastore') or the same value as your `snowplow__atomic_schema` (unless changed it should be 'atomic'). This is needed to handle the database property within models/base/src_base.yml.
+
 ## Configuration
 
 ### Output Schemas
