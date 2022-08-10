@@ -256,10 +256,10 @@ dbt run --select +my_custom_module # Will execute only your custom module + any 
 
 ### Tearing down a subset of models
 
-As the code base for your custom modules evolves, you will likely need to replay events through a given module. In order to do so, the models within your custom module need to be removed from the `snowplow_web_incremental_manifest` table. See the 'Complete refresh' section for an explanation as to why. This removal can be achieved by passing the model's name to the `models_to_remove'` var at run time. If you want to replay events through a series of dependent models, you only need to pass the name of the endmost model within the run:
+As the code base for your custom modules evolves, you will likely need to replay events through a given module. In order to do so, you first need to manually drop the models within your custom module from your database. Then these models need to be removed from the `snowplow_web_incremental_manifest` table. See the 'Complete refresh' section for an explanation as to why. This removal can be achieved by passing the model's name to the `models_to_remove` var at run time. If you want to replay events through a series of dependent models, you only need to pass the name of the endmost model within the run:
 
 ```bash
-dbt run --select +snowplow_web_custom_incremental_model --full-refresh --vars 'models_to_remove: snowplow_web_custom_incremental_model'
+dbt run --select +snowplow_web_custom_incremental_model --vars '{snowplow__start_date: your_backfill_start_date, models_to_remove: snowplow_web_custom_incremental_model}'
 ```
 
 By removing the `snowplow_web_custom_incremental_model` model from the manifest the web packages will be in state 2 and will replay all events.
