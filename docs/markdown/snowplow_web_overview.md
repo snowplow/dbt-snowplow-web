@@ -182,6 +182,22 @@ This package makes use of a series of other variables, which are all set to the 
 
 `snowplow__session_stitching`:      Default: `True`. Determines whether to apply the user mapping to the sessions table. Please see the 'User Mapping' section for more details.
 
+### Postgres Only
+
+In most modern analytical data warehouses constraints are usually either unsupported or unenforced. For this reason it is better to use dbt to assert the data constraints without actually materialising them in the database using `dbt test`. Here you can test the constraint is unique and not null. The snowplow_web package already includes these dbt tests for primary keys, see the testing section for more details.
+
+To optimise performance of large Postgres datasets you can create [indexes][dbt-indexes] in your dbt model config for columns that are commonly used in joins or where clauses. For example:
+
+``` yaml
+# snowplow_web_sessions_custom.sql
+{{ 
+  config(
+    ...
+    indexes=[{'columns': [‘domain_sessionid’], 'unique': True}]
+  )
+}}
+```
+
 ## YAML Selectors
 
 Within this package we have provided a suite of suggested selectors to run and test the models within the package. This leverages dbt's [selector flag][dbt-selectors].
@@ -626,6 +642,7 @@ limitations under the License.
 [snowflake-merge-duplicates]: https://docs.snowflake.com/en/sql-reference/sql/merge.html#duplicate-join-behavior
 [snowplow-utils]: https://github.com/snowplow/dbt-snowplow-utils
 [user-mapping-blog]: https://snowplowanalytics.com/blog/2021/02/24/developing-a-single-customer-view-with-snowplow/
+[dbt-indexes]: https://docs.getdbt.com/reference/resource-configs/postgres-configs#indexes
 
 {% endraw %}
 {% enddocs %}
