@@ -1,9 +1,9 @@
-{{ 
+{{
   config(
     sort='collector_tstamp',
     dist='event_id',
     tags=["this_run"]
-  ) 
+  )
 }}
 
 {%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
@@ -162,8 +162,8 @@ with events_this_run AS (
     count(*) over(partition by e.event_id) as row_count
 
   from events_this_run e
-  
-  where 
+
+  where
     e.event_id_dedupe_index = 1 -- Keep row(s) with earliest collector_tstamp per dupe event
 )
 
@@ -177,12 +177,29 @@ with events_this_run AS (
   select
     root_id,
     root_tstamp,
-    id as page_view_id
+    id as page_view_id,
+    dense_rank() over (partition by root_id order by root_tstamp) as page_context_dedupe_index
 
   from {{ var('snowplow__page_view_context') }}
-  where 
+  where
     root_tstamp >= {{ lower_limit }}
     and root_tstamp <= {{ upper_limit }}
+)
+
+, page_context_dedupe as (
+  select
+   *,
+   count(*) over(partition by root_id) as row_count
+
+  from page_context
+  where page_context_dedupe_index = 1 -- Keep row(s) with earliest collector_tstamp per dupe event
+)
+
+, cleaned_page_context as (
+  select *
+  from page_context_dedupe
+  where row_count = 1 -- Only keep dupes with single row per earliest collector_tstamp
+
 )
 
 select
@@ -190,6 +207,6 @@ select
   pc.page_view_id
 
 from cleaned_events as ce
-left join page_context as pc
+left join cleaned_page_context as pc
 on ce.event_id = pc.root_id
 and ce.collector_tstamp = pc.root_tstamp
