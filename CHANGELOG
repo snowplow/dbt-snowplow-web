@@ -1,3 +1,12 @@
+snowplow-web 0.9.0 (2022-08-11)
+---------------------------------------
+Add custom examples for all databases (Close #87)
+Add buffer for time filter for BigQuery (Close #98)
+Update docs for tear down issue (Close #100)
+Add support for Databricks users with Unity Catalog (Close #102)
+Add safety page_view_context deduplication for Redshift and Postgres (Close #104)
+Update docs for adding indexes for Postgres (Close #90)
+
 snowplow-web 0.8.0 (2022-07-19)
 ---------------------------------------
 Add missing mention of Databricks to README (Close #89)
