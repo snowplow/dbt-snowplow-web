@@ -1,3 +1,7 @@
+snowplow-web 0.9.1 (2022-08-22)
+---------------------------------------
+Fix dbt-spark incompatibility for Databricks support (Close #109)
+
 snowplow-web 0.9.0 (2022-08-11)
 ---------------------------------------
 Add custom examples for all databases (Close #87)
