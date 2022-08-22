@@ -24,7 +24,7 @@ Each module produces a table which acts as the input to the subsequent module (t
 
 ## Adapter Support
 
-The Snowplow Web v0.9.0 package currently supports BigQuery, Databricks, Redshift, Snowflake & Postgres.
+The Snowplow Web v0.9.1 package currently supports BigQuery, Databricks, Redshift, Snowflake & Postgres.
 
 ## Installation
 
@@ -203,7 +203,7 @@ To optimise performance of large Postgres datasets you can create [indexes][dbt-
 
 ``` yaml
 # snowplow_web_sessions_custom.sql
-{{ 
+{{
   config(
     ...
     indexes=[{'columns': [‘domain_sessionid’], 'unique': True}]
