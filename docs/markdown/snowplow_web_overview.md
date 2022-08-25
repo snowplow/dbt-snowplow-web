@@ -118,6 +118,8 @@ vars:
 ```
 Depending on the use case it should either be the catalog (for Unity Catalog users from databricks connector 1.1.1 onwards, defaulted to 'hive_metastore') or the same value as your `snowplow__atomic_schema` (unless changed it should be 'atomic'). This is needed to handle the database property within models/base/src_base.yml.
 
+**A more detailed explanation for how to set up your Databricks configuration properly can be found in [Unity Catalog support](#Unity-Catalog-support).**
+
 ## Configuration
 
 ### Output Schemas
@@ -615,6 +617,21 @@ Using `event_id` de-duplication as an example, for duplicates we:
 - Keep the first row per `event_id` ordered by `collector_tstamp` i.e. the earliest occurring row.
 
 The same methodology is applied to `page_view_id`s, however we order by `derived_tstamp`.
+
+## Databricks Specific Information
+
+You can connect to Databricks using either the `dbt-spark` or the `dbt-databricks` connectors. The `dbt-spark` adapter does not allow dbt to take advantage of certain features that are unique to Databricks, which you can take advantage of when using the `dbt-databricks` adapter. Where possible, we would recommend using the `dbt-databricks` adapter.
+
+### Unity Catalog support
+
+With the rollout of Unity Catalog (UC), the `dbt-databricks` adapter has added support in dbt for the three-level-namespace as of `dbt-databricks>=1.1.1`. As a result of this, we have introduced the `snowplow__databricks_catalog` variable which should be used **if** your Databricks environment has UC enabled, and you are using a version of the `dbt-databricks` adapter that supports UC. The default value for this variable is `hive_metastore` which is also the default name of your UC, but this can be changed with the `snowplow__databricks_catalog` variable.
+
+Since there are many different situations, we've created the following table to help guide your setup process (this should help resolve the `Cannot set database in Databricks!` error):
+
+|                                             | Adapter supports UC and UC Enabled                                                                     | Adapter supports UC and UC not enabled         | Adapter does not support UC                                                                           |
+|---------------------------------------------|--------------------------------------------------------------------------------------------------------|------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| Events land in default `atomic` schema      | `snowplow__databricks_catalog` = '{name_of_catalog}'                                                   | Nothing needed                                 | `snowplow__databricks_catalog` = 'atomic'                                                                                        |
+| Events land in custom schema (not `atomic`) | `snowplow__atomic_schema` = '{name_of_schema}'<br>`snowplow__databricks_catalog` = '{name_of_catalog}' | `snowplow__atomic_schema` = '{name_of_schema}' | `snowplow__atomic_schema` = '{name_of_schema}'<br>`snowplow__databricks_catalog` = '{name_of_schema}' |
 
 # Join the Snowplow community
 
