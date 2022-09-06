@@ -1,3 +1,7 @@
+snowplow-web 0.9.2 (2022-09-06)
+---------------------------------------
+Optimize performance in Databricks for incremental models (Close #113)
+
 snowplow-web 0.9.1 (2022-08-22)
 ---------------------------------------
 Fix dbt-spark incompatibility for Databricks support (Close #109)
