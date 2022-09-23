@@ -22,8 +22,6 @@ models:
         description: '{{ doc("col_user_id") }}'
       - name: domain_userid
         description: '{{ doc("col_domain_userid") }}'
-        tests:
-          - not_null
       - name: network_userid
         description: '{{ doc("col_network_userid") }}'
         tests:
@@ -34,8 +32,6 @@ models:
           - not_null
       - name: domain_sessionidx
         description: '{{ doc("col_domain_sessionidx") }}'
-        tests:
-          - not_null
       - name: page_view_in_session_index
         description: A page view index within a single session
         tests:
