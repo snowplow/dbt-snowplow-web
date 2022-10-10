@@ -48,6 +48,8 @@ The package contains multiple staging models however the mart models are as foll
 | snowplow_web_users        | An aggregated table of sessions to a user level, grouped on `domain_userid`.               |
 | snowplow_web_user_mapping | Provides a mapping between user identifiers, `domain_userid` and `user_id`.                |
 
+Please refer to the [dbt doc site][snowplow-web-docs-dbt] for details on the model output tables.
+
 # Join the Snowplow community
 
 We welcome all ideas, questions and contributions!
@@ -71,11 +73,12 @@ limitations under the License.
 
 [license]: http://www.apache.org/licenses/LICENSE-2.0
 [license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
-[tracker-classificiation]: https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/tracker-maintenance-classification/
+[tracker-classificiation]: https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/tracker-maintenance-classification/
 [early-release]: https://img.shields.io/static/v1?style=flat&label=Snowplow&message=Early%20Release&color=014477&labelColor=9ba0aa&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEVMaXGXANeYANeXANZbAJmXANeUANSQAM+XANeMAMpaAJhZAJeZANiXANaXANaOAM2WANVnAKWXANZ9ALtmAKVaAJmXANZaAJlXAJZdAJxaAJlZAJdbAJlbAJmQAM+UANKZANhhAJ+EAL+BAL9oAKZnAKVjAKF1ALNBd8J1AAAAKHRSTlMAa1hWXyteBTQJIEwRgUh2JjJon21wcBgNfmc+JlOBQjwezWF2l5dXzkW3/wAAAHpJREFUeNokhQOCA1EAxTL85hi7dXv/E5YPCYBq5DeN4pcqV1XbtW/xTVMIMAZE0cBHEaZhBmIQwCFofeprPUHqjmD/+7peztd62dWQRkvrQayXkn01f/gWp2CrxfjY7rcZ5V7DEMDQgmEozFpZqLUYDsNwOqbnMLwPAJEwCopZxKttAAAAAElFTkSuQmCC
-[tracker-docs]: https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/
-[webpage-context]: https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracker-setup/initialization-options/#Adding_predefined_contexts
+[tracker-docs]: https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/
+[webpage-context]: https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/tracker-setup/initialization-options/#Adding_predefined_contexts
 [dbt-package-docs]: https://docs.getdbt.com/docs/building-a-dbt-project/package-management
-[discourse-image]: https://img.shields.io/discourse/posts?server=https%3A%2F%2Fdiscourse.snowplowanalytics.com%2F
-[discourse]: http://discourse.snowplowanalytics.com/
-[snowplow-web-docs]: https://snowplow.github.io/dbt-snowplow-web/#!/overview/snowplow_web
+[discourse-image]: https://img.shields.io/discourse/posts?server=https%3A%2F%2Fdiscourse.snowplow.io%2F
+[discourse]: http://discourse.snowplow.io/
+[snowplow-web-docs-dbt]: https://snowplow.github.io/dbt-snowplow-web/#!/overview/snowplow_web
+[snowplow-web-docs]: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/
