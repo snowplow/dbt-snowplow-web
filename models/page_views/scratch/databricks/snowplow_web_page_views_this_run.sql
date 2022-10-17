@@ -183,7 +183,7 @@ select
   and ev.page_view_id is not null
 
   {% if var("snowplow__ua_bot_filter", true) %}
-     and not rlike(ev.useragent, '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*')
+     {{ filter_bots() }}
   {% endif %}
 
   qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp) = 1

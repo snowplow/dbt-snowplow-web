@@ -54,7 +54,7 @@ jobs:
         working-directory: ./integration_tests
     strategy:
       matrix:
-        dbt_version: ["1.*"]
+        dbt_version: ["1.2.*"]
         warehouse: ["postgres", "bigquery", "snowflake", "databricks"] # TODO: Add RS self-hosted runner
 
     services:

@@ -1,8 +1,8 @@
-{{ 
+{{
   config(
     sort='start_tstamp',
     dist='page_view_id'
-  ) 
+  )
 }}
 
 with page_view_events as (
@@ -84,11 +84,11 @@ with page_view_events as (
   and ev.page_view_id is not null
 
   {% if var("snowplow__ua_bot_filter", true) %}
-    and ev.useragent not similar to '%(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt)%'
+    {{ filter_bots() }}
   {% endif %}
 )
 
--- Dedupe: Take first row of duplicate page view, unless derived_tstamp also duplicated. 
+-- Dedupe: Take first row of duplicate page view, unless derived_tstamp also duplicated.
 -- Remove pv entirely if both fields are dupes. Avoids 1:many join with context tables.
 , dedupe as (
   select

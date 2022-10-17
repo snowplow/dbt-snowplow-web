@@ -114,9 +114,10 @@ from (
 
   group by e.page_view_id
 )
+where 1 = 1
 
 {% if var("snowplow__ua_bot_filter", true) %}
-   where not regexp_contains(ev.useragent, '(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt)')
+ {{ filter_bots() }}
 {% endif %}
 )
 
