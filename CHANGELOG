@@ -1,3 +1,9 @@
+snowplow-web 0.9.3 (2022-10-26)
+---------------------------------------
+Add databricks to stitch user macro (Close #93)
+Enable custom bot filtering (Close #121)
+Point docs to core docs site (docs.snowplow.io) (Close #119)
+
 snowplow-web 0.9.2 (2022-09-06)
 ---------------------------------------
 Optimize performance in Databricks for incremental models (Close #113)
