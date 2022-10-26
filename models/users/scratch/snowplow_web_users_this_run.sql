@@ -13,7 +13,7 @@ select
 
   b.start_tstamp,
   b.end_tstamp,
-  {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
+  {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   -- engagement fields
   b.page_views,

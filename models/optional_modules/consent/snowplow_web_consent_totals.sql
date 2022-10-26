@@ -18,9 +18,9 @@ with totals as (
     count(case when last_consent_event_type = 'expired'  then 1 end) as expired,
     count(case when last_consent_event_type = 'withdrawn'  then 1 end) as withdrawn,
     count(case when last_consent_event_type = 'implicit_consent'  then 1 end) as implicit_consent,
-    count(case when {{ dbt_utils.dateadd('year', '1', 'last_consent_event_tstamp') }} <= {{ dbt_utils.dateadd('month', '6', 'current_date') }}
+    count(case when {{ dateadd('year', '1', 'last_consent_event_tstamp') }} <= {{ dateadd('month', '6', 'current_date') }}
           and last_consent_event_type <> 'expired'
-          and {{ dbt_utils.dateadd('year', '1', 'last_consent_event_tstamp') }} > current_date then 1 end) as expires_in_six_months
+          and {{ dateadd('year', '1', 'last_consent_event_tstamp') }} > current_date then 1 end) as expires_in_six_months
 
   from {{ ref('snowplow_web_consent_users') }}
 
@@ -49,4 +49,3 @@ left join totals t
 on t.last_consent_version = v.consent_version
 
 order by v.version_start_tstamp desc
-

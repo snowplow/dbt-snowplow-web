@@ -29,10 +29,10 @@ select
   ev.derived_tstamp,
   ev.start_tstamp,
   coalesce(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
-  {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
+  {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
-  {{ dbt_utils.datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
+  {{ datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
 
   sd.hmax as horizontal_pixels_scrolled,
   sd.vmax as vertical_pixels_scrolled,

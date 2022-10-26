@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized='snowplow_incremental',
     unique_key='user_primary_key',
@@ -11,12 +11,12 @@
     }, databricks_partition_by='start_tstamp_date'),
     cluster_by=snowplow_web.web_cluster_by_fields_users(),
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
-  ) 
+  )
 }}
 
 
 select distinct
-  {{ dbt_utils.concat(["u.domain_userid", "'-'", "s.user_ipaddress"]) }} as user_primary_key,
+  {{ dbt.concat(["u.domain_userid", "'-'", "s.user_ipaddress"]) }} as user_primary_key,
   u.*
   {% if target.type in ['databricks', 'spark'] -%}
   , DATE(start_tstamp) as start_tstamp_date

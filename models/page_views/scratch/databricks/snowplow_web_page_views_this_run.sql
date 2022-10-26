@@ -88,9 +88,9 @@ select
 
   {% else %}
 
-  cast(null as {{ dbt_utils.type_string() }}) as category,
-  cast(null as {{ dbt_utils.type_string() }}) as primary_impact,
-  cast(null as {{ dbt_utils.type_string() }}) as reason,
+  cast(null as {{ type_string() }}) as category,
+  cast(null as {{ type_string() }}) as primary_impact,
+  cast(null as {{ type_string() }}) as reason,
   cast(null as boolean) as spider_or_robot,
 
   {% endif %}
@@ -113,18 +113,18 @@ select
 
   {% else %}
 
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_family,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_major,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_minor,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_patch,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_version,
-  cast(null as {{ dbt_utils.type_string() }}) as os_family,
-  cast(null as {{ dbt_utils.type_string() }}) as os_major,
-  cast(null as {{ dbt_utils.type_string() }}) as os_minor,
-  cast(null as {{ dbt_utils.type_string() }}) as os_patch,
-  cast(null as {{ dbt_utils.type_string() }}) as os_patch_minor,
-  cast(null as {{ dbt_utils.type_string() }}) as os_version,
-  cast(null as {{ dbt_utils.type_string() }}) as device_family,
+  cast(null as {{ type_string() }}) as useragent_family,
+  cast(null as {{ type_string() }}) as useragent_major,
+  cast(null as {{ type_string() }}) as useragent_minor,
+  cast(null as {{ type_string() }}) as useragent_patch,
+  cast(null as {{ type_string() }}) as useragent_version,
+  cast(null as {{ type_string() }}) as os_family,
+  cast(null as {{ type_string() }}) as os_major,
+  cast(null as {{ type_string() }}) as os_minor,
+  cast(null as {{ type_string() }}) as os_patch,
+  cast(null as {{ type_string() }}) as os_patch_minor,
+  cast(null as {{ type_string() }}) as os_version,
+  cast(null as {{ type_string() }}) as device_family,
 
   {% endif %}
 
@@ -154,26 +154,26 @@ select
 
   {% else %}
 
-  cast(null as {{ dbt_utils.type_string() }}) as device_class,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_class,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_name,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_name_version,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_name_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_version,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as device_brand,
-  cast(null as {{ dbt_utils.type_string() }}) as device_name,
-  cast(null as {{ dbt_utils.type_string() }}) as device_version,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_class,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_name,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_name_version,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_name_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_version,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_class,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_name,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_name_version,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_version
+  cast(null as {{ type_string() }}) as device_class,
+  cast(null as {{ type_string() }}) as agent_class,
+  cast(null as {{ type_string() }}) as agent_name,
+  cast(null as {{ type_string() }}) as agent_name_version,
+  cast(null as {{ type_string() }}) as agent_name_version_major,
+  cast(null as {{ type_string() }}) as agent_version,
+  cast(null as {{ type_string() }}) as agent_version_major,
+  cast(null as {{ type_string() }}) as device_brand,
+  cast(null as {{ type_string() }}) as device_name,
+  cast(null as {{ type_string() }}) as device_version,
+  cast(null as {{ type_string() }}) as layout_engine_class,
+  cast(null as {{ type_string() }}) as layout_engine_name,
+  cast(null as {{ type_string() }}) as layout_engine_name_version,
+  cast(null as {{ type_string() }}) as layout_engine_name_version_major,
+  cast(null as {{ type_string() }}) as layout_engine_version,
+  cast(null as {{ type_string() }}) as layout_engine_version_major,
+  cast(null as {{ type_string() }}) as operating_system_class,
+  cast(null as {{ type_string() }}) as operating_system_name,
+  cast(null as {{ type_string() }}) as operating_system_name_version,
+  cast(null as {{ type_string() }}) as operating_system_version
 
   {% endif %}
 
@@ -213,7 +213,7 @@ select
     p.derived_tstamp,
     p.start_tstamp,
     coalesce(t.end_tstamp, p.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
-    {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
+    {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
     coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
     datediff(second, p.derived_tstamp, coalesce(t.end_tstamp, p.derived_tstamp))  as absolute_time_in_s,
