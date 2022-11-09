@@ -35,6 +35,10 @@ models:
         +enabled: "{{ target.type == 'snowflake' | as_bool() }}"
     dummy_custom_module:
       +tags: snowplow_web_incremental
+  snowplow_web:
+    optional_modules:
+      consent:
+        enabled: false
 
 
 

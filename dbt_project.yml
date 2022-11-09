@@ -60,7 +60,6 @@ vars:
     # snowplow__databricks_catalog: 'hive_metastore'
 
 
-
 # Completely or partially remove models from the manifest during run start.
 on-run-start:
   - "{{ snowplow_utils.snowplow_web_delete_from_manifest(var('models_to_remove',[])) }}"
@@ -91,6 +90,11 @@ models:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
+    optional_modules:
+      consent:
+        enabled: false
+        +schema: "derived"
+        +tags: ["snowplow_web_incremental", "derived"]
     page_views:
       +schema: "derived"
       +tags: "snowplow_web_incremental"
