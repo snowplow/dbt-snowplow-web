@@ -1,5 +1,5 @@
 name: 'snowplow_custom_example'
-version: '0.9.3'
+version: '0.10.0'
 config-version: 2
 
 
