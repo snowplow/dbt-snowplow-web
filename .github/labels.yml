@@ -1,0 +1,81 @@
+- name: "category:breaking_change"
+  color: '1e1037'
+  description: "A breaking change will be introduced if this issue is completed."
+- name: "category:documentation"
+  color: '3849b8'
+  description: "About the documentation."
+- name: "cla:no"
+  color: '313131'
+  description: "[Auto generated] Snowplow Contributor License Agreement has not been signed."
+- name: "cla:yes"
+  color: 'c1c1c1'
+  description: "[Auto generated] Snowplow Contributor License Agreement has been signed."
+- name: "good first issue"
+  color: '69f6ff'
+  description: "Good issue for a first time contributor."
+- name: "priority:high"
+  color: 'f1ff1d'
+  description: "To fix as soon as possible."
+- name: "priority:low"
+  color: 'ffd0d4'
+  description: "Not on the roadmap."
+- name: "priority:medium"
+  color: 'ff6372'
+  description: "On the roadmap."
+- name: "status:blocked"
+  color: '042e31'
+  description: "Maintainers can't work on this right now."
+- name: "status:completed"
+  color: '0ea417'
+  description: "Completed - but might not be released yet."
+- name: "status:duplicate"
+  color: 'b6e1e3'
+  description: "Duplicates another issue."
+- name: "status:has_pr"
+  color: '0ea462'
+  description: "A PR exists for this issue."
+- name: "status:in_progress"
+  color: '0e9ba4'
+  description: "Maintainers are working on this."
+- name: "status:needs_triage"
+  color: 'b6e3cf'
+  description: "Needs maintainer triage."
+- name: "status:wont_fix"
+  color: '04311d'
+  description: "Can't or won't be fixed."
+- name: "status:info_needed"
+  color: '56B9BF'
+  description: "More information is needed from filer for issue to be actionable"
+- name: "status:do_not_merge"
+  color: 'D93F0B'
+  description: "Flag to denote a Issue or PR which should not yet be merged (usually pending a release)"
+- name: "status:help_wanted"
+  color: '69f6ff'
+  description: "Help is wanted to help solve this issue."
+- name: "type:admin"
+  color: 'fdffd2'
+  description: 'About code or repo management.'
+- name: "type:bug"
+  color: '4c381f'
+  description: 'Bugs or weaknesses. The issue has to contain steps to reproduce.'
+- name: "type:enhancement"
+  color: 'ffbd69'
+  description: 'New features or improvements to existing features.'
+- name: "type:question"
+  color: 'ffebd2'
+  description: "Questions to the maintainers."
+- name: "category:models"
+  color: '6738b8'
+  description: "Related to the models in the package."
+- name: "category:macros"
+  color: 'f1ff1d'
+  description: "Related to the macros in the package."
+- name: "category:tests"
+  color: 'a738b8'
+  description: "Related to the tests in the package."
+- name: "category:other"
+  color: '6372ff'
+  description: "Related to other parts of the package or repo itself."
+#- name: "category:4"
+#  color: '9e62dd'
+#  description: "Desc"
