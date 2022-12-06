@@ -6,6 +6,8 @@ on:
       - main
       - 'release/**'
 
+concurrency: dbt_integration_tests
+
 env:
   # Set profiles.yml directory
   DBT_PROFILES_DIR: ./ci
@@ -76,7 +78,7 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Remove '*' and replace '.' with '_' in DBT_VERSION & set as SCHEMA_SUFFIX.
       # SCHEMA_SUFFIX allows us to run multiple versions of dbt in parallel without overwriting the output tables
@@ -94,12 +96,12 @@ jobs:
          echo "$BIGQUERY_SERVICE_KEYFILE" > ./dbt-service-account.json
 
       - name: Python setup
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
          python-version: "3.8.x"
 
       - name: Pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
@@ -120,14 +122,6 @@ jobs:
           pip install -Iv "dbt-${{ matrix.warehouse }}[ODBC]"==${{ matrix.dbt_version }} --upgrade
           dbt deps
         if: ${{matrix.warehouse == 'spark'}}
-
-      - name: Block concurrent executions tests
-        uses: softprops/turnstyle@v1
-        with:
-          poll-interval-seconds: 20
-          same-branch-only: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Pre-test: Drop ci schemas"
         run: |

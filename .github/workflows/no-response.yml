@@ -1,0 +1,26 @@
+name: No Response
+
+# Both `issue_comment` and `scheduled` event types are required for this Action
+# to work properly.
+on:
+  issue_comment:
+    types: [created]
+  schedule:
+    # Schedule for 08:00 every day
+    - cron: '0 8 * * *'
+
+jobs:
+  noResponse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lee-dohm/no-response@v0.5.0
+        with:
+          token: ${{ github.token }}
+          daysUntilClose: 14
+          responseRequiredLabel: "status:info_needed"
+          closeComment: >
+            This issue has been automatically closed because there has been no response
+            to our request for more information from the original author within 14 days. With only what
+            is currently in the issue, we don't have enough information
+            to take action. Please comment with this information if you have it to reopen the issue so
+            that we can investigate further.
