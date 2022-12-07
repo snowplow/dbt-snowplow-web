@@ -8,7 +8,7 @@
     partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
       "field": "start_tstamp",
       "data_type": "timestamp"
-    }, databricks_partition_by='start_tstamp'),
+    }, databricks_partition_by='start_tstamp_date'),
     cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
     full_refresh=snowplow_web.allow_refresh(),
     tags=["manifest"],
@@ -94,5 +94,8 @@ select
   sl.domain_userid,
   sl.start_tstamp,
   least({{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'sl.start_tstamp') }}, sl.end_tstamp) as end_tstamp -- limit session length to max_session_days
+  {% if target.type in ['databricks', 'spark'] -%}
+  , DATE(start_tstamp) as start_tstamp_date
+  {%- endif %}
 
 from session_lifecycle sl
