@@ -9,15 +9,10 @@
                                                                           'start_tstamp',
                                                                           'end_tstamp') %}
 
-{%- set columns = adapter.get_columns_in_relation(var('snowplow__events'))|map(attribute='column')|map('lower')|list -%}
-{# No 'EXCEPT' to exclude cols in Snowflake. Remove domain_userid and page view context from returned columns then render. #}
-{%- set filtered_columns = columns|reject("equalto","domain_userid")|reject("equalto","contexts_com_snowplowanalytics_snowplow_web_page_1") -%}
-
-
 select
   a.contexts_com_snowplowanalytics_snowplow_web_page_1[0]:id::varchar as page_view_id,
   b.domain_userid, -- take domain_userid from manifest. This ensures only 1 domain_userid per session.
-  {{ 'a.'~filtered_columns|join(',\n\ta.') }}
+  a.* exclude(contexts_com_snowplowanalytics_snowplow_web_page_1, domain_userid)
 
 from {{ var('snowplow__events') }} as a
 inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
