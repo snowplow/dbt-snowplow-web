@@ -6,6 +6,9 @@
 
 select
   ev.page_view_id,
+  {% if var('snowplow__limit_page_views_to_session', true) %}
+  ev.domain_sessionid,
+  {% endif %}
   max(ev.derived_tstamp) as end_tstamp,
 
   -- aggregate pings:
@@ -21,4 +24,4 @@ from {{ ref('snowplow_web_base_events_this_run') }} as ev
 where ev.event_name = 'page_ping'
 and ev.page_view_id is not null
 
-group by 1
+group by 1 {% if var('snowplow__limit_page_views_to_session', true) %}, 2 {% endif %}
