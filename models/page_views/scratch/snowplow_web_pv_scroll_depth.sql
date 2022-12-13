@@ -7,6 +7,9 @@
 with prep as (
   select
     ev.page_view_id,
+    {% if var('snowplow__limit_page_views_to_session', true) %}
+    ev.domain_sessionid,
+    {% endif %}
 
     max(ev.doc_width) as doc_width,
     max(ev.doc_height) as doc_height,
@@ -31,11 +34,14 @@ with prep as (
     and ev.doc_height > 0 -- exclude problematic (but rare) edge case
     and ev.doc_width > 0 -- exclude problematic (but rare) edge case
 
-  group by 1
+  group by 1 {% if var('snowplow__limit_page_views_to_session', true) %}, 2 {% endif %}
 )
 
 select
   page_view_id,
+  {% if var('snowplow__limit_page_views_to_session', true) %}
+  domain_sessionid,
+  {% endif %}
 
   doc_width,
   doc_height,
