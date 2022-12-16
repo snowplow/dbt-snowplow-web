@@ -17,6 +17,5 @@ Describe your changes, and why you're making them.
 <!-- 
 ## Release Only Checklist
 - [ ] I have updated the version number in all relevant places
-- [ ] I have updated the Github pages `dbt docs` 
 - [ ] I have updated the CHANGELOG.md 
 -->
