@@ -120,4 +120,4 @@ jobs:
         default_author: github_actions
         message: 'Update dbt docs'
         new_branch: gh_pages
-        tag_push: '--force'
+        push: 'origin gh_pages --force'
