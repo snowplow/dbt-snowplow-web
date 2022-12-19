@@ -1,14 +1,22 @@
+snowplow-web 0.12.2 (2022-12-19)
+---------------------------------------
+## Summary
+Fix a bug in 0.12.1 leading to duplicate page view events breaking the incremental logic.
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file. 
+
 snowplow-web 0.12.1 (2022-12-19)
 ---------------------------------------
 ## Summary
-This release adds a new variable to ensure deterministic behaviour on page views when there are stray page pings. 
+This release adds a new variable to ensure deterministic behaviour on page views when there are stray page pings.
 
 ## Features
-Add option to limit page view metrics to a session (Close #96) 
+Add option to limit page view metrics to a session (Close #96)
 
 ## Under The Hood
-- Use new snowflake exclude syntax (Close #36) 
-- Add action for generating docs for pages (Close #5) 
+- Use new snowflake exclude syntax (Close #36)
+- Add action for generating docs for pages (Close #5)
 
 ## Upgrading
 To upgrade simply bump the snowplow-web version in your `packages.yml` file. If you wish to keep the existing non-deterministic behaviour for page view processing, set the `snowplow__limit_page_views_to_session` variable to `false` in your `dbt_project.yml`
