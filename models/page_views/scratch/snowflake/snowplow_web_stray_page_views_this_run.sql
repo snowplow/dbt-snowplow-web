@@ -217,7 +217,7 @@ select
     {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
     coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings (should never happen for stray), engaged time is 0.
-    timeadd(second,  {{ var("snowplow__min_visit_length", 5) }}, timediff(second, p.derived_tstamp, coalesce(t.end_tstamp, p.derived_tstamp)))  as absolute_time_in_s, -- because we are starting with pings here we need to add min visit length time
+    {{ var("snowplow__min_visit_length", 5) }} + timediff(second, p.derived_tstamp, coalesce(t.end_tstamp, p.derived_tstamp))  as absolute_time_in_s, -- because we are starting with pings here we need to add min visit length time
 
     sd.hmax as horizontal_pixels_scrolled,
     sd.vmax as vertical_pixels_scrolled,

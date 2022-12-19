@@ -22,8 +22,10 @@ with view_aggregations as (
     domain_sessionid as first_domain_sessionid,
     domain_sessionidx as first_domain_sessionidx,
 
-    row_number() over (partition by domain_sessionid order by derived_tstamp) as page_view_in_session_index,
-    count(distinct page_view_id) over (partition by domain_sessionid) as page_views_in_session,
+    row_number() over (partition by case when source = 'pv' then 'pv' || domain_sessionid else domain_sessionid end order by derived_tstamp) as page_view_in_session_index ,
+    row_number() over (partition by domain_sessionid order by derived_tstamp) as page_view_plus_stray_in_session_index,
+    count(distinct case when source = 'pv' then page_view_id else null end) over (partition by domain_sessionid) as page_views_in_session,
+    count(page_view_id) over (partition by domain_sessionid) as page_views_plus_strays_in_session,
 
     -- timestamp fields
     dvce_created_tstamp,
@@ -34,7 +36,10 @@ with view_aggregations as (
     {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
     sum(engaged_time_in_s) over (partition by page_view_id) as engaged_time_in_s,
-    sum(absolute_time_in_s) over (partition by page_view_id) as absolute_time_in_s,
+    sum(absolute_time_in_s) over (partition by page_view_id) as absolute_in_session_time_in_s,
+    -- stray page pings will look wrong here as they can have a time of 0 if there's only 1 ping, but we remove them in the next
+    -- step anyway so it doesn't actually matter
+    timediff(second, derived_tstamp, max(end_tstamp) over (partition by page_view_id)) as absolute_time_in_s,
 
     max(horizontal_pixels_scrolled) over (partition by page_view_id) as horizontal_pixels_scrolled,
     max(vertical_pixels_scrolled) over (partition by page_view_id) as vertical_pixels_scrolled,
