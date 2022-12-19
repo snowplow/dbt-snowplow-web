@@ -185,7 +185,7 @@ left join {{ ref('snowplow_web_pv_engaged_time') }} t
 on ev.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = t.domain_sessionid {% endif %}
 
 left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
-on ev.page_view_id = sd.page_view_id
+on ev.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = sd.domain_sessionid {% endif %}
 
 {% if var('snowplow__enable_iab', false) -%}
 

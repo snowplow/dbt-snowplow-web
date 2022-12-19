@@ -319,7 +319,7 @@ select
   on p.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and p.domain_sessionid = t.domain_sessionid {% endif %}
 
   left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
-  on p.page_view_id = sd.page_view_id
+  on p.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and p.domain_sessionid = sd.domain_sessionid {% endif %}
 )
 
 select
