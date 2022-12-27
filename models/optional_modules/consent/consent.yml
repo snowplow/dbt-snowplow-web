@@ -125,7 +125,7 @@ models:
         description: Consent scope
       - name: total_consent
         description: The number of consent events corresponding to a scope
-  - name: snowplow_web_cmp_stats
+  - name: snowplow_web_consent_cmp_stats
     description: Used for modeling cmp_visible events and related metrics
     columns:
       - name: event_id
