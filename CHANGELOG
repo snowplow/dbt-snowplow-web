@@ -1,10 +1,22 @@
+snowplow-web 0.12.3 (2023-01-06)
+---------------------------------------
+## Summary
+Fix a bug introduced in v0.10.0 leading to warnings when running the `dbt compile` command.
+
+## Features
+Update reference to renamed model (Close #142) (Thanks @petersentaylor)
+Update publish gh pages action + alter ci
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.12.2 (2022-12-19)
 ---------------------------------------
 ## Summary
 Fix a bug in 0.12.1 leading to duplicate page view events breaking the incremental logic.
 
 ## Upgrading
-To upgrade simply bump the snowplow-web version in your `packages.yml` file. 
+To upgrade simply bump the snowplow-web version in your `packages.yml` file.
 
 snowplow-web 0.12.1 (2022-12-19)
 ---------------------------------------
