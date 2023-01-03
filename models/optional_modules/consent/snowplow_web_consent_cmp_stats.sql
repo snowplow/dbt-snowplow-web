@@ -5,6 +5,53 @@
   )
 }}
 
+{%- if target.type in ('postgres') -%}
+
+with events as (
+
+  select
+    event_id,
+    domain_userid,
+    page_view_id,
+    domain_sessionid,
+    derived_tstamp,
+    event_name,
+    event_type,
+    cmp_load_time,
+    -- postgres does not allow the IGNORE NULL clause within last_value(), below workaround should do the same: removing NULLS using array_remove then using the COUNT window function (which counts the number of non-null items and count is bounded up to the current row) to access the array using that as its index position
+    (array_remove(array_agg(case when event_name = 'cmp_visible' then event_id else null end) over (partition by domain_userid order by derived_tstamp), null))[count(case when event_name = 'cmp_visible' then event_id else null end) over (partition by domain_userid order by derived_tstamp rows between unbounded preceding and current row)] as cmp_id
+
+  from {{ ref('snowplow_web_consent_log') }}
+
+  where event_type <> 'pending' or event_type is null
+
+)
+
+{%- elif target.type in ('databricks', 'spark') -%}
+
+with events as (
+
+   select
+    event_id,
+    domain_userid,
+    page_view_id,
+    domain_sessionid,
+    derived_tstamp,
+    event_name,
+    event_type,
+    cmp_load_time,
+    last_value(case when event_name = 'cmp_visible' then event_id else null end, TRUE)
+    over (partition by domain_userid order by derived_tstamp
+    rows between unbounded preceding and current row) as cmp_id
+
+  from {{ ref('snowplow_web_consent_log') }}
+
+  where event_type <> 'pending' or event_type is null
+
+)
+
+{%- else -%}
+
 with events as (
 
   select
@@ -25,6 +72,8 @@ with events as (
   where event_type <> 'pending' or event_type is null
 
 )
+
+{%- endif -%}
 
 , event_orders as (
 
