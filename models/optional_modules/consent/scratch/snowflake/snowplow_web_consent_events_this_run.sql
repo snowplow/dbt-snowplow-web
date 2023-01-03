@@ -1,9 +1,6 @@
 {{
   config(
-    materialized='snowplow_incremental',
-    unique_key='event_id',
-    upsert_date_key='derived_tstamp',
-    cluster_by=snowplow_web.web_cluster_by_fields_consent(),
+    tags=["this_run"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   )
 }}
@@ -51,8 +48,8 @@ select
   p.basis_for_processing,
   p.consent_url,
   p.consent_version,
-  array_to_string(p.consent_scopes, ', ') as consent_scopes,
-  array_to_string(p.domains_applied, ', ') as domains_applied,
+  {{ snowplow_utils.get_array_to_string('consent_scopes', 'p', ', ') }} as consent_scopes,
+  {{ snowplow_utils.get_array_to_string('domains_applied', 'p', ', ') }} as domains_applied,
   coalesce(p.gdpr_applies, false) as gdpr_applies,
   p.cmp_load_time
 

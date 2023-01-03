@@ -143,6 +143,7 @@ with events_this_run AS (
     a.event_version,
     a.event_fingerprint,
     a.true_tstamp,
+    a.load_tstamp,
     dense_rank() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index --dense_rank so rows with equal tstamps assigned same number
 
   from {{ var('snowplow__events') }} as a

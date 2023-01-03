@@ -1,0 +1,3 @@
+"consent_version","version_start_tstamp","consent_scopes","consent_url","domains_applied","is_latest_version","last_allow_all_event"
+"1.0",2021-02-26 09:08:42.110,"necessary, preferences, statistics, marketing",https://www.example.com/,https://www.example.com/,false,2021-02-26 09:11:18.490
+"2.0",2021-02-26 09:12:23.161,"necessary, preferences, statistics, marketing",https://www.example.com/,https://www.example.com/,true,2021-03-03 09:14:01.599
