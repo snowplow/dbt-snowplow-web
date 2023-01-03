@@ -1,4 +1,4 @@
-{{ 
+{{
   config(
     materialized='snowplow_incremental',
     enabled=var('snowplow__enable_custom_example'),
@@ -11,7 +11,7 @@
       "data_type": "timestamp"
     }),
     cluster_by=["page_view_id"]
-  ) 
+  )
 }}
 
 select
@@ -39,4 +39,4 @@ select
     else 'others'
   end as channel
 
-from {{ ref('snowplow_web_page_views_this_run' ) }} pv 
+from {{ ref('snowplow_web_page_views_this_run' ) }} pv

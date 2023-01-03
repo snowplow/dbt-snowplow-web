@@ -7,10 +7,10 @@
 with arrays as (
 
   select
-    domain_userid,
-    split(last_consent_scopes, ', ') as scope_array
+    u.domain_userid,
+    {{ snowplow_utils.get_split_to_array('last_consent_scopes', 'u', ', ') }} as scope_array
 
-  from {{ ref('snowplow_web_consent_users') }}
+  from {{ ref('snowplow_web_consent_users') }} u
 
   where is_latest_version
 
@@ -23,7 +23,7 @@ with arrays as (
   )
 
 select
-  replace(consent_scope,'"', '') as scope,
+  replace(replace(replace(consent_scope, '"', ''), '[', ''), ']', '') as scope,
   count(*) as total_consent
 
 from unnesting

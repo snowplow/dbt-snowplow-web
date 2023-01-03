@@ -24,43 +24,7 @@ with prep as (
     e.event_name,
     {{ snowplow_utils.get_optional_fields(
         enabled= true,
-        fields=[{'field': 'event_type', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
-        relation=ref('snowplow_web_base_events_this_run'),
-        relation_alias='e')}},
-    {{ snowplow_utils.get_optional_fields(
-        enabled= true,
-        fields=[{'field': 'basis_for_processing', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
-        relation=ref('snowplow_web_base_events_this_run'),
-        relation_alias='e')}},
-    {{ snowplow_utils.get_optional_fields(
-        enabled= true,
-        fields=[{'field': 'consent_url', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
-        relation=ref('snowplow_web_base_events_this_run'),
-        relation_alias='e')}},
-    {{ snowplow_utils.get_optional_fields(
-        enabled= true,
-        fields=[{'field': 'consent_version', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
-        relation=ref('snowplow_web_base_events_this_run'),
-        relation_alias='e')}},
-    {{ snowplow_utils.get_optional_fields(
-        enabled= true,
-        fields=[{'field': 'consent_scopes', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
-        relation=ref('snowplow_web_base_events_this_run'),
-        relation_alias='e') }},
-    {{ snowplow_utils.get_optional_fields(
-        enabled= true,
-        fields=[{'field': 'domains_applied', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
-        relation=ref('snowplow_web_base_events_this_run'),
-        relation_alias='e') }},
-    {{ snowplow_utils.get_optional_fields(
-        enabled= true,
-        fields=[{'field': 'gdpr_applies', 'dtype': 'string'}],
+        fields=consent_fields(),
         col_prefix='unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1',
         relation=ref('snowplow_web_base_events_this_run'),
         relation_alias='e') }},
@@ -95,8 +59,8 @@ select
   p.consent_version,
   array_to_string(p.consent_scopes, ', ') as consent_scopes,
   array_to_string(p.domains_applied, ', ') as domains_applied,
-  cast(coalesce(p.gdpr_applies, false) as boolean) gdpr_applies,
-  p.elapsed_time as cmp_load_time
+  cast(coalesce(cast(p.gdpr_applies as {{ dbt.type_boolean() }}), false) as boolean) gdpr_applies,
+  cast(p.elapsed_time as {{ dbt.type_float() }}) as cmp_load_time
 
   from prep p
 
