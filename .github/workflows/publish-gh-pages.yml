@@ -19,10 +19,18 @@ env:
   # REDSHIFT_TEST_PORT: ${{ secrets.REDSHIFT_TEST_PORT }}
 
   # # BigQuery Connection
-  # BIGQUERY_SERVICE_KEYFILE: ${{ secrets.BIGQUERY_SERVICE_KEYFILE }}
-  # BIGQUERY_SERVICE_KEY_PATH: ./dbt-service-account.json
   # BIGQUERY_TEST_DATABASE: ${{ secrets.BIGQUERY_TEST_DATABASE }}
   # BIGQUERY_LOCATION: ${{ secrets.BIGQUERY_LOCATION }}
+  # BIGQUERY_SERVICE_TYPE: ${{ secrets.BIGQUERY_SERVICE_TYPE }}
+  # BIGQUERY_SERVICE_PROJECT_ID: ${{ secrets.BIGQUERY_SERVICE_PROJECT_ID }}
+  # BIGQUERY_SERVICE_PRIVATE_KEY_ID: ${{ secrets.BIGQUERY_SERVICE_PRIVATE_KEY_ID }}
+  # BIGQUERY_SERVICE_PRIVATE_KEY: ${{ secrets.BIGQUERY_SERVICE_PRIVATE_KEY }}
+  # BIGQUERY_SERVICE_CLIENT_EMAIL: ${{ secrets.BIGQUERY_SERVICE_CLIENT_EMAIL }}
+  # BIGQUERY_SERVICE_CLIENT_ID: ${{ secrets.BIGQUERY_SERVICE_CLIENT_ID }}
+  # BIGQUERY_SERVICE_AUTH_URI: ${{ secrets.BIGQUERY_SERVICE_AUTH_URI }}
+  # BIGQUERY_SERVICE_TOKEN_URI: ${{ secrets.BIGQUERY_SERVICE_TOKEN_URI }}
+  # BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL }}
+  # BIGQUERY_SERVICE_CLIENT_X509_CERT_URL: ${{ secrets.BIGQUERY_SERVICE_CLIENT_X509_CERT_URL }}
 
   # Snowflake Connection
   SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
@@ -73,10 +81,6 @@ jobs:
       run: |
         echo "DEFAULT_TARGET=${{ matrix.warehouse }}" >> $GITHUB_ENV
 
-    # - name: Write BigQuery creds to json file
-    #   run: |
-    #     echo "$BIGQUERY_SERVICE_KEYFILE" > ./dbt-service-account.json
-
     - name: Python setup
       uses: actions/setup-python@v4
       with:
@@ -96,6 +100,7 @@ jobs:
         pip install --upgrade pip wheel setuptools
         pip install -Iv dbt-${{ matrix.warehouse }}==${{ matrix.dbt_version }} --upgrade
         dbt deps
+
     - name: Create dbt docs
       run: |
         dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
@@ -109,8 +114,7 @@ jobs:
         cp target/manifest.json ../docs/manifest.json
         cp target/run_results.json ../docs/run_results.json
         dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
-    - name: Delete BigQuery creds to json file
-      run: rm -f ./dbt-service-account.json
+
     - name: Commit & Push changes
       uses: EndBug/add-and-commit@v9
       with:

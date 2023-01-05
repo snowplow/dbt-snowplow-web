@@ -31,12 +31,22 @@ integration_tests:
 
     bigquery:
       type: bigquery
-      method: service-account
-      keyfile: "{{ env_var('BIGQUERY_SERVICE_KEY_PATH') }}"
+      method: service-account-json
       project: "{{ env_var('BIGQUERY_TEST_DATABASE') }}"
       location: "{{ env_var('BIGQUERY_LOCATION') }}"
       schema: "gh_sp_web_dbt_{{ env_var('SCHEMA_SUFFIX') }}"
       threads: 4
+      keyfile_json:
+        type: "{{ env_var('BIGQUERY_SERVICE_TYPE') }}"
+        project_id: "{{ env_var('BIGQUERY_SERVICE_PROJECT_ID') }}"
+        private_key_id: "{{ env_var('BIGQUERY_SERVICE_PRIVATE_KEY_ID') }}"
+        private_key: "{{ env_var('BIGQUERY_SERVICE_PRIVATE_KEY') }}"
+        client_email: "{{ env_var('BIGQUERY_SERVICE_CLIENT_EMAIL') }}"
+        client_id: "{{ env_var('BIGQUERY_SERVICE_CLIENT_ID') }}"
+        auth_uri: "{{ env_var('BIGQUERY_SERVICE_AUTH_URI') }}"
+        token_uri: "{{ env_var('BIGQUERY_SERVICE_TOKEN_URI') }}"
+        auth_provider_x509_cert_url: "{{ env_var('BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL') }}"
+        client_x509_cert_url: "{{ env_var('BIGQUERY_SERVICE_CLIENT_X509_CERT_URL') }}"
 
     snowflake:
       type: snowflake
