@@ -1,10 +1,6 @@
 {{
   config(
-    materialized='snowplow_incremental',
-    unique_key='event_id',
-    upsert_date_key='derived_tstamp',
-    sort='derived_tstamp',
-    dist='event_id'
+    tags=["this_run"]
   )
 }}
 
@@ -62,7 +58,6 @@ select
   replace(replace(replace(replace(p.consent_scopes, '"', ''), '[', ''), ']', ''), ',', ', ') as consent_scopes,
   replace(replace(replace(replace(p.domains_applied, '"', ''), '[', ''), ']', ''), ',', ', ') as domains_applied,
   coalesce(p.gdpr_applies, false) as gdpr_applies,
-  p.cmp_load_time,
-  date(derived_tstamp) as derived_tstamp_date
+  p.cmp_load_time
 
 from prep p

@@ -1,12 +1,6 @@
 {{
   config(
-    materialized='snowplow_incremental',
-    unique_key='event_id',
-    upsert_date_key='derived_tstamp',
-    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by = {
-      "field": "derived_tstamp",
-      "data_type": "timestamp"
-    }),
+    tags=["this_run"]
   )
 }}
 
@@ -59,7 +53,7 @@ select
   p.consent_version,
   array_to_string(p.consent_scopes, ', ') as consent_scopes,
   array_to_string(p.domains_applied, ', ') as domains_applied,
-  cast(coalesce(cast(p.gdpr_applies as {{ dbt.type_boolean() }}), false) as boolean) gdpr_applies,
+  coalesce(safe_cast(p.gdpr_applies as boolean), false) gdpr_applies,
   cast(p.elapsed_time as {{ dbt.type_float() }}) as cmp_load_time
 
   from prep p

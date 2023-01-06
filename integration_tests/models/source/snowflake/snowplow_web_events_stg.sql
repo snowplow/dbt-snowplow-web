@@ -156,7 +156,7 @@ select
   load_tstamp,
   contexts_com_snowplowanalytics_snowplow_web_page_1,
   object_construct('basisForProcessing', basisForProcessing,'consentScopes', consentScopes, 'consentUrl', consentUrl, 'consentVersion', consentVersion, 'domainsApplied', domainsApplied, 'eventType', eventType, 'gdprApplies', gdprApplies) as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
-  object_construct('elapsedTime', elapsedTime) as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1
+  object_construct_keep_null('elapsedTime', elapsedTime) as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1
 
 from flatten
 

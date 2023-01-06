@@ -3,7 +3,7 @@ with prep as (
 select
   *,
   from_json(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_web_page_1,
-  from_json(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, 'array<struct<basis_for_processing:string, consent_scopes:string, consent_url:string, consent_version:string, domains_applied:string, event_type:string, gdpr_applies:string>>') as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
+  from_json(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, 'array<struct<basis_for_processing:string, consent_scopes:array<string>, consent_url:string, consent_version:string, domains_applied:array<string>, event_type:string, gdpr_applies:string>>') as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
   from_json(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, 'array<struct<elapsed_time:string>>') as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1
 
 from {{ ref('snowplow_web_events') }}
@@ -13,10 +13,10 @@ from {{ ref('snowplow_web_events') }}
   select
     *,
     unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].basis_for_processing::STRING as basis_for_processing,
-    unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_scopes::STRING as consent_scopes,
+    unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_scopes::ARRAY<string> as consent_scopes,
     unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_url::STRING as consent_url,
     unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_version::STRING as consent_version,
-    unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].domains_applied::STRING as domains_applied,
+    unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].domains_applied::ARRAY<string> as domains_applied,
     unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].event_type::STRING as event_type,
     unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].gdpr_applies::BOOLEAN as gdpr_applies,
     unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1[0].elapsed_time::FLOAT as elapsed_time

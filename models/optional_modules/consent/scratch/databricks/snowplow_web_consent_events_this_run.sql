@@ -1,9 +1,6 @@
 {{
   config(
-    materialized='snowplow_incremental',
-    unique_key='event_id',
-    upsert_date_key='derived_tstamp',
-    partition_by = snowplow_utils.get_partition_by(databricks_partition_by = 'derived_tstamp_date'),
+    tags=["this_run"]
   )
 }}
 
@@ -23,8 +20,8 @@ with prep as (
     e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.basis_for_processing::STRING as basis_for_processing,
     e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.consent_url::STRING as consent_url,
     e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.consent_version::STRING as consent_version,
-    e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.consent_scopes::STRING as consent_scopes,
-    e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.domains_applied::STRING as domains_applied,
+    e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.consent_scopes::ARRAY<STRING> as consent_scopes,
+    e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.domains_applied::ARRAY<STRING> as domains_applied,
     e.unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1.gdpr_applies::boolean as gdpr_applies,
     e.unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1.elapsed_time::float as cmp_load_time
 
@@ -50,10 +47,9 @@ select
   p.basis_for_processing,
   p.consent_url,
   p.consent_version,
-  replace(replace(replace(replace(p.consent_scopes, '"', ''), '[', ''), ']', ''), ',', ', ') as consent_scopes,
-  replace(replace(replace(replace(p.domains_applied, '"', ''), '[', ''), ']', ''), ',', ', ') as domains_applied,
+  {{ snowplow_utils.get_array_to_string('consent_scopes', 'p', ', ') }} as consent_scopes,
+  {{ snowplow_utils.get_array_to_string('domains_applied', 'p', ', ') }} as domains_applied,
   coalesce(p.gdpr_applies, false) as gdpr_applies,
-  p.cmp_load_time,
-  date(derived_tstamp) as derived_tstamp_date
+  p.cmp_load_time
 
 from prep p

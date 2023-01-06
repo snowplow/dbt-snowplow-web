@@ -96,8 +96,7 @@ models:
     optional_modules:
       consent:
         enabled: false
-        +schema: "derived"
-        +tags: ["snowplow_web_incremental", "derived"]
+
     page_views:
       +schema: "derived"
       +tags: "snowplow_web_incremental"
