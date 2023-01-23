@@ -171,7 +171,7 @@ models:
       - name: primary_impact
         description: '{{ doc("col_primary_impact") }}'
       - name: reason
-        description: '{{ doc("col_reason") }}' 
+        description: '{{ doc("col_reason") }}'
       - name: spider_or_robot
         description: '{{ doc("col_spider_or_robot") }}'
       - name: useragent_family
@@ -288,23 +288,39 @@ models:
               enabled: "{{ var('snowplow__enable_yauaa', false) and target.type in ['redshift', 'postgres'] | as_bool() }}"
   - name: snowplow_web_pv_engaged_time
     description: '{{ doc("table_pv_engaged_time") }}'
+    tests:
+      - unique:
+          column_name: "(page_view_id || '-' || domain_sessionid)"
+          config:
+            tags: primary-key
+            enabled: "{{ var('snowplow__limit_page_views_to_session', true) | as_bool }}"
+      - unique:
+          column_name: "page_view_id"
+          config:
+            tags: primary-key
+            enabled: "{{  var('snowplow__limit_page_views_to_session', true) is not true | as_bool }}"
     columns:
       - name: page_view_id
         description: '{{ doc("col_page_view_id") }}'
-        tags:
-          - primary-key
         tests:
-          - unique
           - not_null
   - name: snowplow_web_pv_limits
     description: '{{ doc("table_pv_limits") }}'
   - name: snowplow_web_pv_scroll_depth
     description: '{{ doc("table_scroll_depth") }}'
+    tests:
+      - unique:
+          column_name: "(page_view_id || '-' || domain_sessionid)"
+          config:
+            tags: primary-key
+            enabled: "{{ var('snowplow__limit_page_views_to_session', true) | as_bool }}"
+      - unique:
+          column_name: "page_view_id"
+          config:
+            tags: primary-key
+            enabled: "{{  var('snowplow__limit_page_views_to_session', true) is not true | as_bool }}"
     columns:
       - name: page_view_id
         description: '{{ doc("col_page_view_id") }}'
-        tags:
-          - primary-key
         tests:
-          - unique
           - not_null
