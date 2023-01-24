@@ -57,7 +57,7 @@ for db in ${DATABASES[@]}; do
 
   echo "Snowplow web integration tests: Test models"
 
-  eval "dbt test --target $db" || exit 1;
+  eval "dbt test --target $db --store-failures" || exit 1;
 
   echo "Snowplow web integration tests: All tests passed"
 
