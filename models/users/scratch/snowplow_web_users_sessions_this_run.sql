@@ -6,7 +6,11 @@
 }}
 
 with user_ids_this_run as (
-select distinct domain_userid from {{ ref('snowplow_web_base_sessions_this_run') }}
+  select
+      distinct domain_userid
+
+  from {{ ref('snowplow_web_base_sessions_this_run') }}
+  where domain_userid is not null
 )
 
 select
