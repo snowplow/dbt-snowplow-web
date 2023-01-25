@@ -1,3 +1,15 @@
+snowplow-web 0.12.4 (2023-01-25)
+---------------------------------------
+## Summary
+Remove unnecessary `domain_userid` tests which would fail due to anonymous tracking. We also fix some integration tests
+
+## Features
+Fix page view scratch table tests (Close #150)
+Fix bug where tests fail due to NULL domain_userid (Close #152)
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.12.3 (2023-01-06)
 ---------------------------------------
 ## Summary
