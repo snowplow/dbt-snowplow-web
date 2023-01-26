@@ -1,0 +1,9 @@
+version: 2
+
+macros:
+  - name: filter_bots
+    description: '{{ doc("macro_filter_bots") }}'
+    arguments:
+      - name: table_alias
+        type: string
+        description: (Optional) the table alias to identify the useragent column from. Default none

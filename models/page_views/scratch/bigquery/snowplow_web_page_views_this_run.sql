@@ -117,7 +117,7 @@ from (
 where 1 = 1
 
 {% if var("snowplow__ua_bot_filter", true) %}
- {{ filter_bots() }}
+ {{ filter_bots('ev') }}
 {% endif %}
 )
 

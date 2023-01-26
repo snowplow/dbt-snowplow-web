@@ -1,7 +1,6 @@
 {{
   config(
-    tags=["this_run"],
-    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+    tags=["this_run"]
   )
 }}
 
@@ -183,7 +182,7 @@ select
   and ev.page_view_id is not null
 
   {% if var("snowplow__ua_bot_filter", true) %}
-     {{ filter_bots() }}
+     {{ filter_bots('ev') }}
   {% endif %}
 
   qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp) = 1
