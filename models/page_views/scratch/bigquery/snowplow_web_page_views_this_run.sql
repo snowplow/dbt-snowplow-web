@@ -75,7 +75,7 @@ select
   ev.br_renderengine,
   ev.os_timezone,
 
-  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp) AS page_view_in_session_index,
+  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp) AS page_view_in_session_index,
 
   -- optional fields, only populated if enabled.
 
@@ -105,7 +105,7 @@ select
 
 from (
   select
-    array_agg(e order by e.derived_tstamp limit 1)[offset(0)] as ev
+    array_agg(e order by e.derived_tstamp, e.dvce_created_tstamp limit 1)[offset(0)] as ev
     -- order by matters here since derived_tstamp determines parts of model logic
 
   from {{ ref('snowplow_web_base_events_this_run') }} as e

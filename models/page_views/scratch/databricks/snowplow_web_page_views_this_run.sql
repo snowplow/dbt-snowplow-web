@@ -185,7 +185,7 @@ select
      {{ filter_bots('ev') }}
   {% endif %}
 
-  qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp) = 1
+  qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) = 1
 )
 
 , page_view_events as (
@@ -204,7 +204,7 @@ select
     p.domain_sessionid,
     p.domain_sessionidx,
 
-    row_number() over (partition by p.domain_sessionid order by p.derived_tstamp) AS page_view_in_session_index,
+    row_number() over (partition by p.domain_sessionid order by p.derived_tstamp, p.dvce_created_tstamp) AS page_view_in_session_index,
 
     -- timestamp fields
     p.dvce_created_tstamp,
