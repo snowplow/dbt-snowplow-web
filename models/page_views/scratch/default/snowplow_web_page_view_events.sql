@@ -76,7 +76,7 @@ with page_view_events as (
     ev.br_renderengine,
     ev.os_timezone,
 
-    dense_rank() over (partition by ev.page_view_id order by ev.derived_tstamp) as page_view_id_dedupe_index
+    dense_rank() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) as page_view_id_dedupe_index
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
 
@@ -84,7 +84,7 @@ with page_view_events as (
   and ev.page_view_id is not null
 
   {% if var("snowplow__ua_bot_filter", true) %}
-    {{ filter_bots() }}
+    {{ filter_bots('ev') }}
   {% endif %}
 )
 
@@ -169,7 +169,7 @@ select
   pv.br_renderengine,
   pv.os_timezone,
 
-  row_number() over (partition by pv.domain_sessionid order by pv.derived_tstamp) as page_view_in_session_index --Moved to post dedupe, unlike V1 web model.
+  row_number() over (partition by pv.domain_sessionid order by pv.derived_tstamp, pv.dvce_created_tstamp) as page_view_in_session_index --Moved to post dedupe, unlike V1 web model.
 
 from dedupe as pv
 
