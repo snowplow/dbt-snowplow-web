@@ -183,7 +183,7 @@ select
   and ev.page_view_id is not null
 
   {% if var("snowplow__ua_bot_filter", true) %}
-     {{ filter_bots() }}
+     {{ filter_bots('ev') }}
   {% endif %}
 
   qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp) = 1
