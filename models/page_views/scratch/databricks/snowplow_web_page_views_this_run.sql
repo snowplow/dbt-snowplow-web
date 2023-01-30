@@ -78,103 +78,13 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {% if var('snowplow__enable_iab', false) %}
+  {{snowplow_web.get_iab_context_fields()}},
 
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0].category::STRING AS category,
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0].primary_impact::STRING AS primary_impact,
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0].reason::STRING AS reason,
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0].spider_or_robot::BOOLEAN AS spider_or_robot,
+  -- ua parser enrichment fields
+  {{snowplow_web.get_ua_context_fields()}},
 
-  {% else %}
-
-  cast(null as {{ type_string() }}) as category,
-  cast(null as {{ type_string() }}) as primary_impact,
-  cast(null as {{ type_string() }}) as reason,
-  cast(null as boolean) as spider_or_robot,
-
-  {% endif %}
-
-  -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {% if var('snowplow__enable_ua', false) %}
-
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].useragent_family::STRING AS useragent_family,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].useragent_major::STRING AS useragent_major,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].useragent_minor::STRING AS useragent_minor,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].useragent_patch::STRING AS useragent_patch,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].useragent_version::STRING AS useragent_version,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].os_family::STRING AS os_family,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].os_major::STRING AS os_major,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].os_minor::STRING AS os_minor,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].os_patch::STRING AS os_patch,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].os_patch_minor::STRING AS os_patch_minor,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].os_version::STRING AS os_version,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0].device_family::STRING AS device_family,
-
-  {% else %}
-
-  cast(null as {{ type_string() }}) as useragent_family,
-  cast(null as {{ type_string() }}) as useragent_major,
-  cast(null as {{ type_string() }}) as useragent_minor,
-  cast(null as {{ type_string() }}) as useragent_patch,
-  cast(null as {{ type_string() }}) as useragent_version,
-  cast(null as {{ type_string() }}) as os_family,
-  cast(null as {{ type_string() }}) as os_major,
-  cast(null as {{ type_string() }}) as os_minor,
-  cast(null as {{ type_string() }}) as os_patch,
-  cast(null as {{ type_string() }}) as os_patch_minor,
-  cast(null as {{ type_string() }}) as os_version,
-  cast(null as {{ type_string() }}) as device_family,
-
-  {% endif %}
-
-  -- yauaa enrichment fields: set yauaa variable to true to enable
-  {% if var('snowplow__enable_yauaa', false) %}
-
-  ev.contexts_nl_basjes_yauaa_context_1[0].device_class::STRING AS device_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0].agent_class::STRING AS agent_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0].agent_name::STRING AS agent_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0].agent_name_version::STRING AS agent_name_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0].agent_name_version_major::STRING AS agent_name_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0].agent_version::STRING AS agent_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0].agent_version_major::STRING AS agent_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0].device_brand::STRING AS device_brand,
-  ev.contexts_nl_basjes_yauaa_context_1[0].device_name::STRING AS device_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0].device_version::STRING AS device_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0].layout_engine_class::STRING AS layout_engine_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0].layout_engine_name::STRING AS layout_engine_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0].layout_engine_name_version::STRING AS layout_engine_name_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0].layout_engine_name_version_major::STRING AS layout_engine_name_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0].layout_engine_version::STRING AS layout_engine_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0].layout_engine_version_major::STRING AS layout_engine_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0].operating_system_class::STRING AS operating_system_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0].operating_system_name::STRING AS operating_system_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0].operating_system_name_version::STRING AS operating_system_name_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0].operating_system_version::STRING AS operating_system_version
-
-  {% else %}
-
-  cast(null as {{ type_string() }}) as device_class,
-  cast(null as {{ type_string() }}) as agent_class,
-  cast(null as {{ type_string() }}) as agent_name,
-  cast(null as {{ type_string() }}) as agent_name_version,
-  cast(null as {{ type_string() }}) as agent_name_version_major,
-  cast(null as {{ type_string() }}) as agent_version,
-  cast(null as {{ type_string() }}) as agent_version_major,
-  cast(null as {{ type_string() }}) as device_brand,
-  cast(null as {{ type_string() }}) as device_name,
-  cast(null as {{ type_string() }}) as device_version,
-  cast(null as {{ type_string() }}) as layout_engine_class,
-  cast(null as {{ type_string() }}) as layout_engine_name,
-  cast(null as {{ type_string() }}) as layout_engine_name_version,
-  cast(null as {{ type_string() }}) as layout_engine_name_version_major,
-  cast(null as {{ type_string() }}) as layout_engine_version,
-  cast(null as {{ type_string() }}) as layout_engine_version_major,
-  cast(null as {{ type_string() }}) as operating_system_class,
-  cast(null as {{ type_string() }}) as operating_system_name,
-  cast(null as {{ type_string() }}) as operating_system_name_version,
-  cast(null as {{ type_string() }}) as operating_system_version
-
-  {% endif %}
+  -- yauaa enrichment fields
+  {{snowplow_web.get_yauaa_context_fields()}}
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
 
