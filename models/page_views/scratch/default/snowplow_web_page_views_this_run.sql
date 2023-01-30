@@ -93,91 +93,13 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {% if var('snowplow__enable_iab', false) %}
-    iab.category,
-    iab.primary_impact,
-    iab.reason,
-    iab.spider_or_robot,
-  {% else %}
-    cast(null as varchar) as category,
-    cast(null as varchar) as primary_impact,
-    cast(null as varchar) as reason,
-    cast(null as boolean) as spider_or_robot,
-  {% endif %}
+  {{snowplow_web.get_iab_context_fields()}},
 
-  -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {% if var('snowplow__enable_ua', false) %}
-    ua.useragent_family,
-    ua.useragent_major,
-    ua.useragent_minor,
-    ua.useragent_patch,
-    ua.useragent_version,
-    ua.os_family,
-    ua.os_major,
-    ua.os_minor,
-    ua.os_patch,
-    ua.os_patch_minor,
-    ua.os_version,
-    ua.device_family,
-  {% else %}
-    cast(null as varchar) as useragent_family,
-    cast(null as varchar) as useragent_major,
-    cast(null as varchar) as useragent_minor,
-    cast(null as varchar) as useragent_patch,
-    cast(null as varchar) as useragent_version,
-    cast(null as varchar) as os_family,
-    cast(null as varchar) as os_major,
-    cast(null as varchar) as os_minor,
-    cast(null as varchar) as os_patch,
-    cast(null as varchar) as os_patch_minor,
-    cast(null as varchar) as os_version,
-    cast(null as varchar) as device_family,
-  {% endif %}
+  -- ua parser enrichment fields
+  {{snowplow_web.get_ua_context_fields()}},
 
-  -- yauaa enrichment fields: set yauaa variable to true to enable
-  {% if var('snowplow__enable_yauaa', false) %}
-    ya.device_class,
-    ya.agent_class,
-    ya.agent_name,
-    ya.agent_name_version,
-    ya.agent_name_version_major,
-    ya.agent_version,
-    ya.agent_version_major,
-    ya.device_brand,
-    ya.device_name,
-    ya.device_version,
-    ya.layout_engine_class,
-    ya.layout_engine_name,
-    ya.layout_engine_name_version,
-    ya.layout_engine_name_version_major,
-    ya.layout_engine_version,
-    ya.layout_engine_version_major,
-    ya.operating_system_class,
-    ya.operating_system_name,
-    ya.operating_system_name_version,
-    ya.operating_system_version
-  {% else %}
-    cast(null as varchar) as device_class,
-    cast(null as varchar) as agent_class,
-    cast(null as varchar) as agent_name,
-    cast(null as varchar) as agent_name_version,
-    cast(null as varchar) as agent_name_version_major,
-    cast(null as varchar) as agent_version,
-    cast(null as varchar) as agent_version_major,
-    cast(null as varchar) as device_brand,
-    cast(null as varchar) as device_name,
-    cast(null as varchar) as device_version,
-    cast(null as varchar) as layout_engine_class,
-    cast(null as varchar) as layout_engine_name,
-    cast(null as varchar) as layout_engine_name_version,
-    cast(null as varchar) as layout_engine_name_version_major,
-    cast(null as varchar) as layout_engine_version,
-    cast(null as varchar) as layout_engine_version_major,
-    cast(null as varchar) as operating_system_class,
-    cast(null as varchar) as operating_system_name,
-    cast(null as varchar) as operating_system_name_version,
-    cast(null as varchar) as operating_system_version
-  {% endif %}
+  -- yauaa enrichment fields
+  {{snowplow_web.get_yauaa_context_fields()}}
 
 from {{ ref('snowplow_web_page_view_events') }} ev
 
