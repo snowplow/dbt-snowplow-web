@@ -206,23 +206,3 @@ models:
         description: '{{ doc("col_operating_system_name_version") }}'
       - name: operating_system_version
         description: '{{ doc("col_operating_system_version") }}'
-  - name: snowplow_web_sessions_aggs
-    description: '{{ doc("table_sessions_aggs") }}'
-    columns:
-      - name: domain_sessionid
-        description: '{{ doc("col_domain_sessionid") }}'
-        tags:
-          - primary-key
-        tests:
-          - unique
-          - not_null
-  - name: snowplow_web_sessions_lasts
-    description: '{{ doc("table_sessions_lasts") }}'
-    columns:
-      - name: domain_sessionid
-        description: '{{ doc("col_domain_sessionid") }}'
-        tags:
-          - primary-key
-        tests:
-          - unique
-          - not_null
