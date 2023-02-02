@@ -11,7 +11,7 @@
 {%- endmacro -%}
 
 {# iab fields #}
-{% macro default__get_iab_context_fields(table_prefix = none) %}
+{% macro postgres__get_iab_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_iab', false) -%}
         {% if table_prefix %}table_prefix.{% endif %}category,
         {% if table_prefix %}table_prefix.{% endif %}primary_impact,
@@ -25,7 +25,13 @@
     {%- endif -%}
 {% endmacro %}
 
-{% macro databricks__get_iab_context_fields(table_prefix = none) %}
+{% macro bigquery__get_iab_context_fields(table_prefix = none) %}
+    {% if execute %}
+        {% do exceptions.raise_compiler_error('get_iab_context_fields is not defined for bigquery, please use snowplow_utils.get_optional_fields instead') %}
+    {% endif %}
+{% endmacro %}
+
+{% macro spark__get_iab_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_iab', false) -%}
         {% if table_prefix %}table_prefix.{% endif %}contexts_com_iab_snowplow_spiders_and_robots_1[0].category::STRING as category,
         {% if table_prefix %}table_prefix.{% endif %}contexts_com_iab_snowplow_spiders_and_robots_1[0]:primaryImpact::STRING as primary_impact,
@@ -55,7 +61,7 @@
 {% endmacro %}
 
 {# ua fields #}
-{% macro default__get_ua_context_fields(table_prefix = none) %}
+{% macro postgres__get_ua_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_ua', false) -%}
         {% if table_prefix %}table_prefix.{% endif %}useragent_family,
         {% if table_prefix %}table_prefix.{% endif %}useragent_major,
@@ -85,7 +91,13 @@
     {%- endif -%}
 {% endmacro %}
 
-{% macro databricks__get_ua_context_fields(table_prefix = none) %}
+{% macro bigquery__get_ua_context_fields(table_prefix = none) %}
+    {% if execute %}
+        {% do exceptions.raise_compiler_error('get_ua_context_fields is not defined for bigquery, please use snowplow_utils.get_optional_fields instead') %}
+    {% endif %}
+{% endmacro %}
+
+{% macro spark__get_ua_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_ua', false) -%}
         {% if table_prefix %}table_prefix.{% endif %}contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentFamily::STRING as useragent_family,
         {% if table_prefix %}table_prefix.{% endif %}contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentMajor::STRING as useragent_major,
@@ -147,7 +159,7 @@
 {% endmacro %}
 
 {# yauaa fields #}
-{% macro default__get_yauaa_context_fields(table_prefix = none) %}
+{% macro postgres__get_yauaa_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_yauaa', false) -%}
         {% if table_prefix %}table_prefix.{% endif %}device_class,
         {% if table_prefix %}table_prefix.{% endif %}agent_class,
@@ -193,7 +205,13 @@
     {%- endif -%}
 {% endmacro %}
 
-{% macro databricks__get_yauaa_context_fields(table_prefix = none) %}
+{% macro bigquery__get_yauaa_context_fields(table_prefix = none) %}
+    {% if execute %}
+        {% do exceptions.raise_compiler_error('get_yauaa_context_fields is not defined for bigquery, please use snowplow_utils.get_optional_fields instead') %}
+    {% endif %}
+{% endmacro %}
+
+{% macro spark__get_yauaa_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_yauaa', false) -%}
         {% if table_prefix %}table_prefix.{% endif %}contexts_nl_basjes_yauaa_context_1[0]:deviceClass as device_class,
         {% if table_prefix %}table_prefix.{% endif %}contexts_nl_basjes_yauaa_context_1[0]:agentClass::STRING as agent_class,

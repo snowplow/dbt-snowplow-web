@@ -57,3 +57,73 @@ and not rlike(useragent, '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit
 ```
 {% endraw %}
 {% enddocs %}
+
+{% docs macro_stitch_user_identifiers %}
+{% raw %}		
+This macro is used as a post-hook on the sessions table to stitch user identities using the user_mapping table provided.
+- 
+#### Returns
+
+The update/merge statement to update the `stitched_user_id` column, if enabled.
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_get_iab_context_fields %}
+{% raw %}		
+This macro is used to extract the fields from the iab enrichment context for each warehouse.
+- 
+#### Returns
+
+The sql to extract the columns from the iab context, or these columns as nulls.
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_get_ua_context_fields %}
+{% raw %}		
+This macro is used to extract the fields from the ua enrichment context for each warehouse.
+- 
+#### Returns
+
+The sql to extract the columns from the ua context, or these columns as nulls.
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_get_yauaa_context_fields %}
+{% raw %}		
+This macro is used to extract the fields from the yauaa enrichment context for each warehouse.
+- 
+#### Returns
+
+The sql to extract the columns from the yauaa context, or these columns as nulls.
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_web_cluster_by_X %}
+{% raw %}		
+This macro is used to return the appropriate `cluster_by` fields for the table, depending on the warehouse target.
+- 
+#### Returns
+
+The specific fields for each warehouse (see macro code for values).
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_bq_context_fields %}
+{% raw %}		
+This macro is used to return the appropriate field and type mapping for use in `snowplow_utils.get_optional_fields`.
+- 
+#### Returns
+
+The specific fields and their type for the context (see macro code for values).
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_allow_refresh %}
+{% raw %}		
+This macro is used to determine if a full-refresh is allowed (depending on the environment), using the `snowplow__allow_refresh` variable.
+- 
+#### Returns
+`snowplow__allow_refresh` if environment is not `dev`, `none` otherwise.
+
+{% endraw %}
+{% enddocs %}
