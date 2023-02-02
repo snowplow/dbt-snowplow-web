@@ -10,7 +10,7 @@
   and not regexp_contains({% if table_alias %}{{table_alias~'.'}}{% endif %}useragent, '(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt)')
 {% endmacro %}
 
-{% macro databricks__filter_bots(table_alias = none) %}
+{% macro spark__filter_bots(table_alias = none) %}
   and not rlike({% if table_alias %}{{table_alias~'.'}}{% endif %}useragent, '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*')
 {% endmacro %}
 
