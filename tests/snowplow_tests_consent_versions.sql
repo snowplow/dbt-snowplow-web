@@ -2,7 +2,7 @@ with prep as (
 
   select
     consent_version,
-    count(*)
+    count(*) as n_consents
 
   from {{ ref('snowplow_web_consent_versions')}}
 
