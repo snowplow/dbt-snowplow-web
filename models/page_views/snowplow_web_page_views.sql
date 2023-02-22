@@ -15,7 +15,8 @@
     tblproperties={
       'delta.autoOptimize.optimizeWrite' : 'true',
       'delta.autoOptimize.autoCompact' : 'true'
-    }
+    },
+    snowplow_optimize = true
   )
 }}
 
