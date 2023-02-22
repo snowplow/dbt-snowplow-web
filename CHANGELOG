@@ -1,3 +1,29 @@
+snowplow-web 0.13.0 (2023-02-22)
+---------------------------------------
+## Summary
+This release adds Databricks, Redshift and Postgres support for the optional Consent module. As a breaking change we are decoupling sessions from pageviews, please refer to the below breakdown on this. It also removes unnecessary `domain_userid` tests which would fail due to anonymous tracking. We also fix some integration tests.
+
+## 🚨 Breaking Changes 🚨
+- The way we generate the sessions table has changed, breaking the dependency on the page views table and instead building directly from page view and ping events. This means we now include sessions that contain only page-pings, and all stray page pings in sessions, see our [docs](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/#stray-page-pings) for more information about what this means. You do not need to make any changes to your tables or data, but **you will likely see an increase in the number of sessions overall**, and may see a small increase in absolute and engaged time on individual sessions (to account for those starting with a stray page ping). Any reporting off the sessions table should be interpreted accordingly, or the data re-processed (see [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-custom-models/#incremental-models-2) for how to reprocess a single model).
+
+## 🚨 Prerequisite Alert 🚨
+Redshift/Postgres users would need to use `RDB Loader v4.0.0` and above as the web model for them relies on the `load_tstamp` field from now on. The same dependency applies for the Consent module users regardles of warehouse as that field is utilised for the incremental logic.
+
+## Features
+- Fixed sessions being dependant on snowplow_web_user_mapping even when session stitching was disabled (Close #155)
+- Added alias argument to the `filter_bots` macro for more flexibility
+- Migrated engaged time to use device timestamps instead of derived to provide more accurate calculation when there is a delay between events being sent and the collector receiving them
+- Added `get_optional_fields` macro to reduce duplication of calls to contexts across models
+- Added missing adapter support for Consent module (Close #148)
+
+## Under the hood
+- Tidied up some macro inheritance
+- Improved macro documentation
+- Improvements to integration test
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file, taking account of the breaking changes above.
+
 snowplow-web 0.12.4 (2023-01-25)
 ---------------------------------------
 ## Summary
