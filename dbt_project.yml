@@ -2,9 +2,13 @@ name: 'snowplow_web'
 version: '0.13.2'
 config-version: 2
 
-require-dbt-version: [">=1.3.0", "<2.0.0"]
+require-dbt-version: [">=1.4.0", "<2.0.0"]
 
 profile: 'default'
+
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
 
 model-paths: ["models"]
 test-paths: ["tests"]
@@ -52,7 +56,7 @@ vars:
     snowplow__max_session_days: 3
     snowplow__upsert_lookback_days: 30
     snowplow__query_tag: "snowplow_dbt"
-    snowplow__incremental_materialization: "snowplow_incremental"
+    snowplow__incremental_materialization: "incremental"
     snowplow__dev_target_name: 'dev'
     snowplow__allow_refresh: false
     # snowplow__limit_page_views_to_session: true
