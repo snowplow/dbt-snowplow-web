@@ -44,6 +44,7 @@ vars:
     snowplow__ua_bot_filter: true
     snowplow__derived_tstamp_partitioned: true
     snowplow__session_stitching: true
+    snowplow__enable_load_tstamp: true # set to false if you are using the postgres loader or earlier than 4.0.0 of the RDB loader
     # Variables - Advanced Config
     snowplow__lookback_window_hours: 6
     snowplow__session_lookback_days: 730
