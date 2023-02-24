@@ -19,7 +19,7 @@ The snowplow-web v0.13.0 package currently supports BigQuery, Databricks, Redshi
 
 |                      Warehouse                       |    dbt versions     | snowplow-web version |
 | :--------------------------------------------------: | :-----------------: | :------------------: |
-| BigQuery, Databricks, Redshift, Snowflake & Postgres |  >=1.3.0 to <2.0.0  |        0.13.0         |
+| BigQuery, Databricks, Redshift, Snowflake & Postgres |  >=1.3.0 to <2.0.0  |        0.13.1         |
 | BigQuery, Databricks, Redshift, Snowflake & Postgres |  >=1.0.0 to <1.3.0  |        0.11.0         |
 |       BigQuery, Redshift, Snowflake & Postgres       | >=0.20.0 to <1.0.0  |        0.5.1         |
 |            BigQuery, Redshift & Snowflake            | >=0.18.0 to <0.20.0 |        0.4.1         |

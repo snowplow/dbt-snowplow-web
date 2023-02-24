@@ -1,3 +1,12 @@
+snowplow-web 0.13.1 (2023-02-24)
+---------------------------------------
+## Summary
+This is a patch release with the purpose to unblock those Redshift/Postgres users whose loaders do not send `load_tstamp` field to their events table: they use `Postgres loader` or `RDB Loader` below v4.0.0. Please note that they will not be able to use the Consent models but the general web model will still be supported.
+
+## Upgrading
+Apart from bumping the snowplow-web version in your `packages.yml` file, impacted users will need to set a newly introduced variable: `snowplow__enable_load_tstamp` to `false`.
+
+
 snowplow-web 0.13.0 (2023-02-22)
 ---------------------------------------
 ## Summary
