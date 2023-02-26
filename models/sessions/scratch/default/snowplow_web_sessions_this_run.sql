@@ -104,7 +104,7 @@ with session_firsts as (
     {% if var('snowplow__enable_yauaa', false) -%}
         left join {{ ref('snowplow_web_pv_yauaa') }} ya
         on ev.page_view_id = ya.page_view_id
-    {%- endif -%}
+    {% endif -%}
 
     where
         ev.event_name in ('page_ping', 'page_view')
