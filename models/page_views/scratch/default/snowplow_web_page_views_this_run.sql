@@ -93,13 +93,13 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {{snowplow_web.get_iab_context_fields()}},
+  {{snowplow_web.get_iab_context_fields('iab')}},
 
   -- ua parser enrichment fields
-  {{snowplow_web.get_ua_context_fields()}},
+  {{snowplow_web.get_ua_context_fields('ua')}},
 
   -- yauaa enrichment fields
-  {{snowplow_web.get_yauaa_context_fields()}}
+  {{snowplow_web.get_yauaa_context_fields('ya')}}
 
 from {{ ref('snowplow_web_page_view_events') }} ev
 
