@@ -1,3 +1,15 @@
+snowplow-web 0.13.2 (2023-02-27)
+---------------------------------------
+## Summary
+This is a patch release with the purpose to unblock those Redshift/Postgres users who are using enrichments. The macros we introduced were not correctly parsing the table aliases for the enrichments loaded in Redshift/Postgres. This has now been fixed.
+
+## Features
+- Fix whitespace issue on redshift sessions (Close #166)
+- Fix context prefix argument usage (Close #167)
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.13.1 (2023-02-24)
 ---------------------------------------
 ## Summary
