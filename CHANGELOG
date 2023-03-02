@@ -1,3 +1,24 @@
+snowplow-web 0.14.0-rc1 (2023-03-06)
+---------------------------------------
+## Summary
+**This is a pre-release version of the package, we believe it to be in working condition but you may encounter bugs and some features may change before the final release.**
+
+This version of the package begins the migration away from our `snowplow_incremental` materialization and uses an overwrite to the standard `incremental` materialization to provide the same performance improvements but in a simpler way. We expect users should see little to no performance change from the previous version, please let us know if you see performance degradation for large volumes of data. 
+
+Users will need to add the following to their `dbt_project.yml` to benefit from the enhancements: 
+```yaml
+# dbt_project.yml
+...
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+```
+
+For custom models and more details, please see more details on our temporary docs page: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-advanced-usage/dbt-incremental-logic-pre-release/ 
+
+## Features
+Use new materialization 
+
 snowplow-web 0.13.2 (2023-02-27)
 ---------------------------------------
 ## Summary
