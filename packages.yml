@@ -1,3 +1,4 @@
 packages:
-  - package: snowplow/snowplow_utils
-    version: 0.14.0rc1
+  # - package: snowplow/snowplow_utils
+  - git: "https://github.com/snowplow/dbt-snowplow-utils.git" # git URL
+    revision: feature/predicate-incremental-materialization # tag or branch name
