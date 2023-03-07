@@ -4,6 +4,10 @@ config-version: 2
 
 profile: 'integration_tests'
 
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+
 model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]

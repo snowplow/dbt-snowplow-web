@@ -1,15 +1,16 @@
---Using `snowplow_incremental` materialization to reduce table scans. Could also use the standard `incremental` materialization.
+--Using `snowplow_optimize` config to reduce table scans. Could also use the standard `incremental` materialization.
 
-{{ 
+{{
   config(
-    materialized='snowplow_incremental',
+    materialized='incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
-    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by = {
+    partition_by = snowplow_utils.get_value_by_target_type(bigquery_val = {
       "field": "start_tstamp",
       "data_type": "timestamp"
     }),
-  ) 
+    snowplow_optimize=true
+  )
 }}
 
 with link_clicks as (

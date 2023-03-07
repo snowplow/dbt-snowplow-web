@@ -1,12 +1,13 @@
---Using `snowplow_incremental` materialization to reduce table scans. Could also use the standard `incremental` materialization.
+--Using `snowplow_optimize` config to reduce table scans. Could also use the standard `incremental` materialization.
 
-{{ 
+{{
   config(
-    materialized='snowplow_incremental',
+    materialized='incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
-    partition_by = snowplow_utils.get_partition_by(databricks_partition_by='start_tstamp_date')
-  ) 
+    partition_by = snowplow_utils.get_partition_by(databricks_val='start_tstamp_date'),
+    snowplow_optimize=true
+  )
 }}
 
 with link_clicks as (

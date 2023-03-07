@@ -1,14 +1,14 @@
 {{
   config(
-    materialized=var("snowplow__incremental_materialization"),
+    materialized='incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
     dist='page_view_id',
-    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by = {
+    partition_by = snowplow_utils.get_value_by_target_type(bigquery_val = {
       "field": "start_tstamp",
       "data_type": "timestamp"
-    }, databricks_partition_by='start_tstamp_date'),
+    }, databricks_val='start_tstamp_date'),
     cluster_by=snowplow_web.web_cluster_by_fields_page_views(),
     tags=["derived"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt')),

@@ -15,7 +15,7 @@
 
 with prep as (
   select
-    cast(null as {{ snowplow_utils.type_string(4096) }}) model,
+    cast(null as {{ snowplow_utils.type_max_string() }}) model,
     cast('1970-01-01' as {{ type_timestamp() }}) as last_success
 )
 

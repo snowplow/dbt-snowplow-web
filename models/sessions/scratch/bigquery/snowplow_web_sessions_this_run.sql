@@ -20,9 +20,9 @@ with session_firsts as (
         domain_userid,
         {% if var('snowplow__session_stitching') %}
             -- updated with mapping as part of post hook on derived sessions table
-            cast(domain_userid as {{ snowplow_utils.type_string(255) }}) as stitched_user_id,
+            cast(domain_userid as {{ type_string() }}) as stitched_user_id,
         {% else %}
-            cast(null as {{ snowplow_utils.type_string(255) }}) as stitched_user_id,
+            cast(null as {{ type_string() }}) as stitched_user_id,
         {% endif %}
         network_userid as network_userid,
 
