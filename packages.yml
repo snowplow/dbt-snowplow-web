@@ -1,3 +1,5 @@
 packages:
-  - package: snowplow/snowplow_utils
-    version: 0.14.0-rc2
+  # - package: snowplow/snowplow_utils
+  #   version: 0.14.0-rc2
+  - git: "https://github.com/snowplow/dbt-snowplow-utils.git" # git URL
+    revision: feature/tests-and-incrementals
