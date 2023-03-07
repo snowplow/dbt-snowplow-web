@@ -1,13 +1,14 @@
---Using `snowplow_incremental` materialization to reduce table scans. Could also use the standard `incremental` materialization.
+--Using `snowplow_optimize` config to reduce table scans. Could also use the standard `incremental` materialization.
 
-{{ 
+{{
   config(
-    materialized='snowplow_incremental',
+    materialized='incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',
-    dist='page_view_id'
-  ) 
+    dist='page_view_id',
+    snowplow_optimize=true
+  )
 }}
 
 with link_clicks as (
