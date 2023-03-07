@@ -4,7 +4,7 @@
     unique_key='domain_userid',
     sort='end_tstamp',
     dist='domain_userid',
-    partition_by = snowplow_utils.get_partition_by(bigquery_partition_by={
+    partition_by = snowplow_utils.get_value_by_target_type(bigquery_val={
       "field": "end_tstamp",
       "data_type": "timestamp"
     }),

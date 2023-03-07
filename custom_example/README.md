@@ -2,7 +2,7 @@
 
 This is a dummy dbt project demonstrating how to integrate custom modules into the Snowplow Web dbt package.
 
-We demonstrate two methods to add custom modules.
+We demonstrate two methods to add custom modules, but more details are provided in our [docs](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-custom-models/).
 
 ## Set Up
 
@@ -43,7 +43,7 @@ An example of such a set up for Redshift can be seen in [snowplow_web_pv_channel
 - We select events from `snowplow_web_base_events_this_run` rather than `atomic.events`. This ensures we only have the events required for this run, as well as not having to worry about de-duping events.
 - We restrict the date range of the `com_snowplowanalytics_snowplow_link_click_1` source table using `snowplow_web_base_new_event_limits`, improving query performance. This is only required in Redshift due to the federated table design.
 - We include the `is_run_with_new_events()` macro in the where clause. This ensures that no old data is inserted into the table during back-fills. This improves performance and protects against inaccurate data in the table during batched back-fills.
-- The model is materialized using the `snowplow_incremental` materialization. This reduces the table scan on the target table during the upsert procedure. You could equally use the out-the-box `incremental` materialization if you so wanted.
+- The model is materialized using the `incremental` materialization with the `snowplow_optimize` config. This reduces the table scan on the target table during the upsert procedure. 
 - This incremental table can then be joined back to the `snowplow_web_page_views` table to produce a bespoke page views view catered for your business needs, `snowplow_page_views_custom`. Notice how this is materialized as a view, saving on storage cost.
 
 ## Method 2 - Replace a standard derived table with your own custom version

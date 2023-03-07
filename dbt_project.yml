@@ -56,7 +56,6 @@ vars:
     snowplow__max_session_days: 3
     snowplow__upsert_lookback_days: 30
     snowplow__query_tag: "snowplow_dbt"
-    snowplow__incremental_materialization: "incremental"
     snowplow__dev_target_name: 'dev'
     snowplow__allow_refresh: false
     # snowplow__limit_page_views_to_session: true
