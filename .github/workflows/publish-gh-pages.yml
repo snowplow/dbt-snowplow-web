@@ -62,7 +62,7 @@ jobs:
         working-directory: ./integration_tests
     strategy:
       matrix:
-        dbt_version: ["1.*"]
+        dbt_version: ["1.4.*"]
         warehouse: ["snowflake"]
 
 
@@ -110,9 +110,11 @@ jobs:
         rm -f ../docs/catalog.json
         rm -f ../docs/manifest.json
         rm -f ../docs/run_results.json
+        rm -f ../docs/index.html
         cp target/catalog.json ../docs/catalog.json
         cp target/manifest.json ../docs/manifest.json
         cp target/run_results.json ../docs/run_results.json
+        cp target/index.html ../docs/index.html
         dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
 
     - name: Commit & Push changes
@@ -123,7 +125,7 @@ jobs:
         # - user_info -> Your Display Name <your-actual@email.com>
         # - github_actions -> github-actions <email associated with the github logo>
         # Default: github_actor
-        add: ./docs/catalog.json ./docs/manifest.json ./docs/run_results.json
+        add: ./docs/catalog.json ./docs/manifest.json ./docs/run_results.json ./docs/index.html
         default_author: github_actions
         message: 'Update dbt docs'
         new_branch: gh_pages
