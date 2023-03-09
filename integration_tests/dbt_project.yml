@@ -1,5 +1,5 @@
 name: 'snowplow_web_integration_tests'
-version: '0.14.0-rc1'
+version: '0.14.0-rc2'
 config-version: 2
 
 profile: 'integration_tests'
