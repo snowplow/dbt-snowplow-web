@@ -1,3 +1,29 @@
+snowplow-web 0.14.0-rc2 (2023-03-10)
+---------------------------------------
+## Summary
+**This is a pre-release version of the package, we believe it to be in working condition but you may encounter bugs and some features may change before the final release.**
+
+This version migrates the rest of our models (consent and custom examples) to the new materialization, and uses new macros in place of those we have deprecated.
+
+As a reminder Users will need to add the following to their `dbt_project.yml` to benefit from the enhancements: 
+```yaml
+# dbt_project.yml
+...
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+```
+
+For custom models and more details, please refer to our temporary docs page: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-advanced-usage/dbt-incremental-logic-pre-release/ 
+
+## Features
+Migrate from `get_cluster_by` and `get_partition_by` to `get_value_by_target_type`
+Migrate consent and custom models to use new materialization
+Remove `snowplow__incremental_materialization` variable
+## Docs
+Small typo fixes
+Small update to readme
+
 snowplow-web 0.14.0-rc1 (2023-03-06)
 ---------------------------------------
 ## Summary
