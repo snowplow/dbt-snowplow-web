@@ -31,3 +31,4 @@ d629cda4-db63-4d0e-92a5-c867ba18f143,2021-02-26 09:09:24.713,consent,1.0,"[""nec
 d2731ab1-14ad-45c2-9677-7fc71cb2e253,2021-02-26 09:09:42.497,consent,1.0,"[""necessary""]","https://www.example.com/","[""https://www.example.com/""]",deny_all,TRUE
 368fca23-5dc5-4ca5-8afe-d32c000e32eb,2021-02-26 09:13:51.444,consent,2.0,"[""necessary""]","https://www.example.com/","[""https://www.example.com/""]",deny_all,TRUE
 b41fae66-ba73-4af1-8d16-7813e769b38e,2021-03-03 09:14:01.599,consent,2.0,"[""necessary"",""preferences"",""statistics"",""marketing""]","https://www.example.com/","[""https://www.example.com/""]",allow_all,TRUE
+b41fae66-ba73-4af1-8d16-7813e769b38e,2021-03-03 09:14:01.599,consent,2.0,"[""necessary"",""preferences"",""statistics"",""marketing""]","https://www.example.com/","[""https://www.example.com/""]",allow_all,TRUE

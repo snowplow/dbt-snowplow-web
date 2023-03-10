@@ -76,7 +76,7 @@ with page_view_events as (
     ev.br_renderengine,
     ev.os_timezone,
 
-    dense_rank() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) as page_view_id_dedupe_index
+    row_number() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) as page_view_id_dedupe_index
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
 
@@ -86,17 +86,6 @@ with page_view_events as (
   {% if var("snowplow__ua_bot_filter", true) %}
     {{ filter_bots('ev') }}
   {% endif %}
-)
-
--- Dedupe: Take first row of duplicate page view, unless derived_tstamp also duplicated.
--- Remove pv entirely if both fields are dupes. Avoids 1:many join with context tables.
-, dedupe as (
-  select
-    *,
-    count(*) over(partition by page_view_id) as row_count
-
-  from page_view_events
-  where page_view_id_dedupe_index = 1 -- Keep row(s) with earliest derived_tstamp per dupe pv
 )
 
 select
@@ -171,6 +160,6 @@ select
 
   row_number() over (partition by pv.domain_sessionid order by pv.derived_tstamp, pv.dvce_created_tstamp) as page_view_in_session_index --Moved to post dedupe, unlike V1 web model.
 
-from dedupe as pv
+from page_view_events as pv
 
-where row_count = 1 -- Remove dupe page views with more than 1 row
+where page_view_id_dedupe_index = 1
