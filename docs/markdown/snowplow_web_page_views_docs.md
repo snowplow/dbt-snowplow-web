@@ -58,6 +58,6 @@ This model calculates the lower and upper limit for the page views events in the
 
 {% docs table_scroll_depth %}
 
-This model calculates the horizontal and vertical scroll depth of the vistor on a given page view. Such metrics are useful when assessing engagement on a page view.
+This model calculates the horizontal and vertical scroll depth of the visitor on a given page view. Such metrics are useful when assessing engagement on a page view.
 
 {% enddocs %}
