@@ -1,5 +1,5 @@
 name: 'snowplow_web'
-version: '0.14.0-rc2'
+version: '0.14.0'
 config-version: 2
 
 require-dbt-version: [">=1.4.0", "<2.0.0"]
