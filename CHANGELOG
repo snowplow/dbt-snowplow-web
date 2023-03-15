@@ -1,3 +1,37 @@
+snowplow-web 0.14.0 (2023-0X-XX)
+---------------------------------------
+## Summary
+This version contains two major changes, the first is to migrate our models away from the `snowplow_incremental_materialization` and instead move to using the built-in `incremental` with an optimization applied on top. The second is to change the de-duplication logic applied to redshift/postgres to bring it in line with the other warehouses (keeping 1 of the duplicate records, instead of discarding them all). We also upgrade some macros and update some of our docs.
+
+## 🚨 Breaking Changes 🚨
+### Changes to materialization
+To take advantage of the optimization we apply to the `incremental` materialization, users will need to add the following to their `dbt_project.yml` : 
+```yaml
+# dbt_project.yml
+...
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+```
+
+For custom models please refer to the [snowplow utils migration guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/utils/#upgrading-to-0140) and the latest docs on [creating custom incremental models](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-custom-models/#incremental-models).
+
+### Redshift/Postgres custom contexts
+The change in de-duplication logic means that now the `events_this_run` and downstream tables will contain events that may have duplicates within your self-describing-events or context tables. Previously these events were discarded do there was no risk of duplication when joining a sde/context in a custom model, you must now make sure to de-dupe your sde/context before joining in any custom models. See the `models/optional_modules/consent/scratch/default/snowplow_web_consent_events_this_run.sql` file for an example, and the docs [here](ADD THE DOCS HERE!).
+
+## Features
+- Migrate from `get_cluster_by` and `get_partition_by` to `get_value_by_target_type`
+- Migrate all models to use new materialization
+- Remove `snowplow__incremental_materialization` variable
+- Change de-duplication logic on redshift/postgres
+
+## Docs
+- Typo fixes
+- Update to readme
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file, and ensuring you have followed the above steps. You can read more in our [upgrade guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/web/#upgrading-to-0140)
+
 snowplow-web 0.14.0-rc2 (2023-03-10)
 ---------------------------------------
 ## Summary
