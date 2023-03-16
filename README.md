@@ -13,6 +13,10 @@ This dbt package:
 
 Please refer to the [doc site](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/) for a full breakdown of the package.
 
+### Getting Started
+
+The easiest way to get started is to follow our [QuickStart guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-quickstart/web/), or to use our [Advanced Analytics for Web Accelerator](https://docs.snowplow.io/accelerators/web/) which includes steps for setting up tracking as well as modeling, and our [Consent Tracking for Marketing Accelerator](https://docs.snowplow.io/accelerators/consent/) specifically for our Consent Management Platform models.
+
 ### Adapter Support
 
 The latest version of the snowplow-web package supports BigQuery, Databricks, Redshift, Snowflake & Postgres. For previous versions see our [package docs](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/).
