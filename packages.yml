@@ -1,3 +1,5 @@
 packages:
-  - package: snowplow/snowplow_utils
-    version: [">=0.14.0", "<0.15.0"]
+  # - package: snowplow/snowplow_utils
+  #   version: [">=0.14.0", "<0.15.0"]
+  - git: https://github.com/snowplow/dbt-snowplow-utils.git
+    revision: release/snowplow-utils/0.14.0
