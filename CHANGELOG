@@ -1,3 +1,14 @@
+snowplow-web 0.13.3 (2023-03-24)
+---------------------------------------
+## Summary
+This is a patch release which fixes an issue with enabling contexts on databricks. 
+
+## Features
+- Fix databricks context macro (Close #181)
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.13.2 (2023-02-27)
 ---------------------------------------
 ## Summary
