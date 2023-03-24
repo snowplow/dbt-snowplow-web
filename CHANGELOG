@@ -32,6 +32,7 @@ The change in de-duplication logic means that now the `events_this_run` and down
 ## Upgrading
 Bump the snowplow-web version in your `packages.yml` file, and ensuring you have followed the above steps. You can read more in our [upgrade guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/web/#upgrading-to-0140)
 
+
 snowplow-web 0.13.3 (2023-03-24)
 ---------------------------------------
 ## Summary
