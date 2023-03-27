@@ -13,6 +13,7 @@ Describe your changes, and why you're making them.
 - [ ] I have updated the README.md (if applicable)
 - [ ] I have added tests & descriptions to my models (and macros if applicable)
 - [ ] I have raised a [documentation](https://github.com/snowplow/documentation) PR if applicable (Link here if required)
+- [ ] Is your change a breaking change?
 
 <!-- 
 ## Release Only Checklist
