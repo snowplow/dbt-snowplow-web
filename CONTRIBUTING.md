@@ -19,12 +19,12 @@ Before you start a load of work, please note that all PRs (apart from cosmetic f
 
 ## About this document
 
-This document document serves as guide for contributing code changes to `dbt-snowplow-*` (this and similar repository). It is not intended as a guide for using `dbt-snowplow-*`, and some pieces assume a level of familiarity with Python development (virtualenvs, `pip`, etc) and dbt package development. Specific code snippets in this guide assume you are using macOS or Linux and are comfortable with the command line.
+This document serves as guide for contributing code changes to `dbt-snowplow-*` (this and similar repositories). It is not intended as a guide for using `dbt-snowplow-*`, and some pieces assume a level of familiarity with Python development (virtualenvs, `pip`, etc) and dbt package development. Specific code snippets in this guide assume you are using macOS or Linux and are comfortable with the command line.
 
 ### Notes
 
 - **CLA:** If this is your first time contributing you will be asked to sign the Individual Contributor License Agreement. If you would prefer to read this in advance of submitting your PR you can find it [here](https://docs.google.com/forms/d/e/1FAIpQLSd89YTDQ1XpTZbj3LpOkquV_h1Y8k9ay3iFbJsZsJrz18I23Q/viewform). If you are unable to sign the CLA, the `dbt-snowplow-*` maintainers will unfortunately be unable to merge any of your Pull Requests. We welcome you to participate in discussions, open issues, and comment on existing ones.
-- **Branches:** All pull requests from community contributors should target a the `main` branch (default) and the maintainers will create the appropriate branch to merge this into. Please let us know if you believe your changes are a breaking change or could be done as part of a patch release, if you are unsure that's fine just make that clear in your PR.
+- **Branches:** All pull requests from community contributors should target the `main` branch (default) and the maintainers will create the appropriate branch to merge this into. Please let us know if you believe your changes are a breaking change or could be done as part of a patch release, if you are unsure that's fine just make that clear in your PR.
 - **Documentation:** The majority of the documentation for our dbt packages is in the core [Snowplow Docs](https://github.com/snowplow/documentation) and as such a PR will need to be raised there to update any docs related to your change. Things such as the deployed dbt site are taken care of automatically.
 
 ## Getting the code
@@ -82,7 +82,7 @@ In general we try to follow these rules of thumb, but there are possible excepti
 - Where models need to be different across multiple warehouse types, ensure they are enabled based on the `target.type`
 - Make use of macros (ours and dbt's) where possible to avoid duplication and to manage the differences between warehouses
   - Do not reinvent the wheel e.g. make use of [`type_*` macros](https://docs.getdbt.com/reference/dbt-jinja-functions/cross-database-macros#data-type-functions) instead of explicit datatypes
-  - In the case where a macro may be useful outside of a specific package, we may make the choice to add it to `dbt-snowplow-utils` instead
+  - In the case where a macro may be useful outside of a specific package, we may make the choice to add it to `dbt-snowplow-utils` [repository](https://www.github.com/snowplow/dbt-snowplow-utils) instead
 - Make use of the incremental logic as much as possible to avoid full-scanning large tables
 - Where new functionality is being added, or you are touching existing functionality that does not have good/any test, add tests
 
@@ -119,6 +119,6 @@ You don't need to worry about which version your change will go into. Just creat
 
 A  maintainer will review your PR. They may suggest code revision for style or clarity, or request that you add unit or integration test(s). We promise these are good things and it's not personal, we all want to make sure the highest quality of work goes into the packages in a way that will be the least disruptive for our users.
 
-Automated tests run via Github actions. If you're a first-time contributor, all tests (including code checks and unit tests) will require a maintainer to approve. You will not be able to see the output data of these tests, but can share and explore any failures with you should there be any.
+Automated tests run via Github actions. If you're a first-time contributor, all tests (including code checks and unit tests) will require a maintainer to approve. You will not be able to see the output data of these tests, but we can share and explore any failures with you should there be any.
 
-Once all tests are passing and your PR has been approved, a maintainer will merge your changes into the active development branch. And that's it! You're now an Open Source Developer!
+Once all tests are passing and your PR has been approved, a maintainer will merge your changes into the active development branch. And that's it! You're now an Open Source Contributor!
