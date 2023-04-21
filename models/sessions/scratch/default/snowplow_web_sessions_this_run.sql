@@ -78,33 +78,18 @@ with session_firsts as (
 
         -- optional fields, only populated if enabled.
         -- iab enrichment fields: set iab variable to true to enable
-        {{snowplow_web.get_iab_context_fields('iab')}},
+        {{snowplow_web.get_iab_context_fields('ev')}},
 
         -- ua parser enrichment fields
-        {{snowplow_web.get_ua_context_fields('ua')}},
+        {{snowplow_web.get_ua_context_fields('ev')}},
 
         -- yauaa enrichment fields
-        {{snowplow_web.get_yauaa_context_fields('ya')}},
+        {{snowplow_web.get_yauaa_context_fields('ev')}},
 
         -- the joined tables should all be unique on page_view_id anyway, but this has the benefit of de-duping just in case
         row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp) AS page_event_in_session_index,
         event_name
     from {{ ref('snowplow_web_base_events_this_run') }} ev
-
-    {% if var('snowplow__enable_iab', false) -%}
-        left join {{ ref('snowplow_web_pv_iab') }} iab
-        on ev.page_view_id = iab.page_view_id
-    {% endif -%}
-
-    {% if var('snowplow__enable_ua', false) -%}
-        left join {{ ref('snowplow_web_pv_ua_parser') }} ua
-        on ev.page_view_id = ua.page_view_id
-    {% endif -%}
-
-    {% if var('snowplow__enable_yauaa', false) -%}
-        left join {{ ref('snowplow_web_pv_yauaa') }} ya
-        on ev.page_view_id = ya.page_view_id
-    {% endif -%}
 
     where
         ev.event_name in ('page_ping', 'page_view')
@@ -254,46 +239,46 @@ select
 
     -- optional fields, only populated if enabled.
     -- iab enrichment fields
-    a.category,
-    a.primary_impact,
-    a.reason,
-    a.spider_or_robot,
+    a.iab_category as category,
+    a.iab_primary_impact as primary_impact,
+    a.iab_reason as reason,
+    a.iab_spider_or_robot as spider_or_robot,
 
     -- ua parser enrichment fields
-    a.useragent_family,
-    a.useragent_major,
-    a.useragent_minor,
-    a.useragent_patch,
-    a.useragent_version,
-    a.os_family,
-    a.os_major,
-    a.os_minor,
-    a.os_patch,
-    a.os_patch_minor,
-    a.os_version,
-    a.device_family,
+    a.ua_useragent_family as useragent_family,
+    a.ua_useragent_major as useragent_major,
+    a.ua_useragent_minor as useragent_minor,
+    a.ua_useragent_patch as useragent_patch,
+    a.ua_useragent_version as useragent_version,
+    a.ua_os_family as os_family,
+    a.ua_os_major as os_major,
+    a.ua_os_minor as os_minor,
+    a.ua_os_patch as os_patch,
+    a.ua_os_patch_minor as os_patch_minor,
+    a.ua_os_version as os_version,
+    a.ua_device_family as device_family,
 
     -- yauaa enrichment fields
-    a.device_class,
-    a.agent_class,
-    a.agent_name,
-    a.agent_name_version,
-    a.agent_name_version_major,
-    a.agent_version,
-    a.agent_version_major,
-    a.device_brand,
-    a.device_name,
-    a.device_version,
-    a.layout_engine_class,
-    a.layout_engine_name,
-    a.layout_engine_name_version,
-    a.layout_engine_name_version_major,
-    a.layout_engine_version,
-    a.layout_engine_version_major,
-    a.operating_system_class,
-    a.operating_system_name,
-    a.operating_system_name_version,
-    a.operating_system_version
+    a.yauaa_device_class as device_class,
+    a.yauaa_agent_class as agent_class,
+    a.yauaa_agent_name as agent_name,
+    a.yauaa_agent_name_version as agent_name_version,
+    a.yauaa_agent_name_version_major as agent_name_version_major,
+    a.yauaa_agent_version as agent_version,
+    a.yauaa_agent_version_major as agent_version_major,
+    a.yauaa_device_brand as device_brand,
+    a.yauaa_device_name as device_name,
+    a.yauaa_device_version as device_version,
+    a.yauaa_layout_engine_class as layout_engine_class,
+    a.yauaa_layout_engine_name as layout_engine_name,
+    a.yauaa_layout_engine_name_version as layout_engine_name_version,
+    a.yauaa_layout_engine_name_version_major as layout_engine_name_version_major,
+    a.yauaa_layout_engine_version as layout_engine_version,
+    a.yauaa_layout_engine_version_major as layout_engine_version_major,
+    a.yauaa_operating_system_class as operating_system_class,
+    a.yauaa_operating_system_name as operating_system_name,
+    a.yauaa_operating_system_name_version as operating_system_name_version,
+    a.yauaa_operating_system_version as operating_system_version
 from
     session_firsts a
 left join
