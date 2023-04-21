@@ -1,6 +1,7 @@
 root_id,root_tstamp,deviceFamily,osFamily,osMajor,osMinor,osPatch,osPatchMinor,osVersion,useragentFamily,useragentMajor,useragentMinor,useragentPatch,useragentVersion
 9e983d4a-e07c-4858-8e97-bdb7feb31241,2021-03-03 21:27:32.696,"Mac","MacOSX","10","15","7","null","MacOSX10.15.7","Chrome","110","0","0","Chrome110.0.0"
 6a1c6742-7a16-478d-b106-96f9a9a54918,2021-03-03 21:27:23.097,"Mac","MacOSX","10","15","7","null","MacOSX10.15.7","Chrome","110","0","0","Chrome110.0.0"
+1h2c6742-7a16-478d-b106-96f9a9a54547,2021-03-03 21:27:23.097,"Mac","MacOSX","10","15","7","null","MacOSX10.15.7","Chrome","110","0","0","Chrome110.0.0"
 bc14622d-f328-4479-8ac3-836b6970badd,2021-03-03 21:27:23.461,"Mac","MacOSX","10","15","7","null","MacOSX10.15.7","Chrome","110","0","0","Chrome110.0.0"
 74ce09f5-d550-4804-9ffa-b563fc261472,2021-03-03 21:27:35.706,"Mac","MacOSX","10","15","7","null","MacOSX10.15.7","Chrome","110","0","0","Chrome110.0.0"
 9e983d4a-e07c-4858-8e97-bdb7feb31241,2021-03-03 21:27:35.176,"Mac","MacOSX","10","15","7","null","MacOSX10.15.7","Chrome","110","0","0","Chrome110.0.0"

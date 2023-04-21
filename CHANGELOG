@@ -8,6 +8,7 @@ This version contains moves the iab, ua, and yauaa contexts into the base events
 
 ## Under the hood
 - Optimizes a filter in the `snowplow_web_user_sessions_this_run` model (Close #186)
+- Ensure deterministic modeling when two genuine events occur at the same time in a session (Close #178)
 
 ## Docs
 - Remove docs that are no longer necessary

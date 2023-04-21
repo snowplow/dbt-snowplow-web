@@ -86,8 +86,7 @@ with session_firsts as (
         -- yauaa enrichment fields
         {{snowplow_web.get_yauaa_context_fields('ev')}},
 
-        -- the joined tables should all be unique on page_view_id anyway, but this has the benefit of de-duping just in case
-        row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp) AS page_event_in_session_index,
+        row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_event_in_session_index,
         event_name
     from {{ ref('snowplow_web_base_events_this_run') }} ev
 
@@ -109,7 +108,7 @@ session_lasts as (
         page_urlpath as last_page_urlpath,
         page_urlquery as last_page_urlquery,
         page_urlfragment as last_page_urlfragment,
-        row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp desc, ev.dvce_created_tstamp) AS page_event_in_session_index
+        row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp desc, ev.dvce_created_tstamp desc, ev.event_id) AS page_event_in_session_index
     from {{ ref('snowplow_web_base_events_this_run') }} ev
     where
         event_name in ('page_view')
