@@ -1,10 +1,16 @@
 snowplow-web 0.14.1 (2023-0X-XX)
 ---------------------------------------
 ## Summary
+This version contains moves the iab, ua, and yauaa contexts into the base events this run table for Postgres/Redshift, completing the work to decouple our sessions models from the page view models.
 
+## Features
+- Move contexts into base table for redshift (Close #185)
 
 ## Under the hood
-- Optimizes a filter in the `snowplow_web_user_sessions_this_run` model
+- Optimizes a filter in the `snowplow_web_user_sessions_this_run` model (Close #186)
+
+## Docs
+- Remove docs that are no longer necessary
 
 ## Upgrading
 Bump the snowplow-web version in your `packages.yml` file.

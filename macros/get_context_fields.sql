@@ -13,15 +13,15 @@
 {# iab fields #}
 {% macro postgres__get_iab_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_iab', false) -%}
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}category,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}primary_impact,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}reason,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}spider_or_robot
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}iab_category,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}iab_primary_impact,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}iab_reason,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}iab_spider_or_robot
     {%- else -%}
-        cast(null as {{ type_string() }}) as category,
-        cast(null as {{ type_string() }}) as primary_impact,
-        cast(null as {{ type_string() }}) as reason,
-        cast(null as boolean) as spider_or_robot
+        cast(null as {{ type_string() }}) as iab_category,
+        cast(null as {{ type_string() }}) as iab_primary_impact,
+        cast(null as {{ type_string() }}) as iab_reason,
+        cast(null as boolean) as iab_spider_or_robot
     {%- endif -%}
 {% endmacro %}
 
@@ -63,31 +63,31 @@
 {# ua fields #}
 {% macro postgres__get_ua_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_ua', false) -%}
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}useragent_family,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}useragent_major,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}useragent_minor,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}useragent_patch,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}useragent_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_family,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_major,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_minor,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_patch,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_patch_minor,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}device_family
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_useragent_family,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_useragent_major,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_useragent_minor,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_useragent_patch,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_useragent_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_os_family,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_os_major,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_os_minor,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_os_patch,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_os_patch_minor,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_os_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}ua_device_family
     {%- else -%}
-        cast(null as {{ type_string() }}) as useragent_family,
-        cast(null as {{ type_string() }}) as useragent_major,
-        cast(null as {{ type_string() }}) as useragent_minor,
-        cast(null as {{ type_string() }}) as useragent_patch,
-        cast(null as {{ type_string() }}) as useragent_version,
-        cast(null as {{ type_string() }}) as os_family,
-        cast(null as {{ type_string() }}) as os_major,
-        cast(null as {{ type_string() }}) as os_minor,
-        cast(null as {{ type_string() }}) as os_patch,
-        cast(null as {{ type_string() }}) as os_patch_minor,
-        cast(null as {{ type_string() }}) as os_version,
-        cast(null as {{ type_string() }}) as device_family
+        cast(null as {{ type_string() }}) as ua_useragent_family,
+        cast(null as {{ type_string() }}) as ua_useragent_major,
+        cast(null as {{ type_string() }}) as ua_useragent_minor,
+        cast(null as {{ type_string() }}) as ua_useragent_patch,
+        cast(null as {{ type_string() }}) as ua_useragent_version,
+        cast(null as {{ type_string() }}) as ua_os_family,
+        cast(null as {{ type_string() }}) as ua_os_major,
+        cast(null as {{ type_string() }}) as ua_os_minor,
+        cast(null as {{ type_string() }}) as ua_os_patch,
+        cast(null as {{ type_string() }}) as ua_os_patch_minor,
+        cast(null as {{ type_string() }}) as ua_os_version,
+        cast(null as {{ type_string() }}) as ua_device_family
     {%- endif -%}
 {% endmacro %}
 
@@ -161,47 +161,47 @@
 {# yauaa fields #}
 {% macro postgres__get_yauaa_context_fields(table_prefix = none) %}
     {%- if var('snowplow__enable_yauaa', false) -%}
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}device_class,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}agent_class,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}agent_name,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}agent_name_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}agent_name_version_major,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}agent_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}agent_version_major,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}device_brand,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}device_name,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}device_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}layout_engine_class,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}layout_engine_name,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}layout_engine_name_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}layout_engine_name_version_major,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}layout_engine_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}layout_engine_version_major,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}operating_system_class,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}operating_system_name,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}operating_system_name_version,
-        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}operating_system_version
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_device_class,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_agent_class,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_agent_name,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_agent_name_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_agent_name_version_major,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_agent_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_agent_version_major,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_device_brand,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_device_name,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_device_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_layout_engine_class,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_layout_engine_name,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_layout_engine_name_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_layout_engine_name_version_major,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_layout_engine_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_layout_engine_version_major,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_operating_system_class,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_operating_system_name,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_operating_system_name_version,
+        {% if table_prefix %}{{ table_prefix~"." }}{% endif %}yauaa_operating_system_version
     {%- else -%}
-        cast(null as {{ type_string() }}) as device_class,
-        cast(null as {{ type_string() }}) as agent_class,
-        cast(null as {{ type_string() }}) as agent_name,
-        cast(null as {{ type_string() }}) as agent_name_version,
-        cast(null as {{ type_string() }}) as agent_name_version_major,
-        cast(null as {{ type_string() }}) as agent_version,
-        cast(null as {{ type_string() }}) as agent_version_major,
-        cast(null as {{ type_string() }}) as device_brand,
-        cast(null as {{ type_string() }}) as device_name,
-        cast(null as {{ type_string() }}) as device_version,
-        cast(null as {{ type_string() }}) as layout_engine_class,
-        cast(null as {{ type_string() }}) as layout_engine_name,
-        cast(null as {{ type_string() }}) as layout_engine_name_version,
-        cast(null as {{ type_string() }}) as layout_engine_name_version_major,
-        cast(null as {{ type_string() }}) as layout_engine_version,
-        cast(null as {{ type_string() }}) as layout_engine_version_major,
-        cast(null as {{ type_string() }}) as operating_system_class,
-        cast(null as {{ type_string() }}) as operating_system_name,
-        cast(null as {{ type_string() }}) as operating_system_name_version,
-        cast(null as {{ type_string() }}) as operating_system_version
+        cast(null as {{ type_string() }}) as yauaa_device_class,
+        cast(null as {{ type_string() }}) as yauaa_agent_class,
+        cast(null as {{ type_string() }}) as yauaa_agent_name,
+        cast(null as {{ type_string() }}) as yauaa_agent_name_version,
+        cast(null as {{ type_string() }}) as yauaa_agent_name_version_major,
+        cast(null as {{ type_string() }}) as yauaa_agent_version,
+        cast(null as {{ type_string() }}) as yauaa_agent_version_major,
+        cast(null as {{ type_string() }}) as yauaa_device_brand,
+        cast(null as {{ type_string() }}) as yauaa_device_name,
+        cast(null as {{ type_string() }}) as yauaa_device_version,
+        cast(null as {{ type_string() }}) as yauaa_layout_engine_class,
+        cast(null as {{ type_string() }}) as yauaa_layout_engine_name,
+        cast(null as {{ type_string() }}) as yauaa_layout_engine_name_version,
+        cast(null as {{ type_string() }}) as yauaa_layout_engine_name_version_major,
+        cast(null as {{ type_string() }}) as yauaa_layout_engine_version,
+        cast(null as {{ type_string() }}) as yauaa_layout_engine_version_major,
+        cast(null as {{ type_string() }}) as yauaa_operating_system_class,
+        cast(null as {{ type_string() }}) as yauaa_operating_system_name,
+        cast(null as {{ type_string() }}) as yauaa_operating_system_name_version,
+        cast(null as {{ type_string() }}) as yauaa_operating_system_version
     {%- endif -%}
 {% endmacro %}
 
