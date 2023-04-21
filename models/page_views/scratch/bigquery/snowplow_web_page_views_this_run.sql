@@ -75,7 +75,7 @@ select
   ev.br_renderengine,
   ev.os_timezone,
 
-  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp) AS page_view_in_session_index,
+  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_view_in_session_index,
 
   -- optional fields, only populated if enabled.
 

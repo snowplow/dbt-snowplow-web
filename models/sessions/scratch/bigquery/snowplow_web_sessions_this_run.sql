@@ -101,7 +101,7 @@ with session_firsts as (
                 relation=ref('snowplow_web_base_events_this_run'),
                 relation_alias='ev') }},
 
-        row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp) AS page_event_in_session_index,
+        row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_event_in_session_index,
         event_name
     from {{ ref('snowplow_web_base_events_this_run') }} ev
     where
@@ -122,7 +122,7 @@ session_lasts as (
         page_urlpath as last_page_urlpath,
         page_urlquery as last_page_urlquery,
         page_urlfragment as last_page_urlfragment,
-        row_number() over (partition by domain_sessionid order by derived_tstamp desc, dvce_created_tstamp) AS page_event_in_session_index
+        row_number() over (partition by domain_sessionid order by derived_tstamp desc, dvce_created_tstamp desc, event_id) AS page_event_in_session_index
     from {{ ref('snowplow_web_base_events_this_run') }}
     where
         event_name in ('page_view')
