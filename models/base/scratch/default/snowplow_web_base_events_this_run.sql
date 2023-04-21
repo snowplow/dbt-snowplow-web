@@ -146,7 +146,8 @@ with events_this_run AS (
     {% if var('snowplow__enable_load_tstamp', true) %}
       a.load_tstamp,
     {% endif %}
-    row_number() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index
+    row_number() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index,
+    count(*) over (partition by a.event_id) as event_id_dedupe_count
 
   from {{ var('snowplow__events') }} as a
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
@@ -159,6 +160,7 @@ with events_this_run AS (
   and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
 )
 
+-- page context
 , page_context as (
   select
     root_id,
@@ -180,13 +182,137 @@ with events_this_run AS (
   where page_context_dedupe_index = 1
 )
 
+-- iab context
+{% if var('snowplow__enable_iab', false) -%}
+, iab_context as (
+  select
+    root_id as iab_root_id,
+    root_tstamp as iab_root_tstamp,
+    category as iab_category,
+    primary_impact as iab_primary_impact,
+    reason as iab_reason,
+    spider_or_robot as iab_spider_or_robot,
+    row_number() over (partition by root_id order by root_tstamp) as iab_context_dedupe_index
+
+  from {{ var('snowplow__iab_context') }}
+  where
+    root_tstamp >= {{ lower_limit }}
+    and root_tstamp <= {{ upper_limit }}
+)
+
+, iab_context_dedupe as (
+  select
+   *
+
+  from iab_context
+  where iab_context_dedupe_index = 1
+)
+{% endif -%}
+
+-- ua context
+{% if var('snowplow__enable_ua', false) -%}
+, ua_context as (
+  select
+    root_id as ua_root_id,
+    root_tstamp as ua_root_tstamp,
+    useragent_family as ua_useragent_family,
+    useragent_major as ua_useragent_major,
+    useragent_minor as ua_useragent_minor,
+    useragent_patch as ua_useragent_patch,
+    useragent_version as ua_useragent_version,
+    os_family as ua_os_family,
+    os_major as ua_os_major,
+    os_minor as ua_os_minor,
+    os_patch as ua_os_patch,
+    os_patch_minor as ua_os_patch_minor,
+    os_version as ua_os_version,
+    device_family as ua_device_family,
+    row_number() over (partition by root_id order by root_tstamp) as ua_context_dedupe_index
+
+  from {{ var('snowplow__ua_parser_context') }}
+  where
+    root_tstamp >= {{ lower_limit }}
+    and root_tstamp <= {{ upper_limit }}
+)
+
+, ua_context_dedupe as (
+  select
+   *
+
+  from ua_context
+  where ua_context_dedupe_index = 1
+)
+{% endif -%}
+
+--yauaa context
+{% if var('snowplow__enable_yauaa', false) -%}
+, yauaa_context as (
+  select
+    root_id as yauaa_root_id,
+    root_tstamp as yauaa_root_tstamp,
+    device_class as yauaa_device_class,
+    agent_class as yauaa_agent_class,
+    agent_name as yauaa_agent_name,
+    agent_name_version as yauaa_agent_name_version,
+    agent_name_version_major as yauaa_agent_name_version_major,
+    agent_version as yauaa_agent_version,
+    agent_version_major as yauaa_agent_version_major,
+    device_brand as yauaa_device_brand,
+    device_name as yauaa_device_name,
+    device_version as yauaa_device_version,
+    layout_engine_class as yauaa_layout_engine_class,
+    layout_engine_name as yauaa_layout_engine_name,
+    layout_engine_name_version as yauaa_layout_engine_name_version,
+    layout_engine_name_version_major as yauaa_layout_engine_name_version_major,
+    layout_engine_version as yauaa_layout_engine_version,
+    layout_engine_version_major as yauaa_layout_engine_version_major,
+    operating_system_class as yauaa_operating_system_class,
+    operating_system_name as yauaa_operating_system_name,
+    operating_system_name_version as yauaa_operating_system_name_version,
+    operating_system_version as yauaa_operating_system_version,
+    row_number() over (partition by root_id order by root_tstamp) as yauaa_context_dedupe_index
+
+  from {{ var('snowplow__yauaa_context') }}
+  where
+    root_tstamp >= {{ lower_limit }}
+    and root_tstamp <= {{ upper_limit }}
+)
+
+, yauaa_context_dedupe as (
+  select
+   *
+
+  from yauaa_context
+  where yauaa_context_dedupe_index = 1
+)
+{% endif -%}
+
 select
   e.*,
-  pc.page_view_id
+  pc.page_view_id,
 
+-- iab enrichment fields: set iab variable to true to enable
+  {{snowplow_web.get_iab_context_fields('iab')}},
+
+  -- ua parser enrichment fields
+  {{snowplow_web.get_ua_context_fields('ua')}},
+
+  -- yauaa enrichment fields
+  {{snowplow_web.get_yauaa_context_fields('ya')}}
 from events_this_run as e
 left join page_context_dedupe as pc
-on e.event_id = pc.root_id
-and e.collector_tstamp = pc.root_tstamp
+  on e.event_id = pc.root_id and e.collector_tstamp = pc.root_tstamp
+{% if var('snowplow__enable_iab', false) -%}
+left join iab_context_dedupe as iab
+  on e.event_id = iab.iab_root_id and e.collector_tstamp = iab.iab_root_tstamp
+{%- endif %}
+{% if var('snowplow__enable_ua', false) -%}
+left join ua_context_dedupe as ua
+  on e.event_id = ua.ua_root_id and e.collector_tstamp = ua.ua_root_tstamp
+{%- endif %}
+{% if var('snowplow__enable_yauaa', false) -%}
+left join yauaa_context_dedupe as ya
+  on e.event_id = ya.yauaa_root_id and e.collector_tstamp = ya.yauaa_root_tstamp
+{%- endif %}
 
 where e.event_id_dedupe_index = 1
