@@ -114,7 +114,7 @@ with prep as (
     p.domain_sessionid,
     p.domain_sessionidx,
 
-    row_number() over (partition by p.domain_sessionid order by p.derived_tstamp, p.dvce_created_tstamp) AS page_view_in_session_index,
+    row_number() over (partition by p.domain_sessionid order by p.derived_tstamp, p.dvce_created_tstamp, p.event_id) AS page_view_in_session_index,
 
     -- timestamp fields
     p.dvce_created_tstamp,

@@ -94,7 +94,7 @@ with session_firsts as (
         {% if var("snowplow__ua_bot_filter", true) %}
             {{ filter_bots() }}
         {% endif %}
-    qualify row_number() over (partition by domain_sessionid order by derived_tstamp, dvce_created_tstamp) = 1
+    qualify row_number() over (partition by domain_sessionid order by derived_tstamp, dvce_created_tstamp, event_id) = 1
 ),
 
 session_lasts as (
@@ -114,7 +114,7 @@ session_lasts as (
         {% if var("snowplow__ua_bot_filter", true) %}
             {{ filter_bots() }}
         {% endif %}
-    qualify row_number() over (partition by domain_sessionid order by derived_tstamp desc, dvce_created_tstamp) = 1
+    qualify row_number() over (partition by domain_sessionid order by derived_tstamp desc, dvce_created_tstamp desc, event_id) = 1
 ),
 
 session_aggs as (
