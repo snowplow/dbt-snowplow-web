@@ -66,6 +66,11 @@ vars:
     # Variables - Optional Consent model only
     snowplow__consent_cmp_visible: "{{ source('atomic', 'com_snowplowanalytics_snowplow_cmp_visible_1') }}"
     snowplow__consent_preferences: "{{ source('atomic', 'com_snowplowanalytics_snowplow_consent_preferences_1') }}"
+    # Variables - Optional Conversions only
+    # snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true},
+    #                               {'name': 'sign_up', 'condition': "event_name = 'sign_up'", 'value': 5}
+    #                             ]
+
 
 # Completely or partially remove models from the manifest during run start.
 on-run-start:
