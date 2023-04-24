@@ -73,6 +73,7 @@ vars:
     snowplow__enable_iab: true
     snowplow__enable_ua: true
     snowplow__enable_yauaa: true
+    snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true, "value": 'tr_total_base', "default_value": 0.5}]
 
 seeds:
   quote_columns: false
@@ -271,6 +272,10 @@ seeds:
             operating_system_name: string
             operating_system_name_version: string
             operating_system_version: string
+            cv_view_page_volume: integer
+            cv_view_page_total: float
+            cv_view_page_first_conversion: timestamp
+            cv_view_page_converted: boolean
         snowplow_web_users_expected:
           +column_types:
             start_tstamp: timestamp
@@ -469,6 +474,10 @@ seeds:
             operating_system_name: string
             operating_system_name_version: string
             operating_system_version: string
+            cv_view_page_volume: integer
+            cv_view_page_total: float
+            cv_view_page_first_conversion: timestamp
+            cv_view_page_converted: boolean
         snowplow_web_users_expected:
           +column_types:
             start_tstamp: timestamp
@@ -669,6 +678,7 @@ seeds:
             operating_system_name: varchar
             operating_system_name_version: varchar
             operating_system_version: varchar
+            cv_view_page_first_conversion: timestamp
         snowplow_web_users_expected:
           +column_types:
             start_tstamp: timestamp
@@ -871,6 +881,10 @@ seeds:
             operating_system_name: varchar
             operating_system_name_version: varchar
             operating_system_version: varchar
+            cv_view_page_volume: integer
+            cv_view_page_total: float
+            cv_view_page_first_conversion: timestamp
+            cv_view_page_converted: boolean
         snowplow_web_users_expected:
           +column_types:
             start_tstamp: timestamp
