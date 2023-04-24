@@ -1,0 +1,10 @@
+version: 2
+
+seeds:
+  - name: ga4_source_categories
+    description: A list of all source (websites) and their corresponding GA4 category.
+    config:
+      schema: base
+    columns:
+      - name: source
+      - name: source_category

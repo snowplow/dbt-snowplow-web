@@ -39,6 +39,8 @@ select
   a.first_page_urlquery,
   a.first_page_urlfragment,
 
+  a.geo_country
+
   c.last_page_title,
 
   c.last_page_url,
@@ -69,7 +71,9 @@ select
   a.mkt_content,
   a.mkt_campaign,
   a.mkt_clickid,
-  a.mkt_network
+  a.mkt_network,
+  a.mkt_source_platform,
+  a.default_channel
 
 from {{ ref('snowplow_web_users_aggs') }} as b
 
