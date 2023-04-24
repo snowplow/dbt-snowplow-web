@@ -124,31 +124,49 @@ session_aggs as (
         min(derived_tstamp) as start_tstamp,
         max(derived_tstamp) as end_tstamp,
         -- engagement fields
-        count(distinct page_view_id) as page_views,
+        count(distinct case when event_name in ('page_ping', 'page_view') and page_view_id is not null then page_view_id else null end) as page_views,
         -- (hb * (#page pings - # distinct page view ids ON page pings)) + (# distinct page view ids ON page pings * min visit length)
         ({{ var("snowplow__heartbeat", 10) }} * (
                 -- number of (unqiue in heartbeat increment) pages pings following a page ping (gap of heartbeat)
                 count(distinct case
-                        when event_name = 'page_ping' then
+                        when event_name = 'page_ping' and page_view_id is not null then
                         -- need to get a unique list of floored time PER page view, so create a dummy surrogate key...
                             {{ dbt.concat(['page_view_id', "cast(floor("~snowplow_utils.to_unixtstamp('dvce_created_tstamp')~"/"~var('snowplow__heartbeat', 10)~") as "~snowplow_utils.type_max_string()~")" ]) }}
                         else
                             null end) -
-                    count(distinct case when event_name = 'page_ping' then page_view_id else null end)
+                    count(distinct case when event_name = 'page_ping' and page_view_id is not null then page_view_id else null end)
                 ))  +
             -- number of page pings following a page view (or no event) (gap of min visit length)
-            (count(distinct case when event_name = 'page_ping' then page_view_id else null end) * {{ var("snowplow__min_visit_length", 5) }}) as engaged_time_in_s,
+            (count(distinct case when event_name = 'page_ping' and page_view_id is not null then page_view_id else null end) * {{ var("snowplow__min_visit_length", 5) }}) as engaged_time_in_s,
         {{ snowplow_utils.timestamp_diff('min(derived_tstamp)', 'max(derived_tstamp)', 'second') }} as absolute_time_in_s
     from {{ ref('snowplow_web_base_events_this_run') }}
     where
-        event_name in ('page_ping', 'page_view')
-        and page_view_id is not null
+        1 = 1
         {% if var("snowplow__ua_bot_filter", true) %}
             {{ filter_bots() }}
         {% endif %}
     group by
         domain_sessionid
 )
+
+{# Redshift doesn't allow listagg and other aggregations in the same CTE #}
+{%- if var('snowplow__conversion_events', none) %}
+,session_convs as (
+    select
+        domain_sessionid
+        {%- for conv_def in var('snowplow__conversion_events') %}
+            {{ snowplow_web.get_conversion_columns(conv_def)}}
+        {%- endfor %}
+    from {{ ref('snowplow_web_base_events_this_run') }}
+    where
+        1 = 1
+        {% if var("snowplow__ua_bot_filter", true) %}
+            {{ filter_bots() }}
+        {% endif %}
+    group by
+        domain_sessionid
+)
+{%- endif %}
 
 select
     -- app id
@@ -278,11 +296,22 @@ select
     a.yauaa_operating_system_name as operating_system_name,
     a.yauaa_operating_system_name_version as operating_system_name_version,
     a.yauaa_operating_system_version as operating_system_version
+
+    -- conversion fields
+    {%- if var('snowplow__conversion_events', none) %}
+        {%- for conv_def in var('snowplow__conversion_events') %}
+    {{ snowplow_web.get_conversion_columns(conv_def, names_only = true)}}
+        {%- endfor %}
+    {%- endif %}
 from
     session_firsts a
 left join
     session_lasts b on a.domain_sessionid = b.domain_sessionid and b.page_event_in_session_index = 1
 left join
     session_aggs c on a.domain_sessionid = c.domain_sessionid
+{%- if var('snowplow__conversion_events', none) %}
+left join
+    session_convs d on a.domain_sessionid = d.domain_sessionid
+{%- endif %}
 where
     a.page_event_in_session_index = 1
