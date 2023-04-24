@@ -61,4 +61,3 @@ models:
           compare_model: ref('snowplow_web_consent_versions_expected_stg')
       - dbt_utils.equality:
           compare_model: ref('snowplow_web_consent_versions_expected_stg')
-
