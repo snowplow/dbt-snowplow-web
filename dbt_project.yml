@@ -27,6 +27,7 @@ vars:
     # Sources
     # snowplow__atomic_schema: 'atomic_data_sample' # Only set if not using 'atomic' schema for Snowplow events data
     # snowplow__database:  # Only set if not using target.database for Snowplow events data -- WILL BE IGNORED FOR DATABRICKS
+    # snowplow__events_table: "events" # Only set if not using 'events' table for Snowplow events data
     snowplow__events: "{{ source('atomic', 'events') }}"
     snowplow__page_view_context: "{{ source('atomic','com_snowplowanalytics_snowplow_web_page_1') }}"
     snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
@@ -65,6 +66,7 @@ vars:
     # Depending on the use case it should either be the catalog (for Unity Catalog users from databricks connector 1.1.1 onwards) or the same value as your snowplow__atomic_schema (unless changed it should be 'atomic')
     # snowplow__databricks_catalog: 'hive_metastore'
     # Variables - Optional Consent model only
+    snowplow__enable_consent: false
     snowplow__consent_cmp_visible: "{{ source('atomic', 'com_snowplowanalytics_snowplow_cmp_visible_1') }}"
     snowplow__consent_preferences: "{{ source('atomic', 'com_snowplowanalytics_snowplow_consent_preferences_1') }}"
     # Variables - Optional Conversions only
@@ -72,7 +74,10 @@ vars:
     #                               {'name': 'sign_up', 'condition': "event_name = 'sign_up'", 'value': 5}
     #                             ]
     # snowplow__total_all_conversions: false
-
+    # Variables - Optional Core Web Vitals model only
+    snowplow__enable_cwv: false
+    snowplow__cwv_days_to_measure: 28
+    snowplow__cwv_percentile: 75
 
 # Completely or partially remove models from the manifest during run start.
 on-run-start:
@@ -91,6 +96,7 @@ models:
     +file_format: delta
     +bind: false
     base:
+      +tags: "base"
       manifest:
         +schema: "snowplow_manifest"
       scratch:
@@ -106,7 +112,17 @@ models:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
     optional_modules:
       consent:
-        enabled: false
+        +schema: "derived"
+        +tags: ["snowplow_web_incremental", "derived", "consent"]
+        scratch:
+          +schema: "scratch"
+          +tags: "scratch"
+      core_web_vitals:
+        +schema: "derived"
+        +tags: ["snowplow_web_incremental", "derived", "core_web_vitals"]
+        scratch:
+          +schema: "scratch"
+          +tags: "scratch"
 
     page_views:
       +schema: "derived"
@@ -145,3 +161,7 @@ models:
       scratch:
         +schema: "scratch"
         +tags: "scratch"
+
+seeds:
+  snowplow_web:
+    +schema: snowplow_manifest

@@ -1,6 +1,7 @@
 {{
   config(
     materialized='table',
+    enabled=var("snowplow__enable_consent", false),
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   )
 }}

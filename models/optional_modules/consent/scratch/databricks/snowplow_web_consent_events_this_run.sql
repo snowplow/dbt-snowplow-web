@@ -1,6 +1,7 @@
 {{
   config(
-    tags=["this_run"]
+    tags=["this_run"],
+    enabled=var("snowplow__enable_consent", false) and target.type in ['databricks', 'spark'] | as_bool(),
   )
 }}
 
@@ -31,6 +32,9 @@ with prep as (
 
   and {{ snowplow_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.
 
+  {% if var("snowplow__ua_bot_filter", false) %}
+      {{ filter_bots() }}
+  {% endif %}
 )
 
 select

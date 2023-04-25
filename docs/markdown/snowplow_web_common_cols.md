@@ -850,3 +850,15 @@ Name of the continent the visitor is located in
 {% docs col_br_lang_name %}
 Full name of the language the browser is set to e.g. ‘English (United Kingdom)’
 {% enddocs %}
+
+{% docs col_device_category %}
+Derived from the `device_class` it is used to classify devices into one of the following: Desktop / Mobile / Tablet / Other.
+{% enddocs %}
+
+{% docs col_content_group %}
+Custom defined rule builder to classify page based on url title, etc. Defined in macro `content_group_query`.
+{% enddocs %}
+
+{% docs col_screen_resolution %}
+Combines dvce_screenwidth x dvce_screenheight.
+{% enddocs %}

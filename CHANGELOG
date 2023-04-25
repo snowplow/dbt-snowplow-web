@@ -1,18 +1,31 @@
 snowplow-web 0.15.0 (2023-0X-XX)
 ---------------------------------------
 ## Summary
-The main change in this version is the addition of many new fields to the `sessions` table, including the ability to define your conversion events that are aggregated per session. You can read more about it in our docs [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/conversions/)! We also add the (optional) count of events per event type for each session, you can enable it by turning on the `snowplow__list_event_counts` variable.
+The main change in this version is the addition of many new fields to the `sessions` and `pageviews` table, including the ability to define your conversion events that are aggregated per session. You can read more about it in our docs [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/conversions/)! We also add the (optional) count of events per event type for each session, you can enable it by turning on the `snowplow__list_event_counts` variable.
+
+There is a new optional module called `core web vitals` which will allow you to model raw events sent from the **Snowplow Web Vitals plugin** (@snowplow/browser-plugin-web-vitals) of the [JavaScript tracker](/docs/collecting-data/collecting-from-own-applications/javascript-trackers/index.md) to measure and evaluate the speed, responsiveness, and visual stability of websites.
 
 This version also moves the iab, ua, and yauaa contexts into the base events this run table for Postgres/Redshift, completing the work to decouple our sessions models from the page view models for all warehouses.
 
 ## 🚨 Breaking Changes 🚨
-While not breaking in that your models should all still run, there are many new columns in the sessions and users tables that will be automatically added to your derived tables, which may have unintended consequences with existing queries or BI tools that use column position (although dbt usually appends these columns to the end). New columns will only be populated from new runs onwards, if you wish to populate them for older records you will need to do a full refresh.
+While not breaking in that your models should all still run, there are many new columns in the sessions, pageviews and users tables that will be automatically added to your derived tables, which may have unintended consequences with existing queries or BI tools that use column position (although dbt usually appends these columns to the end). New columns will only be populated from new runs onwards, if you wish to populate them for older records you will need to do a full refresh.
+
+Please note that we have added a variable, `snowplow__enable_consent` to enable the models in the consent module. Please make sure you set this variable to true in your dbt_project.yml file to be able to run them:
+
+```yml
+# dbt_project.yml
+
+vars:
+  snowplow_web:
+    snowplow__enable_consent: true
+```
 
 ## Features
 - Move contexts into base table for redshift (Close #185)
 - Add support for user-defined conversion aggregation to sessions
 - Add new fields to the sessions table including enhanced and last geo data, default channel group, marketing source platform, event count, and optional count by event_name
 - Add new fields to the users table relating to the latest event geo and browser information
+- Add core web vitals module
 
 ## Under the hood
 - Optimizes a filter in the `snowplow_web_user_sessions_this_run` model (Close #186)
@@ -24,6 +37,8 @@ While not breaking in that your models should all still run, there are many new 
 ## Upgrading
 Bump the snowplow-web version in your `packages.yml` file.
 
+Some of the tables are relying now on seeds that have just been introduced with this version (`dim_ga4_source_categories`, `dim_geo_country_mapping`,`dim_rfc_5646_language_mapping`). Please run `dbt seed --select snowplow_web --full-refresh` on your first run.
+
 snowplow-web 0.14.1 (2023-05-23)
 ---------------------------------------
 ## Summary
@@ -34,6 +49,11 @@ This version fixes an issue for new runs of the package on redshift where empty 
 
 ## Upgrading
 To upgrade bump the snowplow-web version in your `packages.yml` file.
+
+snowplow-web 0.14.0 (2023-03-28)
+---------------------------------------
+## Summary
+This version contains two major changes, the first is to migrate our models away from the `snowplow_incremental_materialization` and instead move to using the built-in `incremental` with an optimization applied on top. The second is to change the de-duplication logic applied to redshift/postgres to bring it in line with the other warehouses (keeping 1 of the duplicate records, instead of discarding them all). We also upgrade some macros and update some of our docs.
 
 snowplow-web 0.14.0 (2023-03-28)
 ---------------------------------------

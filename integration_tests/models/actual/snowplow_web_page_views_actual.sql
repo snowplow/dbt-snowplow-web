@@ -10,7 +10,7 @@ select
 {% else %}
   app_id,
 {% endif %}
-
+  platform,
   -- user fields
   user_id,
   domain_userid,
@@ -67,6 +67,7 @@ select
 
   doc_width,
   doc_height,
+  content_group,
 
   page_title,
   page_url,
@@ -133,6 +134,8 @@ select
   os_version,
   device_family,
   device_class,
+  device_category,
+  screen_resolution,
   agent_class,
   agent_name,
   agent_name_version,

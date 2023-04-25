@@ -1,6 +1,7 @@
 {{
   config(
     materialized='incremental',
+    enabled=var("snowplow__enable_consent", false),
     unique_key='consent_version',
     sort = 'version_start_tstamp',
     dist = 'consent_version',

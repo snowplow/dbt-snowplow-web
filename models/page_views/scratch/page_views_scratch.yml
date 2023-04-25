@@ -18,6 +18,8 @@ models:
           - not_null
       - name: app_id
         description: '{{ doc("col_app_id") }}'
+      - name: platform
+        description: '{{ doc("col_platform") }}'
       - name: user_id
         description: '{{ doc("col_user_id") }}'
       - name: domain_userid
@@ -84,6 +86,8 @@ models:
         description: '{{ doc("col_doc_height") }}'
       - name: page_title
         description: '{{ doc("col_page_title") }}'
+      - name: content_group
+        description: '{{ doc("col_content_group") }}'
       - name: page_url
         description: '{{ doc("col_page_url") }}'
         tests:
@@ -196,6 +200,10 @@ models:
         description: '{{ doc("col_device_family") }}'
       - name: device_class
         description: '{{ doc("col_device_class") }}'
+      - name: device_category
+        description: '{{ doc("col_device_category") }}'
+      - name: screen_resolution
+        description: '{{ doc("col_screen_resolution") }}'
       - name: agent_class
         description: '{{ doc("col_agent_class") }}'
       - name: agent_name

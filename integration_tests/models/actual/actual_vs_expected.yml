@@ -61,3 +61,10 @@ models:
           compare_model: ref('snowplow_web_consent_versions_expected_stg')
       - dbt_utils.equality:
           compare_model: ref('snowplow_web_consent_versions_expected_stg')
+  - name: snowplow_web_vital_measurements_actual
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('snowplow_web_vital_measurements_expected_stg')
+      - snowplow_web_integration_tests.equality:
+          compare_model: ref('snowplow_web_vital_measurements_expected_stg')
+          precision: 3
