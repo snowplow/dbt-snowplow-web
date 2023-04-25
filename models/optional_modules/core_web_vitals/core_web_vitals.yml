@@ -1,0 +1,203 @@
+version: 2
+
+sources:
+  - name: atomic
+    schema: "{{ var('snowplow__atomic_schema', 'atomic') }}"
+    database: "{{ var('snowplow__database', target.database) if target.type not in ['databricks', 'spark'] else var('snowplow__databricks_catalog', 'hive_metastore') if target.type in ['databricks'] else var('snowplow__atomic_schema', 'atomic') }}"
+    tables:
+      - name: unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1
+        description: '{{ doc("table_consent_preferences") }}'
+
+models:
+  - name: snowplow_web_vital_events_this_run
+    description: An upstream scratch table extracting all the relevant fields that could be used to model core web vital metrics.
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+        description: '{{ doc("col_event_id") }}'
+      - name: event_name
+        description: '{{ doc("col_event_name") }}'
+      - name: app_id
+        description: '{{ doc("col_app_id") }}'
+      - name: platform
+        description: '{{ doc("col_platform") }}'
+      - name: domain_userid
+        description: '{{ doc("col_domain_userid") }}'
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+      - name: domain_sessionid
+        description: '{{ doc("col_domain_sessionid") }}'
+      - name: collector_tstamp
+        description: '{{ doc("col_collector_tstamp") }}'
+      - name: derived_tstamp
+        description: '{{ doc("col_derived_tstamp") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("col_dvce_created_tstamp") }}'
+      - name: load_tstamp
+        description: The timestamp of the event landing the data warehouse.
+      - name: geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: page_url
+        description: '{{ doc("col_page_url") }}'
+        tests:
+          - not_null
+      - name: page_title
+        description: '{{ doc("col_page_title") }}'
+      - name: useragent
+        description: '{{ doc("col_useragent") }}'
+      - name: device_class
+        description: '{{ doc("col_device_class") }}'
+      - name: agent_class
+        description: '{{ doc("col_agent_class") }}'
+      - name: agent_name
+        description: '{{ doc("col_agent_name") }}'
+      - name: agent_name_version
+        description: '{{ doc("col_agent_name_version") }}'
+      - name: agent_name_version_major
+        description: '{{ doc("col_agent_name_version_major") }}'
+      - name: agent_version
+        description: '{{ doc("col_agent_version") }}'
+      - name: agent_version_major
+        description: '{{ doc("col_agent_version_major") }}'
+      - name: device_brand
+        description: '{{ doc("col_device_brand") }}'
+      - name: device_name
+        description: '{{ doc("col_device_name") }}'
+      - name: device_version
+        description: '{{ doc("col_device_version") }}'
+      - name: layout_engine_class
+        description: '{{ doc("col_layout_engine_class") }}'
+      - name: layout_engine_name
+        description: '{{ doc("col_layout_engine_name") }}'
+      - name: layout_engine_name_version
+        description: '{{ doc("col_layout_engine_name_version") }}'
+      - name: layout_engine_name_version_major
+        description: '{{ doc("col_layout_engine_name_version_major") }}'
+      - name: layout_engine_version
+        description: '{{ doc("col_layout_engine_version") }}'
+      - name: layout_engine_version_major
+        description: '{{ doc("col_layout_engine_version_major") }}'
+      - name: operating_system_class
+        description: '{{ doc("col_operating_system_class") }}'
+      - name: operating_system_name
+        description: '{{ doc("col_operating_system_name") }}'
+      - name: operating_system_name_version
+        description: '{{ doc("col_operating_system_name_version") }}'
+      - name: operating_system_version
+        description: '{{ doc("col_operating_system_version") }}'
+      - name: lcp
+        description: A metric for measuring perceived load speed because it marks the point in the page load timeline when the page's main content has likely loaded. Measured in milliseconds. For more information https://web.dev/lcp/.
+      - name: fid
+        description: A metric for measuring load responsiveness because it quantifies the experience users feel when trying to interact with unresponsive pages. Measured in milliseconds. For more information https://web.dev/fid/.
+      - name: cls
+        description: A unitless metric for measuring visual stability because it helps quantify how often users experience unexpected layout shifts. For more information https://web.dev/cls/.
+      - name: inp
+        description: A metric that assesses responsiveness. INP observes the latency of all interactions a user has made with the page, and reports a single value which all (or nearly all) interactions were below that value. For more information https://web.dev/inp/.
+      - name: ttfb
+        description: A DOMHighResTimeStamp referring to the time in milliseconds between the browser requesting a page and when it receives the first byte of information from the server. For more information https://web.dev/ttfb/.
+      - name: navigation_type
+        description: The navigation type recognised from the Navigation Timing API https://www.w3.org/TR/navigation-timing-2/. E.g. 'navigate', 'reload', 'back-forward', 'back-forward-cache', 'prerender', 'restore'.
+  - name: snowplow_web_vitals_this_run
+    description: A scratch table used as a base for creating the main incremental core web vital events (first event per pageview).
+  - name: snowplow_web_vitals
+    description: An incremental table used as a base for storing core web vital events (first event per pageview).
+    columns:
+      - name: event_id
+        description: '{{ doc("col_event_id") }}'
+      - name: event_name
+        description: '{{ doc("col_event_name") }}'
+      - name: app_id
+        description: '{{ doc("col_app_id") }}'
+      - name: platform
+        description: '{{ doc("col_platform") }}'
+      - name: domain_userid
+        description: '{{ doc("col_domain_userid") }}'
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+      - name: domain_sessionid
+        description: '{{ doc("col_domain_sessionid") }}'
+      - name: collector_tstamp
+        description: '{{ doc("col_collector_tstamp") }}'
+      - name: derived_tstamp
+        description: '{{ doc("col_derived_tstamp") }}'
+      - name: load_tstamp
+        description: The timestamp of the event landing the data warehouse.
+      - name: geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: page_url
+        description: '{{ doc("col_page_url") }}'
+      - name: page_title
+        description: '{{ doc("col_page_title") }}'
+      - name: useragent
+        description: '{{ doc("col_useragent") }}'
+      - name: device_class
+        description: '{{ doc("col_device_class") }}'
+      - name: device_name
+        description: '{{ doc("col_device_name") }}'
+      - name: agent_name
+        description: '{{ doc("col_agent_name") }}'
+      - name: agent_version
+        description: '{{ doc("col_agent_version") }}'
+      - name: operating_system_name
+        description: '{{ doc("col_operating_system_name") }}'
+      - name: lcp
+        description: A metric for measuring perceived load speed because it marks the point in the page load timeline when the page's main content has likely loaded. Measured in milliseconds. For more information https://web.dev/lcp/.
+      - name: fid
+        description: A metric for measuring load responsiveness because it quantifies the experience users feel when trying to interact with unresponsive pages. Measured in milliseconds. For more information https://web.dev/fid/.
+      - name: cls
+        description: A unitless metric for measuring visual stability because it helps quantify how often users experience unexpected layout shifts. For more information https://web.dev/cls/.
+      - name: inp
+        description: A metric that assesses responsiveness. INP observes the latency of all interactions a user has made with the page, and reports a single value which all (or nearly all) interactions were below that value. For more information https://web.dev/inp/.
+      - name: ttfb
+        description: A DOMHighResTimeStamp referring to the time in milliseconds between the browser requesting a page and when it receives the first byte of information from the server. For more information https://web.dev/ttfb/.
+      - name: navigation_type
+        description: The navigation type recognised from the Navigation Timing API https://www.w3.org/TR/navigation-timing-2/. E.g. 'navigate', 'reload', 'back-forward', 'back-forward-cache', 'prerender', 'restore'.
+      - name: lcp_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query().
+      - name: fid_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: cls_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: ttfb_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+  - name: snowplow_web_vital_measurements
+    description: A table aimed to use for visualisations that takes core web vital measurements at the user specified percentile point. Defaulted to 75.
+    columns:
+      - name: measurement_type
+        description: The category to be measured. E.g. By country
+      - name: page_url
+        description: '{{ doc("col_page_url") }}'
+      - name: device_class
+        description: '{{ doc("col_device_class") }}'
+      - name: geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: country
+        description: '{{ doc("col_geo_country_name") }}'
+      - name: time_period
+        description: The specific time period (usually day) of the measured period.
+      - name: page_view_count
+        description: The number of page_views within the measured range.
+      - name: lcp_75p
+        description: The lcp result at the given percentile point.
+      - name: fid_75p
+        description: The fid result at the given percentile point.
+      - name: cls_75p
+        description: The cls result at the given percentile point.
+      - name: ttfb_75p
+        description: The ttfb result at the given percentile point.
+      - name: lcp_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: fid_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: cls_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: ttfb_result
+        description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: passed
+        description: Evaluation that only passes when all of the lcp/fid/cls results pass.

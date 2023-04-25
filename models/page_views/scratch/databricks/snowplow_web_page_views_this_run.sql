@@ -10,6 +10,7 @@ select
   ev.event_id,
 
   ev.app_id,
+  ev.platform,
 
   -- user fields
   ev.user_id,
@@ -30,6 +31,7 @@ select
   ev.doc_height,
 
   ev.page_title,
+  {{ content_group_query() }} as content_group,
   ev.page_url,
   ev.page_urlscheme,
   ev.page_urlhost,
@@ -68,6 +70,8 @@ select
 
   ev.useragent,
 
+  ev.dvce_screenwidth || 'x' || ev.dvce_screenheight as screen_resolution,
+
   ev.br_lang,
   ev.br_viewwidth,
   ev.br_viewheight,
@@ -104,6 +108,7 @@ select
     p.event_id,
 
     p.app_id,
+    p.platform,
 
     -- user fields
     p.user_id,
@@ -135,6 +140,8 @@ select
 
     p.doc_width,
     p.doc_height,
+
+    p.content_group,
 
     p.page_title,
     p.page_url,
@@ -174,6 +181,8 @@ select
     p.user_ipaddress,
 
     p.useragent,
+
+    p.screen_resolution,
 
     p.br_lang,
     p.br_viewwidth,
@@ -236,6 +245,7 @@ select
   pve.event_id,
 
   pve.app_id,
+  pve.platform,
 
   -- user fields
   pve.user_id,
@@ -268,6 +278,7 @@ select
 
   pve.doc_width,
   pve.doc_height,
+  pve.content_group,
 
   pve.page_title,
   pve.page_url,
@@ -335,6 +346,11 @@ select
   pve.device_family,
 
   pve.device_class,
+  case when pve.device_class = 'Desktop' then 'Desktop'
+    when pve.device_class = 'Phone' then 'Mobile'
+    when pve.device_class = 'Tablet' then 'Tablet'
+    else 'Other' end as device_category,
+  pve.screen_resolution,
   pve.agent_class,
   pve.agent_name,
   pve.agent_name_version,

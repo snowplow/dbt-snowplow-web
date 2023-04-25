@@ -1,6 +1,7 @@
 {{
   config(
     materialized='incremental',
+    on_schema_change='append_new_columns',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
     sort='start_tstamp',

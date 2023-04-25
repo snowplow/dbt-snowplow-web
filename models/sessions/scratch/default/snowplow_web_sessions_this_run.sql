@@ -9,6 +9,8 @@ with session_firsts as (
         -- app id
         app_id as app_id,
 
+        platform,
+
         -- session fields
         domain_sessionid,
         domain_sessionidx,
@@ -78,6 +80,8 @@ with session_firsts as (
 
         -- user agent
         useragent as useragent,
+
+        dvce_screenwidth || 'x' || dvce_screenheight as screen_resolution,
 
         br_renderengine as br_renderengine,
         br_lang as br_lang,
@@ -209,6 +213,8 @@ select
     -- app id
     a.app_id,
 
+    a.platform,
+
     -- session fields
     a.domain_sessionid,
     a.domain_sessionidx,
@@ -335,6 +341,11 @@ select
 
     -- yauaa enrichment fields
     a.yauaa_device_class as device_class,
+    case when a.yauaa_device_class = 'Desktop' THEN 'Desktop'
+        when a.yauaa_device_class = 'Phone' then 'Mobile'
+        when a.yauaa_device_class = 'Tablet' then 'Tablet'
+        else 'Other' end as device_category,
+    a.screen_resolution,
     a.yauaa_agent_class as agent_class,
     a.yauaa_agent_name as agent_name,
     a.yauaa_agent_name_version as agent_name_version,

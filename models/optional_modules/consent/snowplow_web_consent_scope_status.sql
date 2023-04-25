@@ -1,6 +1,7 @@
 {{
   config(
     materialized='table',
+    enabled=var("snowplow__enable_consent", false)
   )
 }}
 

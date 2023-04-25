@@ -9,6 +9,8 @@ with session_firsts as (
         -- app id
         app_id as app_id,
 
+        platform,
+
         -- session fields
         domain_sessionid,
         domain_sessionidx,
@@ -74,6 +76,8 @@ with session_firsts as (
 
         -- user agent
         useragent as useragent,
+
+        dvce_screenwidth || 'x' || dvce_screenheight as screen_resolution,
 
         br_renderengine as br_renderengine,
         br_lang as br_lang,
@@ -187,6 +191,8 @@ session_aggs as (
 select
     -- app id
     a.app_id,
+
+    a.platform,
 
     -- session fields
     a.domain_sessionid,
@@ -311,6 +317,11 @@ select
 
     -- yauaa enrichment fields
     a.device_class,
+    case when a.device_class = 'Desktop' THEN 'Desktop'
+        when a.device_class = 'Phone' then 'Mobile'
+        when a.device_class = 'Tablet' then 'Tablet'
+        else 'Other' end as device_category,
+    a.screen_resolution,
     a.agent_class,
     a.agent_name,
     a.agent_name_version,
