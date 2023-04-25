@@ -93,6 +93,7 @@ sources:
             description: '{{ doc("col_operating_system_version") }}'
       - name: events
         description: '{{ doc("table_events") }}'
+        identifier: "{{ var('snowplow__events_table', 'events') }}"
         columns:
           - name: app_id
             description: '{{ doc("col_app_id") }}'

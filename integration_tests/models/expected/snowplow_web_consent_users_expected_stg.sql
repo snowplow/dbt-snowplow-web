@@ -1,3 +1,9 @@
+{{
+  config(
+    enabled=var("snowplow__enable_consent", false)
+    )
+}}
+
 select
 
   domain_userid,

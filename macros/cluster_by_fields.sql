@@ -60,3 +60,15 @@
   {{ return(snowplow_utils.get_value_by_target_type(bigquery_val=["event_id","domain_userid"], snowflake_val=["to_date(load_tstamp)"])) }}
 
 {% endmacro %}
+
+{% macro web_cluster_by_fields_cwv() %}
+
+  {{ return(adapter.dispatch('web_cluster_by_fields_cwv', 'snowplow_web')()) }}
+
+{% endmacro %}
+
+{% macro default__web_cluster_by_fields_cwv() %}
+
+  {{ return(snowplow_utils.get_value_by_target_type(bigquery_val=["page_view_id","domain_userid"], snowflake_val=["to_date(derived_tstamp)"])) }}
+
+{% endmacro %}

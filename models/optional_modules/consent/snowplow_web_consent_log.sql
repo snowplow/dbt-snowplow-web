@@ -1,6 +1,7 @@
 {{
   config(
     materialized= 'incremental',
+    enabled=var("snowplow__enable_consent", false),
     unique_key='event_id',
     upsert_date_key='derived_tstamp',
     sort='derived_tstamp',

@@ -59,3 +59,9 @@ macros:
     description: '{{ doc("macro_channel_group_query") }}'
   - name: engaged_session
     description: '{{ doc("macro_engaged_session") }}'
+  - name: core_web_vital_page_groups
+    description: '{{ doc("macro_core_web_vital_page_groups") }}'
+  - name: core_web_vital_results_query
+    description: '{{ doc("macro_core_web_vital_results_query") }}'
+  - name: core_web_vital_pass_query
+    description: '{{ doc("macro_core_web_vital_pass_query") }}'

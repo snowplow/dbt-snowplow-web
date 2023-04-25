@@ -1,3 +1,9 @@
+{{
+  config(
+    enabled=var("snowplow__enable_consent", false)
+    )
+}}
+
 select
 
   replace(cast(consent_version as {{ dbt.type_string() }}), '.0', '') ||'.0' as consent_version,
