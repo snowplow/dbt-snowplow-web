@@ -1,6 +1,7 @@
 {{
   config(
     materialized='incremental',
+    enabled=var("snowplow__enable_consent", false),
     unique_key='domain_userid',
     sort = 'last_consent_event_tstamp',
     dist = 'domain_userid',

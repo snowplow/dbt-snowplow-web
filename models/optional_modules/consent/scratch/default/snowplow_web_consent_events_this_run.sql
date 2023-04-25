@@ -1,6 +1,7 @@
 {{
   config(
-    tags=["this_run"]
+    tags=["this_run"],
+    enabled=var("snowplow__enable_consent", false) and target.type in ['redshift', 'postgres'] | as_bool(),
   )
 }}
 
@@ -77,4 +78,10 @@ with consent_pref as (
 
   where event_name in ('cmp_visible', 'consent_preferences')
 
-  and {{ snowplow_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.
+  and {{ snowplow_utils.is_run_with_new_events('snowplow_web') }}
+
+   --returns false if run doesn't contain new events.
+
+  {% if var("snowplow__ua_bot_filter", false) %}
+      {{ filter_bots() }}
+  {% endif %}

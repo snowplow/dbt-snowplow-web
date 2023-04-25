@@ -1,6 +1,7 @@
 {{
   config(
     tags=["this_run"],
+    enabled=var("snowplow__enable_consent", false) and target.type == 'snowflake' | as_bool(),
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   )
 }}
@@ -31,6 +32,10 @@ with prep as (
   where event_name in ('cmp_visible', 'consent_preferences')
 
   and {{ snowplow_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.
+
+  {% if var("snowplow__ua_bot_filter", false) %}
+      {{ filter_bots() }}
+  {% endif %}
 
 )
 

@@ -5,6 +5,8 @@ models:
     columns:
       - name: app_id
         description: '{{ doc("col_app_id") }}'
+      - name: platform
+        description: '{{ doc("col_platform") }}'
       - name: domain_sessionid
         description: '{{ doc("col_domain_sessionid") }}'
         tags:
@@ -220,6 +222,10 @@ models:
         description: '{{ doc("col_device_name") }}'
       - name: device_version
         description: '{{ doc("col_device_version") }}'
+      - name: device_category
+        description: '{{ doc("col_device_category") }}'
+      - name: screen_resolution
+        description: '{{ doc("col_screen_resolution") }}'
       - name: layout_engine_class
         description: '{{ doc("col_layout_engine_class") }}'
       - name: layout_engine_name

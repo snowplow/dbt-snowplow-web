@@ -2,6 +2,7 @@
 
 select
     app_id
+    ,platform
     ,domain_sessionid
     ,domain_sessionidx
     ,start_tstamp
@@ -97,6 +98,8 @@ select
     ,os_version
     ,device_family
     ,device_class
+    ,device_category
+    ,screen_resolution
     ,agent_class
     ,agent_name
     ,agent_name_version
