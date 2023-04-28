@@ -1,13 +1,7 @@
-{{ 
+{{
   config(
-    materialized='table',
-    partition_by = {
-      "field": "start_tstamp",
-      "data_type": "timestamp"
-    },
-    cluster_by=["domain_sessionid"],
     tags=["this_run"]
-  ) 
+  )
 }}
 
 with page_view_events as (
@@ -81,33 +75,49 @@ select
   ev.br_renderengine,
   ev.os_timezone,
 
-  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp) AS page_view_in_session_index,
+  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp) AS page_view_in_session_index,
 
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {{ get_iab_fields(var('snowplow__enable_iab')) }},
+  {{ snowplow_utils.get_optional_fields(
+        enabled=var('snowplow__enable_iab', false),
+        fields=iab_fields(),
+        col_prefix='contexts_com_iab_snowplow_spiders_and_robots_1',
+        relation=ref('snowplow_web_base_events_this_run'),
+        relation_alias='ev') }},
 
   -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {{ get_ua_fields(var('snowplow__enable_ua')) }},
+  {{ snowplow_utils.get_optional_fields(
+        enabled=var('snowplow__enable_ua', false),
+        fields=ua_fields(),
+        col_prefix='contexts_com_snowplowanalytics_snowplow_ua_parser_context_1',
+        relation=ref('snowplow_web_base_events_this_run'),
+        relation_alias='ev') }},
 
   -- yauaa enrichment fields: set yauaa variable to true to enable
-  {{ get_yauaa_fields(var('snowplow__enable_yauaa')) }}
+  {{ snowplow_utils.get_optional_fields(
+        enabled=var('snowplow__enable_yauaa', false),
+        fields=yauaa_fields(),
+        col_prefix='contexts_nl_basjes_yauaa_context_1',
+        relation=ref('snowplow_web_base_events_this_run'),
+        relation_alias='ev') }}
 
 from (
   select
-    array_agg(e order by e.derived_tstamp limit 1)[offset(0)] as ev
+    array_agg(e order by e.derived_tstamp, e.dvce_created_tstamp limit 1)[offset(0)] as ev
     -- order by matters here since derived_tstamp determines parts of model logic
 
   from {{ ref('snowplow_web_base_events_this_run') }} as e
   where e.event_name = 'page_view'
   and e.page_view_id is not null
-  
+
   group by e.page_view_id
 )
+where 1 = 1
 
 {% if var("snowplow__ua_bot_filter", true) %}
-   where not regexp_contains(ev.useragent, '%(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt)%')
+ {{ filter_bots('ev') }}
 {% endif %}
 )
 
@@ -136,7 +146,7 @@ select
   ev.derived_tstamp,
   ev.start_tstamp,
   coalesce(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
-  {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
+  {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
   timestamp_diff(coalesce(t.end_tstamp, ev.derived_tstamp), ev.derived_tstamp, second)  as absolute_time_in_s,
@@ -201,7 +211,7 @@ select
   ev.primary_impact,
   ev.reason,
   ev.spider_or_robot,
-  
+
   ev.useragent_family,
   ev.useragent_major,
   ev.useragent_minor,
@@ -239,7 +249,7 @@ select
 from page_view_events ev
 
 left join {{ ref('snowplow_web_pv_engaged_time') }} t
-on ev.page_view_id = t.page_view_id
+on ev.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = t.domain_sessionid {% endif %}
 
 left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
-on ev.page_view_id = sd.page_view_id
+on ev.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = sd.domain_sessionid {% endif %}

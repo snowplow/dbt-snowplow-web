@@ -1,25 +1,31 @@
-{{ 
+{{
   config(
-    materialized=var("snowplow__incremental_materialization"),
+    materialized='incremental',
     unique_key='session_id',
     upsert_date_key='start_tstamp',
-    full_refresh=false,
-    schema=var("snowplow__manifest_custom_schema"),
     sort='start_tstamp',
     dist='session_id',
-    partition_by = {
+    partition_by = snowplow_utils.get_value_by_target_type(bigquery_val={
       "field": "start_tstamp",
       "data_type": "timestamp"
+    }, databricks_val='start_tstamp_date'),
+    cluster_by=snowplow_web.web_cluster_by_fields_sessions_lifecycle(),
+    full_refresh=snowplow_web.allow_refresh(),
+    tags=["manifest"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt')),
+    tblproperties={
+      'delta.autoOptimize.optimizeWrite' : 'true',
+      'delta.autoOptimize.autoCompact' : 'true'
     },
-    cluster_by=cluster_by_fields_sessions_lifecycle(),
-    tags=["manifest"]
-  ) 
+    snowplow_optimize = true
+  )
 }}
 
 -- Known edge cases:
 -- 1: Rare case with multiple domain_userid per session.
 
-{% set lower_limit, upper_limit, session_lookback_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set lower_limit, upper_limit, _ = snowplow_utils.return_base_new_event_limits(ref('snowplow_web_base_new_event_limits')) %}
+{% set session_lookback_limit = snowplow_utils.get_session_lookback_limit(lower_limit) %}
 {% set is_run_with_new_events = snowplow_utils.is_run_with_new_events('snowplow_web') %}
 
 with new_events_session_ids as (
@@ -33,6 +39,7 @@ with new_events_session_ids as (
 
   where
     e.domain_sessionid is not null
+    and not exists (select 1 from {{ ref('snowplow_web_base_quarantined_sessions') }} as a where a.session_id = e.domain_sessionid) -- don't continue processing v.long sessions
     and e.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'dvce_created_tstamp') }} -- don't process data that's too late
     and e.collector_tstamp >= {{ lower_limit }}
     and e.collector_tstamp <= {{ upper_limit }}
@@ -46,7 +53,7 @@ with new_events_session_ids as (
   group by 1
   )
 
-{% if snowplow_utils.snowplow_is_incremental() %} 
+{% if is_incremental() %}
 
 , previous_sessions as (
   select *
@@ -63,7 +70,7 @@ with new_events_session_ids as (
     coalesce(self.domain_userid, ns.domain_userid) as domain_userid, -- Edge case 1: Take previous value to keep domain_userid consistent. Not deterministic but performant
     least(ns.start_tstamp, coalesce(self.start_tstamp, ns.start_tstamp)) as start_tstamp,
     greatest(ns.end_tstamp, coalesce(self.end_tstamp, ns.end_tstamp)) as end_tstamp -- BQ 1 NULL will return null hence coalesce
-    
+
   from new_events_session_ids ns
   left join previous_sessions as self
     on ns.session_id = self.session_id
@@ -88,5 +95,8 @@ select
   sl.domain_userid,
   sl.start_tstamp,
   least({{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'sl.start_tstamp') }}, sl.end_tstamp) as end_tstamp -- limit session length to max_session_days
+  {% if target.type in ['databricks', 'spark'] -%}
+  , DATE(start_tstamp) as start_tstamp_date
+  {%- endif %}
 
 from session_lifecycle sl

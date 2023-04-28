@@ -1,0 +1,181 @@
+version: 2
+
+sources:
+  - name: atomic
+    schema: "{{ var('snowplow__atomic_schema', 'atomic') }}"
+    database: "{{ var('snowplow__database', target.database) if target.type not in ['databricks', 'spark'] else var('snowplow__databricks_catalog', 'hive_metastore') if target.type in ['databricks'] else var('snowplow__atomic_schema', 'atomic') }}"
+    tables:
+      - name: com_snowplowanalytics_snowplow_consent_preferences_1
+        description: '{{ doc("table_consent_preferences") }}'
+      - name: com_snowplowanalytics_snowplow_cmp_visible_1
+        description: '{{ doc("table_cmp_visible") }}'
+
+models:
+  - name: snowplow_web_consent_log
+    description: Incremental table showing the audit trail of consent and Consent Management Platform (cmp) events
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+        description: '{{ doc("col_event_id") }}'
+      - name: domain_userid
+        description: '{{ doc("col_domain_userid") }}'
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+      - name: geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+      - name: domain_sessionid
+        description: '{{ doc("col_domain_sessionid") }}'
+      - name: derived_tstamp
+        description: '{{ doc("col_derived_tstamp") }}'
+      - name: load_tstamp
+        description: The timestamp of the event landing the data warehouse.
+      - name: event_name
+        description: '{{ doc("col_event_name") }}'
+      - name: event_type
+        description: The action for the consent preferences of a user E.g allow_all
+        tests:
+          - accepted_values:
+              values: ['deny_all', 'allow_all', 'allow_selected', 'pending', 'implicit_consent' , 'withdrawn', 'expired']
+      - name: basis_for_processing
+        description: GDPR lawful basis for data collection & processing
+      - name: consent_url
+        description: URI of the privacy policy related document
+      - name: consent_version
+        description: Version of the privacy policy related document
+      - name: consent_scopes
+        description: The scopes allowed after the user finalized his selection of consent preferences Eg ['analytics', 'functional', 'advertisement']
+      - name: domains_applied
+        description: The domains for which this consent allows these preferences to persist to
+      - name: gdpr_applies
+        description: A boolean which determines if GDPR applies based on the user's geo-location
+      - name: cmp_load_time
+        description: The time taken for the consent box to be shown to the screen
+  - name: snowplow_web_consent_users
+    description: By user consent stats
+    columns:
+      - name: domain_userid
+        tests:
+            - unique
+            - not_null
+        description: '{{ doc("col_domain_userid") }}'
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+      - name: geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: cmp_events
+        description: The number of cmp_visible events the user has generated
+      - name: consent_events
+        description: The number of cosent events the user has generated
+      - name: last_cmp_event_tstamp
+        description: The timestamp of the last cmp_visible event
+      - name: last_consent_event_tstamp
+        description: The timestamp of the last consent event after the cmp_visible event happened
+      - name: last_consent_event_type
+        description: The type of the last consent event after the cmp_visible event happened
+      - name: last_consent_scopes
+        description: The list of consent scopes in connection with the last consent event
+      - name: last_consent_version
+        description: The privacy policy version in connection with the last consent event
+      - name: last_consent_url
+        description: The privacy policy url in connection with the last consent event
+      - name: last_domains_applied
+        description: The domains for which the last consent event applies
+      - name: last_processed_event
+        description: The timestamp of the last processed event needed for the incremental logic
+      - name: is_latest_version
+        description: A boolean to filter whether the last consent or cmp visible event is sent after the latest privacy policy version goes live
+  - name: snowplow_web_consent_totals
+    description: Summary of the latest consent status as per consent version
+    columns:
+      - name: consent_version
+        description: Version of the privacy policy related document
+      - name: version_start_tstamp
+        description: The first allow_all consent event belonging to a consent version
+      - name: consent_scopes
+        description: The scopes allowed after the user finalized his selection of consent preferences Eg ['analytics', 'functional', 'advertisement']
+      - name: consent_url
+        description: URI of the privacy policy related document
+      - name: domains_applied
+        description: The domains for which this consent allows these preferences to persist to
+      - name: is_latest_version
+        description: A boolean to filter whether the last consent or cmp visible event is sent after the latest privacy policy version goes live
+      - name: last_allow_all_event
+        description: The timestamp of the last allow_all consent event generated by the latest consent version
+      - name: total_visitors
+        description: The number of visitors who have visited since the last consent version is live
+      - name: allow_all
+        description: Total number of users whose last consent event sent from the latest consent version has type allow_all
+      - name: allow_selected
+        description: Total number of users whose last consent event sent from the latest consent version has type allow_selected
+      - name: allow
+        description: Total number of users whose last consent event sent from the latest consent version has type allow
+      - name: pending
+        description: Total number of users whose last consent event sent from the latest consent version has type pending
+      - name: denied
+        description: Total number of users whose last consent event sent from the latest consent version has type denied
+      - name: expired
+        description: Total number of users whose last consent event sent from the latest consent version has type expired
+      - name: implicit_consent
+        describtion: Total number of users whose last consent event sent from the latest consent version has type implicit_consent
+      - name: withdrawn
+        description: Total number of users whose last consent event sent from the latest consent version has type withdrawn
+      - name: expires_in_six_months
+        description: The total number of users whose consent expires in six months (only the offical version is taken into account)
+  - name: snowplow_web_consent_scope_status
+    description: Aggregate of current number of users consented to each consent scope
+    columns:
+      - name: scope
+        tests:
+          - unique
+          - not_null
+        description: Consent scope
+      - name: total_consent
+        description: The number of consent events corresponding to a scope
+  - name: snowplow_web_consent_cmp_stats
+    description: Used for modeling cmp_visible events and related metrics
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+        description: '{{ doc("col_event_id") }}'
+      - name: domain_userid
+        description: The optional userid of a user
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+      - name: domain_sessionid
+        description: '{{ doc("col_domain_sessionid") }}'
+      - name: cmp_load_time
+        description: The time taken for the consent box to be shown to the screen
+      - name: cmp_tstamp
+        description: The timestamp of the cmp_visible event
+      - name: first_consent_event_tstamp
+        description: The timestamp of the first consent event after a cmp_visible event
+      - name: first_consent_event_type
+        description: The event type of the first consent event after a cmp_visible event
+      - name: cmp_interaction_time
+        description: The time it takes for the user to make a consent choice after the cmp_visible event is fired
+  - name: snowplow_web_consent_versions
+    description: Used to keep track of each consent version and its validity
+    columns:
+      - name: consent_version
+        description: Version of the privacy policy related document
+        tests:
+          - unique
+          - not_null
+      - name: version_start_tstamp
+        description: The time_stamp of the first allow_all event related to a consent version
+      - name: consent_scopes
+        description: The scopes allowed after the user finalized his selection of consent preferences Eg ['analytics', 'functional', 'advertisement']
+      - name: consent_url
+        description: URI of the privacy policy related document
+      - name: domains_applied
+        description: The domains for which this consent allows these preferences to persist to
+      - name: is_latest_version
+        description: A boolean to filter whether the last consent or cmp visible event is sent after the latest privacy policy version goes live
+      - name: last_allow_all_event
+        description: The timestamp of the last allow_all event used for the incremental update

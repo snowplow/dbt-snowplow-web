@@ -30,12 +30,8 @@ models:
         description: '{{ doc("col_user_id") }}'
       - name: domain_userid
         description: '{{ doc("col_domain_userid") }}'
-        tests:
-          - not_null
       - name: network_userid
         description: '{{ doc("col_network_userid") }}'
-        tests:
-          - not_null
       - name: page_views
         description: The number of distinct page views within a session
         tests:

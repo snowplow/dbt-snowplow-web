@@ -2,24 +2,24 @@
 name: Feature request
 about: Suggest an idea for this package
 title: ''
-labels: enhancement, triage
+labels: type:enhancement
 assignees: ''
 
 ---
 
-### Describe the feature
-A clear and concise description of what you want to happen.
+## Is your feature request related to a problem? Please describe.
+<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
 
-### Describe alternatives you've considered
-A clear and concise description of any alternative solutions or features you've considered.
+## Describe the solution you'd like
+<!-- A clear and concise description of what you want to happen. -->
 
-### Additional context
-Is this feature database-specific? Which database(s) is/are relevant? Please include any other relevant context here.
+## Describe alternatives you've considered
+<!-- A clear and concise description of any alternative solutions or features you've considered. -->
 
-### Who will this benefit?
-What kind of use case will this feature be useful for? Please be specific and provide examples, this will help us prioritize properly.
+## Additional context
+<!-- Add any other context or screenshots about the feature request here. -->
 
-### Are you interested in contributing this feature?
+## Are you interested in contributing towards this feature?
 <!---
-Let us know if you want to contribute the feature, and whether would need a hand getting started
+Let us know if you want to contribute towards the feature, and whether you would need a hand getting started
 --->

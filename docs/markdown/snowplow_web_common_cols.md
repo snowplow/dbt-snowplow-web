@@ -164,7 +164,7 @@ Scheme aka protocol e.g. ‘https’
 
 
 {% docs col_page_urlhost %}
-Host aka domain e.g. ‘“www.snowplowanalytics.com’
+Host aka domain e.g. ‘“www.snowplow.io’
 {% enddocs %}
 
 

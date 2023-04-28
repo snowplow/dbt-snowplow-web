@@ -1,9 +1,7 @@
-{{ 
+{{
   config(
-    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_sessionid"]),
-    sort='domain_userid',
-    dist='domain_userid'
-  ) 
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 
@@ -23,4 +21,3 @@ from {{ ref('snowplow_web_users_sessions_this_run') }} a
 
 inner join {{ ref('snowplow_web_users_aggs') }} b
 on a.domain_sessionid = b.last_domain_sessionid
-

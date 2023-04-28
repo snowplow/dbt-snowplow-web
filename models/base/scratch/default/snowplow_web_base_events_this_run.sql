@@ -1,15 +1,17 @@
-{{ 
+{{
   config(
-    materialized='table',
     sort='collector_tstamp',
     dist='event_id',
     tags=["this_run"]
-  ) 
+  )
 }}
 
 {%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
                                                                           'start_tstamp',
                                                                           'end_tstamp') %}
+
+/* Dedupe logic: Per dupe event_id keep earliest row ordered by collector_tstamp.
+   If multiple earliest rows, take arbitrary one using row_number(). */
 
 with events_this_run AS (
   select
@@ -141,7 +143,10 @@ with events_this_run AS (
     a.event_version,
     a.event_fingerprint,
     a.true_tstamp,
-    dense_rank() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index --dense_rank to catch dupe events with dupe tstamps later
+    {% if var('snowplow__enable_load_tstamp', true) %}
+      a.load_tstamp,
+    {% endif %}
+    row_number() over (partition by a.event_id order by a.collector_tstamp) as event_id_dedupe_index
 
   from {{ var('snowplow__events') }} as a
   inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
@@ -154,38 +159,34 @@ with events_this_run AS (
   and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
 )
 
-, events_deduped as (
-  select
-    *,
-    count(*) over(partition by e.event_id) as row_count
-
-  from events_this_run e
-  
-  where 
-    e.event_id_dedupe_index = 1 -- Keep row(s) with earliest collector_tstamp per dupe event
-)
-
 , page_context as (
-select
-  root_id,
-  root_tstamp,
-  id as page_view_id
+  select
+    root_id,
+    root_tstamp,
+    id as page_view_id,
+    row_number() over (partition by root_id order by root_tstamp) as page_context_dedupe_index
 
-from {{ var('snowplow__page_view_context') }}
-where 
-  root_tstamp >= {{ lower_limit }}
-  and root_tstamp <= {{ upper_limit }}
+  from {{ var('snowplow__page_view_context') }}
+  where
+    root_tstamp >= {{ lower_limit }}
+    and root_tstamp <= {{ upper_limit }}
+)
+
+, page_context_dedupe as (
+  select
+   *
+
+  from page_context
+  where page_context_dedupe_index = 1
 )
 
 select
-  ed.*,
+  e.*,
   pc.page_view_id
 
-from 
-  events_deduped as ed
-left join 
-  page_context as pc
-on ed.event_id = pc.root_id
-and ed.collector_tstamp = pc.root_tstamp
+from events_this_run as e
+left join page_context_dedupe as pc
+on e.event_id = pc.root_id
+and e.collector_tstamp = pc.root_tstamp
 
-where row_count = 1 -- Remove dupe events with more than 1 row
+where e.event_id_dedupe_index = 1

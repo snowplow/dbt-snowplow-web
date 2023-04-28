@@ -1,3 +1,315 @@
+snowplow-web 0.14.0 (2023-03-28)
+---------------------------------------
+## Summary
+This version contains two major changes, the first is to migrate our models away from the `snowplow_incremental_materialization` and instead move to using the built-in `incremental` with an optimization applied on top. The second is to change the de-duplication logic applied to redshift/postgres to bring it in line with the other warehouses (keeping 1 of the duplicate records, instead of discarding them all). We also upgrade some macros and update some of our docs.
+
+## 🚨 Breaking Changes 🚨
+### Changes to materialization
+To take advantage of the optimization we apply to the `incremental` materialization, users will need to add the following to their `dbt_project.yml` :
+```yaml
+# dbt_project.yml
+...
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+```
+
+For custom models please refer to the [snowplow utils migration guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/utils/#upgrading-to-0140) and the latest docs on [creating custom incremental models](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-custom-models/#incremental-models).
+
+### Redshift/Postgres custom contexts
+The change in de-duplication logic means that now the `events_this_run` and downstream tables will contain events that may have duplicates within your self-describing-events or context tables. Previously these events were discarded do there was no risk of duplication when joining a sde/context in a custom model, you must now make sure to de-dupe your sde/context before joining in any custom models. See the `models/optional_modules/consent/scratch/default/snowplow_web_consent_events_this_run.sql` file for an example, and the docs [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-custom-models/#guidelines--best-practice).
+
+## Features
+- Migrate from `get_cluster_by` and `get_partition_by` to `get_value_by_target_type`
+- Migrate all models to use new materialization
+- Remove `snowplow__incremental_materialization` variable
+- Change de-duplication logic on redshift/postgres
+
+## Docs
+- Typo fixes
+- Update to readme
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file, and ensuring you have followed the above steps. You can read more in our [upgrade guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/web/#upgrading-to-0140)
+
+snowplow-web 0.13.3 (2023-03-24)
+---------------------------------------
+## Summary
+This is a patch release which fixes an issue with enabling contexts on databricks.
+
+## Features
+- Fix databricks context macro (Close #181)
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file.
+
+snowplow-web 0.14.0-rc2 (2023-03-10)
+---------------------------------------
+## Summary
+**This is a pre-release version of the package, we believe it to be in working condition but you may encounter bugs and some features may change before the final release.**
+
+This version migrates the rest of our models (consent and custom examples) to the new materialization, and uses new macros in place of those we have deprecated.
+
+As a reminder Users will need to add the following to their `dbt_project.yml` to benefit from the enhancements:
+```yaml
+# dbt_project.yml
+...
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+```
+
+For custom models and more details, please refer to our temporary docs page: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-advanced-usage/dbt-incremental-logic-pre-release/
+
+## Features
+Migrate from `get_cluster_by` and `get_partition_by` to `get_value_by_target_type`
+Migrate consent and custom models to use new materialization
+Remove `snowplow__incremental_materialization` variable
+## Docs
+Small typo fixes
+Small update to readme
+
+snowplow-web 0.14.0-rc1 (2023-03-06)
+---------------------------------------
+## Summary
+**This is a pre-release version of the package, we believe it to be in working condition but you may encounter bugs and some features may change before the final release.**
+
+This version of the package begins the migration away from our `snowplow_incremental` materialization and uses an overwrite to the standard `incremental` materialization to provide the same performance improvements but in a simpler way. We expect users should see little to no performance change from the previous version, please let us know if you see performance degradation for large volumes of data.
+
+Users will need to add the following to their `dbt_project.yml` to benefit from the enhancements:
+```yaml
+# dbt_project.yml
+...
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+```
+
+For custom models and more details, please see more details on our temporary docs page: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-advanced-usage/dbt-incremental-logic-pre-release/
+
+## Features
+Use new materialization
+
+snowplow-web 0.13.2 (2023-02-27)
+---------------------------------------
+## Summary
+This is a patch release with the purpose to unblock those Redshift/Postgres users who are using enrichments. The macros we introduced were not correctly parsing the table aliases for the enrichments loaded in Redshift/Postgres. This has now been fixed.
+
+## Features
+- Fix whitespace issue on redshift sessions (Close #166)
+- Fix context prefix argument usage (Close #167)
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file.
+
+snowplow-web 0.13.1 (2023-02-24)
+---------------------------------------
+## Summary
+This is a patch release with the purpose to unblock those Redshift/Postgres users whose loaders do not send `load_tstamp` field to their events table: they use `Postgres loader` or `RDB Loader` below v4.0.0. Please note that they will not be able to use the Consent models but the general web model will still be supported.
+
+## Upgrading
+Apart from bumping the snowplow-web version in your `packages.yml` file, impacted users will need to set a newly introduced variable: `snowplow__enable_load_tstamp` to `false`.
+
+
+snowplow-web 0.13.0 (2023-02-22)
+---------------------------------------
+## Summary
+This release adds Databricks, Redshift and Postgres support for the optional Consent module. As a breaking change we are decoupling sessions from pageviews, please refer to the below breakdown on this. It also removes unnecessary `domain_userid` tests which would fail due to anonymous tracking. We also fix some integration tests.
+
+## 🚨 Breaking Changes 🚨
+- The way we generate the sessions table has changed, breaking the dependency on the page views table and instead building directly from page view and ping events. This means we now include sessions that contain only page-pings, and all stray page pings in sessions, see our [docs](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/#stray-page-pings) for more information about what this means. You do not need to make any changes to your tables or data, but **you will likely see an increase in the number of sessions overall**, and may see a small increase in absolute and engaged time on individual sessions (to account for those starting with a stray page ping). Any reporting off the sessions table should be interpreted accordingly, or the data re-processed (see [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-custom-models/#incremental-models-2) for how to reprocess a single model).
+
+## 🚨 Prerequisite Alert 🚨
+Redshift/Postgres users would need to use `RDB Loader v4.0.0` and above as the web model for them relies on the `load_tstamp` field from now on. The same dependency applies for the Consent module users regardles of warehouse as that field is utilised for the incremental logic.
+
+## Features
+- Fixed sessions being dependant on snowplow_web_user_mapping even when session stitching was disabled (Close #155)
+- Added alias argument to the `filter_bots` macro for more flexibility
+- Migrated engaged time to use device timestamps instead of derived to provide more accurate calculation when there is a delay between events being sent and the collector receiving them
+- Added `get_optional_fields` macro to reduce duplication of calls to contexts across models
+- Added missing adapter support for Consent module (Close #148)
+
+## Under the hood
+- Tidied up some macro inheritance
+- Improved macro documentation
+- Improvements to integration test
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file, taking account of the breaking changes above.
+
+snowplow-web 0.12.4 (2023-01-25)
+---------------------------------------
+## Summary
+Remove unnecessary `domain_userid` tests which would fail due to anonymous tracking. We also fix some integration tests
+
+## Features
+Fix page view scratch table tests (Close #150)
+Fix bug where tests fail due to NULL domain_userid (Close #152)
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file.
+
+snowplow-web 0.12.3 (2023-01-06)
+---------------------------------------
+## Summary
+Fix a bug introduced in v0.10.0 leading to warnings when running the `dbt compile` command.
+
+## Features
+Update reference to renamed model (Close #142) (Thanks @petersentaylor)
+Update publish gh pages action + alter ci
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file.
+
+snowplow-web 0.12.2 (2022-12-19)
+---------------------------------------
+## Summary
+Fix a bug in 0.12.1 leading to duplicate page view events breaking the incremental logic.
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file.
+
+snowplow-web 0.12.1 (2022-12-19)
+---------------------------------------
+## Summary
+This release adds a new variable to ensure deterministic behaviour on page views when there are stray page pings.
+
+## Features
+Add option to limit page view metrics to a session (Close #96)
+
+## Under The Hood
+- Use new snowflake exclude syntax (Close #36)
+- Add action for generating docs for pages (Close #5)
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file. If you wish to keep the existing non-deterministic behaviour for page view processing, set the `snowplow__limit_page_views_to_session` variable to `false` in your `dbt_project.yml`
+
+snowplow-web 0.12.0 (2022-12-08)
+---------------------------------------
+## Summary
+**This release drops support for dbt versions below 1.3.** In order to support the new dbt-utils major release, we need to drop support for dbt versions below 1.3. As a result, we've stopped using macros from dbt-utils which removes the deprecation warnings users were seeing.
+
+## Features
+Drop support for dbt versions below 1.3 (Close #123)
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file. **You will need dbt v1.3 at least to be able to use this version of the package.**
+
+snowplow-web 0.11.0 (2022-12-07)
+---------------------------------------
+## Summary
+This release optimises performance in Databricks for the `base_sessions_lifecycle_manifest`, bringing the behaviour in line with the mobile package. We also add standard actions to aid development and categorize issues better.
+
+## Features
+Add missing start_tstamp_date for `base_sessions_lifecycle_manifest` on Databricks (Close #132)
+Add standard actions and templates
+
+## Upgrading
+To upgrade simply bump the snowplow-web version in your `packages.yml` file. If you are running the web package on **Databricks**, you will need to run the following SQL to take advantage of the performance optimizations in this release. Be sure to replace `{catalog_name}` with your catalog name if your environment is UC enabled, and remove it if not. Also be sure to replace `{manifest_schema}` with the name of the schema where your manifest is currently found.
+
+```sql
+CREATE TABLE {catalog_name}.{manifest_schema}.snowplow_web_base_sessions_lifecycle_manifest_tmp
+    USING DELTA
+    PARTITIONED BY (start_tstamp_date)
+    tblproperties ('delta.autoOptimize.optimizeWrite' = 'true' , 'delta.autoOptimize.autoCompact' = 'true'
+    ) AS
+
+    SELECT *,
+            DATE(start_tstamp) as start_tstamp_date
+    FROM {catalog_name}.{manifest_schema}.snowplow_web_base_sessions_lifecycle_manifest;
+
+DROP TABLE IF EXISTS {catalog_name}.{manifest_schema}.snowplow_web_base_sessions_lifecycle_manifest;
+
+ALTER TABLE {catalog_name}.{manifest_schema}.snowplow_web_base_sessions_lifecycle_manifest_tmp RENAME TO {catalog_name}.{manifest_schema}.snowplow_web_base_sessions_lifecycle_manifest;
+```
+
+snowplow-web 0.10.0 (2022-11-30)
+---------------------------------------
+Add optional Consent model (Close #126)
+
+snowplow-web 0.9.3 (2022-10-26)
+---------------------------------------
+Add databricks to stitch user macro (Close #93)
+Enable custom bot filtering (Close #121)
+Point docs to core docs site (docs.snowplow.io) (Close #119)
+
+snowplow-web 0.9.2 (2022-09-06)
+---------------------------------------
+Optimize performance in Databricks for incremental models (Close #113)
+
+snowplow-web 0.9.1 (2022-08-22)
+---------------------------------------
+Fix dbt-spark incompatibility for Databricks support (Close #109)
+
+snowplow-web 0.9.0 (2022-08-11)
+---------------------------------------
+Add custom examples for all databases (Close #87)
+Add buffer for time filter for BigQuery (Close #98)
+Update docs for tear down issue (Close #100)
+Add support for Databricks users with Unity Catalog (Close #102)
+Add safety page_view_context deduplication for Redshift and Postgres (Close #104)
+Update docs for adding indexes for Postgres (Close #90)
+
+snowplow-web 0.8.0 (2022-07-19)
+---------------------------------------
+Add missing mention of Databricks to README (Close #89)
+Add support for Databricks through dbt-spark (Close #91)
+Improve performance in Databricks (Close #92)
+Improve performance of scratch tables (Close #94)
+
+snowplow-web 0.7.0 (2022-06-22)
+---------------------------------------
+Add support for Databricks (Close #86)
+
+snowplow-web 0.6.2 (2022-06-08)
+---------------------------------------
+Fix bot filter regex for BigQuery page views (Close #81) (Thanks to @James-Fallon)
+
+snowplow-web 0.6.1 (2022-05-04)
+---------------------------------------
+Add `query_tag` to Snowflake (Close #74)
+Clarify that some tables are Redshift & Postgres only (Close #75)
+Update the codeowner file (Close #77)
+
+snowplow-web 0.6.0 (2022-03-11)
+---------------------------------------
+Drop support for dbt versions before 1.0.0 (Close #62)
+Set default materialisation to tables (Close #61)
+Fix configuration bug when materialisation set to table (Close #59)
+Improve quarantined sessions exclusion logic (Close #60)
+Fix cluster by fields bug when customising and using both web and mobile packages (Close #65)
+Increase `session_lookback_days` limit to be aligned with mobile model (Close #68)
+Fix user stitching bug if `domain_userid` is smaller than `user_id` (Close #66)
+Clean up `incremental_manifest` and `quarantined_sessions` tables varchar logic (Close #70)
+
+snowplow-web 0.5.1 (2022-02-04)
+---------------------------------------
+Bump copyright to 2022 (Close #57)
+Bump snowplow utils version (Close #55)
+
+snowplow-web 0.5.0 (2021-12-17)
+---------------------------------------
+Regenerate doc site (Close #52)
+Add dbt v1 compatibility (Close #38)
+
+snowplow-web 0.4.1 (2021-12-06)
+---------------------------------------
+Update docs (Close #51)
+Update all views in Redshift to late binding (Close #48)
+Fix for unexpired sessions (Close #47)
+
+snowplow-web 0.4.0 (2021-11-30)
+---------------------------------------
+Update documentation (Close #44)
+Add CI Github Action (Close #43)
+Fix cluster_by_fields macros to allow overriding (Close #35)
+Improve filtering of long sessions (Close #41)
+Add user mapping module (Close #42)
+Improve Redshift event dedupe logic (Close #33)
+Refactor BigQuery page view enrichments (Close #40)
+Create manifest table using native dbt (Close #39)
+Add Postgres adapter support (Close #45)
+
 snowplow-web 0.3.0 (2021-10-12)
 ---------------------------------------
 Update documentation (Close #32)

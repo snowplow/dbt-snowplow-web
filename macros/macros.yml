@@ -1,0 +1,57 @@
+version: 2
+
+macros:
+  - name: filter_bots
+    description: '{{ doc("macro_filter_bots") }}'
+    arguments:
+      - name: table_alias
+        type: string
+        description: (Optional) the table alias to identify the useragent column from. Default none
+  - name: stitch_user_identifiers
+    description: '{{ doc("macro_stitch_user_identifiers") }}'
+    arguments:
+      - name: enabled
+        type: boolean
+        description: If the user stitching should be done or not
+      - name: relation
+        type: string
+        description: (Optional) The model to update the `stitched_user_id` column in. Default `this`
+      - name: user_mapping_relation
+        type: string
+        description: (Optional) The model to use the `user_id` column from. Default `snowplow_web_user_mapping`
+  - name: get_iab_context_fields
+    description: '{{ doc("macro_get_iab_context_fields") }}'
+    arguments:
+      - name: table_prefix
+        type: string
+        description: (Optional) Table alias to prefix the column selection with. Default none
+  - name: get_ua_context_fields
+    description: '{{ doc("macro_get_ua_context_fields") }}'
+    arguments:
+      - name: table_prefix
+        type: string
+        description: (Optional) Table alias to prefix the column selection with. Default none
+  - name: get_yauaa_context_fields
+    description: '{{ doc("macro_get_yauaa_context_fields") }}'
+    arguments:
+      - name: table_prefix
+        type: string
+        description: (Optional) Table alias to prefix the column selection with. Default none
+  - name: web_cluster_by_fields_sessions_lifecycle
+    description: '{{ doc("macro_web_cluster_by_X") }}'
+  - name: web_cluster_by_fields_page_views
+    description: '{{ doc("macro_web_cluster_by_X") }}'
+  - name: web_cluster_by_fields_sessions
+    description: '{{ doc("macro_web_cluster_by_X") }}'
+  - name: web_cluster_by_fields_users
+    description: '{{ doc("macro_web_cluster_by_X") }}'
+  - name: web_cluster_by_fields_consent
+    description: '{{ doc("macro_web_cluster_by_X") }}'
+  - name: iab_fields
+    description: '{{ doc("macro_bq_context_fields") }}'
+  - name: ua_fields
+    description: '{{ doc("macro_bq_context_fields") }}'
+  - name: yauaa_fields
+    description: '{{ doc("macro_bq_context_fields") }}'
+  - name: allow_refresh
+    description: '{{ doc("macro_allow_refresh") }}'

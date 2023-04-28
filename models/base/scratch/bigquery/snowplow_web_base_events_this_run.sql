@@ -1,13 +1,7 @@
-{{ 
+{{
   config(
-    materialized='table',
-    partition_by = {
-      "field": "collector_tstamp",
-      "data_type": "timestamp"
-    },
-    cluster_by=["event_name","page_view_id"],
     tags=["this_run"]
-  ) 
+  )
 }}
 
 {%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
@@ -34,11 +28,10 @@ from (
   and a.collector_tstamp >= {{ lower_limit }}
   and a.collector_tstamp <= {{ upper_limit }}
   {% if var('snowplow__derived_tstamp_partitioned', true) and target.type == 'bigquery' | as_bool() %}
-    and a.derived_tstamp >= {{ lower_limit }}
+    and a.derived_tstamp >= {{ snowplow_utils.timestamp_add('hour', -1, lower_limit) }}
     and a.derived_tstamp <= {{ upper_limit }}
   {% endif %}
   and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
 
 ) e
 group by e.event_id
-

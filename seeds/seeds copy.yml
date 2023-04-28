@@ -1,0 +1,26 @@
+version: 2
+
+seeds:
+  - name: ga4_source_categories
+    description: A list of all source (websites) and their corresponding GA4 category.
+    config:
+      schema: base
+    columns:
+      - name: source
+      - name: source_category
+  - name: geo_country_mapping
+    description: A mapping from geo_country alpha-2 ISO 3166-2 codes to the other properties of the country.
+    config:
+      schema: base
+    columns:
+      - name: name
+      - name: alpha_2
+      - name: alpha_3
+      - name: country_code
+      - name: iso_3166_2
+      - name: region
+      - name: sub_region
+      - name: intermediate_region
+      - name: region_code
+      - name: sub_region_code
+      - name: intermediate_region_code

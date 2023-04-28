@@ -1,9 +1,9 @@
 -- `this_run` table so calc in drop and recompute fashion. This will be joined into the `snowplow_web_sessions_custom` incremental table 
 {{ 
   config(
-    materialized='table', 
     sort='domain_sessionid',
-    dist='domain_sessionid'
+    dist='domain_sessionid',
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   ) 
 }}
 

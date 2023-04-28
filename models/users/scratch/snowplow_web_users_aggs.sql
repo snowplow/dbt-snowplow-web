@@ -1,13 +1,14 @@
-{{ 
+{{
   config(
-    partition_by = {
+    partition_by = snowplow_utils.get_value_by_target_type(bigquery_val={
       "field": "start_tstamp",
       "data_type": "timestamp"
-    },
-    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["domain_userid"]),
+    }),
+    cluster_by=snowplow_utils.get_value_by_target_type(bigquery_val=["domain_userid"]),
     sort='domain_userid',
-    dist='domain_userid'
-  ) 
+    dist='domain_userid',
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 select

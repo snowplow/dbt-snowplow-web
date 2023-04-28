@@ -1,12 +1,16 @@
 name: 'snowplow_web'
-version: '0.3.0'
+version: '0.14.0'
 config-version: 2
 
-require-dbt-version: [">=0.18.0", "<0.20.0"]
+require-dbt-version: [">=1.4.0", "<2.0.0"]
 
 profile: 'default'
 
-source-paths: ["models"]
+dispatch:
+  - macro_namespace: dbt
+    search_order: ['snowplow_utils', 'dbt']
+
+model-paths: ["models"]
 test-paths: ["tests"]
 macro-paths: ["macros"]
 docs-paths: ["docs"]
@@ -16,60 +20,87 @@ target-path: "target"
 clean-targets:
     - "target"
     - "dbt_modules"
+    - "dbt_packages"
 
 vars:
-  # Sources
-  # snowplow__atomic_schema: Only set if not using 'atomic' schema for Snowplow events data
-  # snowplow__database: Only set if not using target.database for Snowplow events data
-  snowplow__events: "{{ source('atomic','events') }}"
-  snowplow__page_view_context: "{{ source('atomic','com_snowplowanalytics_snowplow_web_page_1') }}"
-  snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
-  snowplow__ua_parser_context: "{{ source('atomic','com_snowplowanalytics_snowplow_ua_parser_context_1') }}"
-  snowplow__yauaa_context: "{{ source('atomic','nl_basjes_yauaa_context_1') }}"
-  snowplow__sessions_table: "{{ ref('snowplow_web_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
-  # Variables - Standard Config
-  snowplow__start_date: '2020-01-01'
-  snowplow__min_visit_length: 5
-  snowplow__heartbeat: 10
-  snowplow__backfill_limit_days: 30
-  snowplow__app_id: []
-  snowplow__enable_iab: false
-  snowplow__enable_ua: false
-  snowplow__enable_yauaa: false
-  snowplow__ua_bot_filter: true
-  snowplow__derived_tstamp_partitioned: true
-  # Variables - Advanced Config
-  snowplow__lookback_window_hours: 6
-  snowplow__session_lookback_days: 365
-  snowplow__days_late_allowed: 3
-  snowplow__max_session_days: 3
-  snowplow__upsert_lookback_days: 30
-  snowplow__manifest_custom_schema: "snowplow_manifest"
-  snowplow__incremental_materialization: "snowplow_incremental"
-
+  snowplow_web:
+    # Sources
+    # snowplow__atomic_schema: 'atomic_data_sample' # Only set if not using 'atomic' schema for Snowplow events data
+    # snowplow__database:  # Only set if not using target.database for Snowplow events data -- WILL BE IGNORED FOR DATABRICKS
+    snowplow__events: "{{ source('atomic', 'events') }}"
+    snowplow__page_view_context: "{{ source('atomic','com_snowplowanalytics_snowplow_web_page_1') }}"
+    snowplow__iab_context: "{{ source('atomic','com_iab_snowplow_spiders_and_robots_1') }}"
+    snowplow__ua_parser_context: "{{ source('atomic','com_snowplowanalytics_snowplow_ua_parser_context_1') }}"
+    snowplow__yauaa_context: "{{ source('atomic','nl_basjes_yauaa_context_1') }}"
+    snowplow__sessions_table: "{{ ref('snowplow_web_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
+    # Variables - Standard Config
+    snowplow__start_date: '2020-01-01'
+    snowplow__min_visit_length: 5
+    snowplow__heartbeat: 10
+    snowplow__backfill_limit_days: 30
+    snowplow__app_id: []
+    # Setting default values for 3 enrichments below throughout package rather than here
+    # Workaround for a bug (https://github.com/dbt-labs/dbt-core/issues/3698).
+    # TODO: Return to having default values here once fixed.
+    # snowplow__enable_iab: false
+    # snowplow__enable_ua: false
+    # snowplow__enable_yauaa: false
+    snowplow__ua_bot_filter: true
+    snowplow__derived_tstamp_partitioned: true
+    snowplow__session_stitching: true
+    snowplow__enable_load_tstamp: true # set to false if you are using the postgres loader or earlier than 4.0.0 of the RDB loader
+    # Variables - Advanced Config
+    snowplow__lookback_window_hours: 6
+    snowplow__session_lookback_days: 730
+    snowplow__days_late_allowed: 3
+    snowplow__max_session_days: 3
+    snowplow__upsert_lookback_days: 30
+    snowplow__query_tag: "snowplow_dbt"
+    snowplow__dev_target_name: 'dev'
+    snowplow__allow_refresh: false
+    # snowplow__limit_page_views_to_session: true
+    # Variables - Databricks Only
+    # Add the following variable to your dbt project's dbt_project.yml file
+    # Depending on the use case it should either be the catalog (for Unity Catalog users from databricks connector 1.1.1 onwards) or the same value as your snowplow__atomic_schema (unless changed it should be 'atomic')
+    # snowplow__databricks_catalog: 'hive_metastore'
+    # Variables - Optional Consent model only
+    snowplow__consent_cmp_visible: "{{ source('atomic', 'com_snowplowanalytics_snowplow_cmp_visible_1') }}"
+    snowplow__consent_preferences: "{{ source('atomic', 'com_snowplowanalytics_snowplow_consent_preferences_1') }}"
 
 # Completely or partially remove models from the manifest during run start.
-on-run-start: "{{ snowplow_utils.snowplow_run_start_cleanup('snowplow_web', var('teardown_all', false), var('models_to_remove',[])) }}"
+on-run-start:
+  - "{{ snowplow_utils.snowplow_web_delete_from_manifest(var('models_to_remove',[])) }}"
 
 # Update manifest table with last event consumed per sucessfully executed node/model
-on-run-end: "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
+on-run-end:
+  - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 
 # Tag 'snowplow_web_incremental' allows snowplow_incremental_post_hook to identify Snowplow models
 # and add their last sucessfull collector_tstamp to the manifest.
 models:
   snowplow_web:
-    +materialized: view
+    +materialized: table
+    +file_format: delta
+    +bind: false
     base:
+      manifest:
+        +schema: "snowplow_manifest"
       scratch:
         +schema: "scratch"
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
+    optional_modules:
+      consent:
+        enabled: false
+
     page_views:
       +schema: "derived"
       +tags: "snowplow_web_incremental"
@@ -78,6 +109,8 @@ models:
         +tags: "scratch"
         bigquery:
           enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
         default:
           enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
         snowflake:
@@ -88,6 +121,17 @@ models:
       scratch:
         +schema: "scratch"
         +tags: "scratch"
+        bigquery:
+          enabled: "{{ target.type == 'bigquery' | as_bool() }}"
+        databricks:
+          enabled: "{{ target.type in ['databricks', 'spark'] | as_bool() }}"
+        default:
+          enabled: "{{ target.type in ['redshift', 'postgres'] | as_bool() }}"
+        snowflake:
+          enabled: "{{ target.type == 'snowflake' | as_bool() }}"
+    user_mapping:
+      +schema: "derived"
+      +tags: "snowplow_web_incremental"
     users:
       +schema: "derived"
       +tags: "snowplow_web_incremental"

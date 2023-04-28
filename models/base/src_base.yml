@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: atomic
     schema: "{{ var('snowplow__atomic_schema', 'atomic') }}"
-    database: "{{ var('snowplow__database', target.database) }}"
+    database: "{{ var('snowplow__database', target.database) if target.type not in ['databricks', 'spark'] else var('snowplow__databricks_catalog', 'hive_metastore') if target.type in ['databricks'] else var('snowplow__atomic_schema', 'atomic') }}"
     tables:
       - name: com_snowplowanalytics_snowplow_web_page_1
         description: '{{ doc("table_page_view_context") }}'

@@ -1,15 +1,8 @@
-{{ 
+{{
   config(
-    materialized='table',
-    partition_by = {
-      "field": "start_tstamp",
-      "data_type": "timestamp"
-    },
-    cluster_by=snowplow_utils.get_cluster_by(bigquery_cols=["user_id"]),
-    sort='start_tstamp',
-    dist='domain_userid',
-    tags=["this_run"]
-  ) 
+    tags=["this_run"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 select
@@ -20,7 +13,7 @@ select
 
   b.start_tstamp,
   b.end_tstamp,
-  {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
+  {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   -- engagement fields
   b.page_views,
@@ -30,19 +23,19 @@ select
 
   -- first page fields
   a.first_page_title,
-
   a.first_page_url,
-
   a.first_page_urlscheme,
   a.first_page_urlhost,
   a.first_page_urlpath,
   a.first_page_urlquery,
   a.first_page_urlfragment,
 
+  a.geo_country,
+  a.name,
+  a.region,
+
   c.last_page_title,
-
   c.last_page_url,
-
   c.last_page_urlscheme,
   c.last_page_urlhost,
   c.last_page_urlpath,
@@ -69,7 +62,9 @@ select
   a.mkt_content,
   a.mkt_campaign,
   a.mkt_clickid,
-  a.mkt_network
+  a.mkt_network,
+  a.mkt_source_platform,
+  a.default_channel
 
 from {{ ref('snowplow_web_users_aggs') }} as b
 

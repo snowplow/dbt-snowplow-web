@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {{ 
   config(
     materialized='table',
@@ -5,6 +6,12 @@
     dist='page_view_id',
     tags=["this_run"]
   ) 
+=======
+{{
+  config(
+    tags=["this_run"]
+  )
+>>>>>>> upstream/main
 }}
 
 
@@ -32,10 +39,17 @@ select
   ev.derived_tstamp,
   ev.start_tstamp,
   coalesce(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
+<<<<<<< HEAD
   {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
 
   coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
   {{ dbt_utils.datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
+=======
+  {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
+
+  coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
+  {{ datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
+>>>>>>> upstream/main
 
   sd.hmax as horizontal_pixels_scrolled,
   sd.vmax as vertical_pixels_scrolled,
@@ -96,6 +110,7 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
+<<<<<<< HEAD
   {% if var('snowplow__enable_iab') %}
     iab.category,
     iab.primary_impact,
@@ -181,30 +196,56 @@ select
     cast(null as varchar) as operating_system_name_version,
     cast(null as varchar) as operating_system_version
   {% endif %}
+=======
+  {{snowplow_web.get_iab_context_fields('iab')}},
+
+  -- ua parser enrichment fields
+  {{snowplow_web.get_ua_context_fields('ua')}},
+
+  -- yauaa enrichment fields
+  {{snowplow_web.get_yauaa_context_fields('ya')}}
+>>>>>>> upstream/main
 
 from {{ ref('snowplow_web_page_view_events') }} ev
 
 left join {{ ref('snowplow_web_pv_engaged_time') }} t
+<<<<<<< HEAD
 on ev.page_view_id = t.page_view_id
 
 left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
 on ev.page_view_id = sd.page_view_id
 
 {% if var('snowplow__enable_iab') -%}
+=======
+on ev.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = t.domain_sessionid {% endif %}
+
+left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
+on ev.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = sd.domain_sessionid {% endif %}
+
+{% if var('snowplow__enable_iab', false) -%}
+>>>>>>> upstream/main
 
   left join {{ ref('snowplow_web_pv_iab') }} iab
   on ev.page_view_id = iab.page_view_id
 
 {% endif -%}
 
+<<<<<<< HEAD
 {% if var('snowplow__enable_ua') -%}
+=======
+{% if var('snowplow__enable_ua', false) -%}
+>>>>>>> upstream/main
 
   left join {{ ref('snowplow_web_pv_ua_parser') }} ua
   on ev.page_view_id = ua.page_view_id
 
 {% endif -%}
 
+<<<<<<< HEAD
 {% if var('snowplow__enable_yauaa') -%}
+=======
+{% if var('snowplow__enable_yauaa', false) -%}
+>>>>>>> upstream/main
 
   left join {{ ref('snowplow_web_pv_yauaa') }} ya
   on ev.page_view_id = ya.page_view_id

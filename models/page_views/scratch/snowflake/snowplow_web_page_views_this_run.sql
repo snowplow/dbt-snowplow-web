@@ -1,8 +1,8 @@
-{{ 
+{{
   config(
-    materialized='table',
-    tags=["this_run"]
-  ) 
+    tags=["this_run"],
+    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+  )
 }}
 
 with prep as (
@@ -79,114 +79,24 @@ select
   -- optional fields, only populated if enabled.
 
   -- iab enrichment fields: set iab variable to true to enable
-  {% if var('snowplow__enable_iab') %}
+  {{snowplow_web.get_iab_context_fields()}},
 
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0]:category::VARCHAR AS category,
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0]:primaryImpact::VARCHAR AS primary_impact,
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0]:reason::VARCHAR AS reason,
-  ev.contexts_com_iab_snowplow_spiders_and_robots_1[0]:spiderOrRobot::BOOLEAN AS spider_or_robot,
+  -- ua parser enrichment fields
+  {{snowplow_web.get_ua_context_fields()}},
 
-  {% else %}
-
-  cast(null as {{ dbt_utils.type_string() }}) as category,
-  cast(null as {{ dbt_utils.type_string() }}) as primary_impact,
-  cast(null as {{ dbt_utils.type_string() }}) as reason,
-  cast(null as boolean) as spider_or_robot,
-
-  {% endif %}
-
-  -- ua parser enrichment fields: set ua_parser variable to true to enable
-  {% if var('snowplow__enable_ua') %}
-
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentFamily::VARCHAR AS useragent_family,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentMajor::VARCHAR AS useragent_major,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentMinor::VARCHAR AS useragent_minor,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentPatch::VARCHAR AS useragent_patch,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:useragentVersion::VARCHAR AS useragent_version,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:osFamily::VARCHAR AS os_family,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:osMajor::VARCHAR AS os_major,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:osMinor::VARCHAR AS os_minor,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:osPatch::VARCHAR AS os_patch,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:osPatchMinor::VARCHAR AS os_patch_minor,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:osVersion::VARCHAR AS os_version,
-  ev.contexts_com_snowplowanalytics_snowplow_ua_parser_context_1[0]:deviceFamily::VARCHAR AS device_family,
-
-  {% else %}
-
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_family,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_major,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_minor,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_patch,
-  cast(null as {{ dbt_utils.type_string() }}) as useragent_version,
-  cast(null as {{ dbt_utils.type_string() }}) as os_family,
-  cast(null as {{ dbt_utils.type_string() }}) as os_major,
-  cast(null as {{ dbt_utils.type_string() }}) as os_minor,
-  cast(null as {{ dbt_utils.type_string() }}) as os_patch,
-  cast(null as {{ dbt_utils.type_string() }}) as os_patch_minor,
-  cast(null as {{ dbt_utils.type_string() }}) as os_version,
-  cast(null as {{ dbt_utils.type_string() }}) as device_family,
-
-  {% endif %}
-
-  -- yauaa enrichment fields: set yauaa variable to true to enable
-  {% if var('snowplow__enable_yauaa') %}
-
-  ev.contexts_nl_basjes_yauaa_context_1[0]:deviceClass::VARCHAR AS device_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:agentClass::VARCHAR AS agent_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:agentName::VARCHAR AS agent_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:agentNameVersion::VARCHAR AS agent_name_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:agentNameVersionMajor::VARCHAR AS agent_name_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:agentVersion::VARCHAR AS agent_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:agentVersionMajor::VARCHAR AS agent_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:deviceBrand::VARCHAR AS device_brand,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:deviceName::VARCHAR AS device_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:deviceVersion::VARCHAR AS device_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:layoutEngineClass::VARCHAR AS layout_engine_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:layoutEngineName::VARCHAR AS layout_engine_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:layoutEngineNameVersion::VARCHAR AS layout_engine_name_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:layoutEngineNameVersionMajor::VARCHAR AS layout_engine_name_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:layoutEngineVersion::VARCHAR AS layout_engine_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:layoutEngineVersionMajor::VARCHAR AS layout_engine_version_major,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:operatingSystemClass::VARCHAR AS operating_system_class,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:operatingSystemName::VARCHAR AS operating_system_name,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:operatingSystemNameVersion::VARCHAR AS operating_system_name_version,
-  ev.contexts_nl_basjes_yauaa_context_1[0]:operatingSystemVersion::VARCHAR AS operating_system_version
-
-  {% else %}
-
-  cast(null as {{ dbt_utils.type_string() }}) as device_class,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_class,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_name,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_name_version,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_name_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_version,
-  cast(null as {{ dbt_utils.type_string() }}) as agent_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as device_brand,
-  cast(null as {{ dbt_utils.type_string() }}) as device_name,
-  cast(null as {{ dbt_utils.type_string() }}) as device_version,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_class,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_name,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_name_version,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_name_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_version,
-  cast(null as {{ dbt_utils.type_string() }}) as layout_engine_version_major,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_class,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_name,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_name_version,
-  cast(null as {{ dbt_utils.type_string() }}) as operating_system_version
-
-  {% endif %}
+  -- yauaa enrichment fields
+  {{snowplow_web.get_yauaa_context_fields()}}
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
-  
+
   where ev.event_name = 'page_view'
   and ev.page_view_id is not null
 
   {% if var("snowplow__ua_bot_filter", true) %}
-     and not rlike(ev.useragent, '.*(bot|crawl|slurp|spider|archiv|spinn|sniff|seo|audit|survey|pingdom|worm|capture|(browser|screen)shots|analyz|index|thumb|check|facebook|PingdomBot|PhantomJS|YandexBot|Twitterbot|a_archiver|facebookexternalhit|Bingbot|BingPreview|Googlebot|Baiduspider|360(Spider|User-agent)|semalt).*')
+     {{ filter_bots('ev') }}
   {% endif %}
 
-  qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp) = 1
+  qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) = 1
 )
 
 , page_view_events as (
@@ -205,7 +115,7 @@ select
     p.domain_sessionid,
     p.domain_sessionidx,
 
-    row_number() over (partition by p.domain_sessionid order by p.derived_tstamp) AS page_view_in_session_index,
+    row_number() over (partition by p.domain_sessionid order by p.derived_tstamp, p.dvce_created_tstamp) AS page_view_in_session_index,
 
     -- timestamp fields
     p.dvce_created_tstamp,
@@ -213,7 +123,7 @@ select
     p.derived_tstamp,
     p.start_tstamp,
     coalesce(t.end_tstamp, p.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
-    {{ dbt_utils.current_timestamp_in_utc() }} as model_tstamp,
+    {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
 
     coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
     timediff(second, p.derived_tstamp, coalesce(t.end_tstamp, p.derived_tstamp))  as absolute_time_in_s,
@@ -316,10 +226,10 @@ select
   from prep p
 
   left join {{ ref('snowplow_web_pv_engaged_time') }} t
-  on p.page_view_id = t.page_view_id
+  on p.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and p.domain_sessionid = t.domain_sessionid {% endif %}
 
   left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
-  on p.page_view_id = sd.page_view_id
+  on p.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and p.domain_sessionid = sd.domain_sessionid {% endif %}
 )
 
 select

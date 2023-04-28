@@ -21,3 +21,25 @@ models:
         description: The `collector_tstamp` when the session ended
         tests:
           - not_null
+  - name: snowplow_web_incremental_manifest
+    description: '{{ doc("table_base_incremental_manifest") }}'
+    columns:
+      - name: model
+        description: The name of the model.
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: last_success
+        description: The latest event consumed by the model, based on `collector_tstamp`
+  - name: snowplow_web_base_quarantined_sessions
+    description: '{{ doc("table_base_quarantined_sessions") }}'
+    columns:
+      - name: session_id
+        description: The `session_id` of the quarantined session
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null

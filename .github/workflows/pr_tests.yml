@@ -1,0 +1,140 @@
+name: pr_tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release/**'
+
+concurrency: dbt_integration_tests
+
+env:
+  # Set profiles.yml directory
+  DBT_PROFILES_DIR: ./ci
+
+  # Redshift Connection
+  REDSHIFT_TEST_HOST: ${{ secrets.REDSHIFT_TEST_HOST }}
+  REDSHIFT_TEST_USER: ${{ secrets.REDSHIFT_TEST_USER }}
+  REDSHIFT_TEST_PASS: ${{ secrets.REDSHIFT_TEST_PASS }}
+  REDSHIFT_TEST_DBNAME: ${{ secrets.REDSHIFT_TEST_DBNAME }}
+  REDSHIFT_TEST_PORT: ${{ secrets.REDSHIFT_TEST_PORT }}
+
+  # BigQuery Connection
+  BIGQUERY_TEST_DATABASE: ${{ secrets.BIGQUERY_TEST_DATABASE }}
+  BIGQUERY_LOCATION: ${{ secrets.BIGQUERY_LOCATION }}
+  BIGQUERY_SERVICE_TYPE: ${{ secrets.BIGQUERY_SERVICE_TYPE }}
+  BIGQUERY_SERVICE_PROJECT_ID: ${{ secrets.BIGQUERY_SERVICE_PROJECT_ID }}
+  BIGQUERY_SERVICE_PRIVATE_KEY_ID: ${{ secrets.BIGQUERY_SERVICE_PRIVATE_KEY_ID }}
+  BIGQUERY_SERVICE_PRIVATE_KEY: ${{ secrets.BIGQUERY_SERVICE_PRIVATE_KEY }}
+  BIGQUERY_SERVICE_CLIENT_EMAIL: ${{ secrets.BIGQUERY_SERVICE_CLIENT_EMAIL }}
+  BIGQUERY_SERVICE_CLIENT_ID: ${{ secrets.BIGQUERY_SERVICE_CLIENT_ID }}
+  BIGQUERY_SERVICE_AUTH_URI: ${{ secrets.BIGQUERY_SERVICE_AUTH_URI }}
+  BIGQUERY_SERVICE_TOKEN_URI: ${{ secrets.BIGQUERY_SERVICE_TOKEN_URI }}
+  BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL }}
+  BIGQUERY_SERVICE_CLIENT_X509_CERT_URL: ${{ secrets.BIGQUERY_SERVICE_CLIENT_X509_CERT_URL }}
+
+  # Snowflake Connection
+  SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+  SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+  SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+  SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+  SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+  SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+
+  # Postgres Connection
+  POSTGRES_TEST_HOST: ${{ secrets.POSTGRES_TEST_HOST }}
+  POSTGRES_TEST_USER: ${{ secrets.POSTGRES_TEST_USER }}
+  POSTGRES_TEST_PASS: ${{ secrets.POSTGRES_TEST_PASS }}
+  POSTGRES_TEST_PORT: ${{ secrets.POSTGRES_TEST_PORT }}
+  POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }}
+
+  # Databricks Connection
+  DATABRICKS_TEST_HOST: ${{ secrets.DATABRICKS_TEST_HOST }}
+  DATABRICKS_TEST_HTTP_PATH: ${{ secrets.DATABRICKS_TEST_HTTP_PATH }}
+  DATABRICKS_TEST_TOKEN: ${{ secrets.DATABRICKS_TEST_TOKEN }}
+  DATABRICKS_TEST_ENDPOINT: ${{ secrets.DATABRICKS_TEST_ENDPOINT }}
+
+jobs:
+  pr_tests:
+    name: pr_tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # Run tests from integration_tests sub dir
+        working-directory: ./integration_tests
+    strategy:
+      matrix:
+        dbt_version: ["1.*"]
+        warehouse: ["postgres", "bigquery", "snowflake", "databricks"] # TODO: Add RS self-hosted runner
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_TEST_DBNAME }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_TEST_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_TEST_PASS }}
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      # Remove '*' and replace '.' with '_' in DBT_VERSION & set as SCHEMA_SUFFIX.
+      # SCHEMA_SUFFIX allows us to run multiple versions of dbt in parallel without overwriting the output tables
+      - name: Set SCHEMA_SUFFIX env
+        run: echo "SCHEMA_SUFFIX=$(echo ${DBT_VERSION%.*} | tr . _)" >> $GITHUB_ENV
+        env:
+          DBT_VERSION: ${{ matrix.dbt_version }}
+
+      - name: Set DEFAULT_TARGET env
+        run: |
+         echo "DEFAULT_TARGET=${{ matrix.warehouse }}" >> $GITHUB_ENV
+
+      - name: Python setup
+        uses: actions/setup-python@v4
+        with:
+         python-version: "3.8.x"
+
+      - name: Pip cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
+
+      # Install latest patch version. Upgrade if cache contains old patch version.
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip wheel setuptools
+          pip install -Iv dbt-${{ matrix.warehouse }}==${{ matrix.dbt_version }} --upgrade
+          dbt deps
+        if: ${{matrix.warehouse != 'spark'}}
+
+      - name: Install spark dependencies
+        run: |
+          pip install --upgrade pip wheel setuptools
+          pip install -Iv "dbt-${{ matrix.warehouse }}[ODBC]"==${{ matrix.dbt_version }} --upgrade
+          dbt deps
+        if: ${{matrix.warehouse == 'spark'}}
+
+      - name: "Pre-test: Drop ci schemas"
+        run: |
+          dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
+
+      - name: Run tests
+        run: ./.scripts/integration_test.sh -d ${{ matrix.warehouse }}
+
+      # post_ci_cleanup sits in utils package
+      - name: "Post-test: Drop ci schemas"
+        run: |
+          dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
