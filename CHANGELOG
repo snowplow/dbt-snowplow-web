@@ -1,10 +1,13 @@
 snowplow-web 0.14.1 (2023-0X-XX)
 ---------------------------------------
 ## Summary
-This version contains moves the iab, ua, and yauaa contexts into the base events this run table for Postgres/Redshift, completing the work to decouple our sessions models from the page view models.
+The main change in this version is the addition of many new fields to the `sessions` table, including the ability to define your conversion events that are aggregated per session. You can read more about it in our docs [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/conversions/)!
+
+This version also moves the iab, ua, and yauaa contexts into the base events this run table for Postgres/Redshift, completing the work to decouple our sessions models from the page view models.
 
 ## Features
 - Move contexts into base table for redshift (Close #185)
+- Add support for user-defined conversion aggregation to sessions
 
 ## Under the hood
 - Optimizes a filter in the `snowplow_web_user_sessions_this_run` model (Close #186)

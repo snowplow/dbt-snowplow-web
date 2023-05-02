@@ -302,6 +302,10 @@ select
         {%- for conv_def in var('snowplow__conversion_events') %}
     {{ snowplow_web.get_conversion_columns(conv_def, names_only = true)}}
         {%- endfor %}
+    {% if var('snowplow__total_all_conversions', false) %}
+        ,{%- for conv_def in var('snowplow__conversion_events') %}{{'cv_' ~ conv_def['name'] ~ '_volume'}}{%- if not loop.last %} + {% endif -%}{%- endfor %} as cv__all_volume
+        ,{%- for conv_def in var('snowplow__conversion_events') %}{%- if conv_def.get('value') %}{{'cv_' ~ conv_def['name'] ~ '_volume'}}{%- if not loop.last %} + {% endif -%}{% endif -%}{%- endfor %} as cv__all_total
+    {% endif %}
     {%- endif %}
 from
     session_firsts a

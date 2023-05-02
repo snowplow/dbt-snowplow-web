@@ -70,6 +70,7 @@ vars:
     # snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true},
     #                               {'name': 'sign_up', 'condition': "event_name = 'sign_up'", 'value': 5}
     #                             ]
+    # snowplow__total_all_conversions: false
 
 
 # Completely or partially remove models from the manifest during run start.
