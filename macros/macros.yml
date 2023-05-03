@@ -55,3 +55,7 @@ macros:
     description: '{{ doc("macro_bq_context_fields") }}'
   - name: allow_refresh
     description: '{{ doc("macro_allow_refresh") }}'
+  - name: channel_group_query
+    description: '{{ doc("macro_channel_group_query") }}'
+  - name: engaged_session
+    description: '{{ doc("macro_engaged_session") }}'

@@ -15,7 +15,15 @@ select
   a.last_page_urlhost,
   a.last_page_urlpath,
   a.last_page_urlquery,
-  a.last_page_urlfragment
+  a.last_page_urlfragment,
+
+  a.last_geo_country,
+  a.last_geo_country_name,
+  a.last_geo_continent,
+  a.last_geo_city,
+  a.last_geo_region_name,
+  a.last_br_lang,
+  a.last_br_lang_name
 
 from {{ ref('snowplow_web_users_sessions_this_run') }} a
 

@@ -23,24 +23,37 @@ select
 
   -- first page fields
   a.first_page_title,
-
   a.first_page_url,
-
   a.first_page_urlscheme,
   a.first_page_urlhost,
   a.first_page_urlpath,
   a.first_page_urlquery,
   a.first_page_urlfragment,
 
+  a.geo_country as first_geo_country,
+  a.geo_country_name as first_geo_country_name,
+  a.geo_continent as first_geo_continent,
+  a.geo_city as first_geo_city,
+  a.geo_region_name as first_geo_region_name,
+  a.br_lang as first_br_lang,
+  a.br_lang_name as first_br_lang_name,
+
   c.last_page_title,
-
   c.last_page_url,
-
   c.last_page_urlscheme,
   c.last_page_urlhost,
   c.last_page_urlpath,
   c.last_page_urlquery,
   c.last_page_urlfragment,
+
+  c.last_geo_country,
+  c.last_geo_country_name,
+  c.last_geo_continent,
+  c.last_geo_city,
+  c.last_geo_region_name,
+  c.last_br_lang,
+  c.last_br_lang_name,
+
 
   -- referrer fields
   a.referrer,
@@ -62,7 +75,9 @@ select
   a.mkt_content,
   a.mkt_campaign,
   a.mkt_clickid,
-  a.mkt_network
+  a.mkt_network,
+  a.mkt_source_platform,
+  a.default_channel_group
 
 from {{ ref('snowplow_web_users_aggs') }} as b
 
