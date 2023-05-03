@@ -73,7 +73,10 @@ vars:
     snowplow__enable_iab: true
     snowplow__enable_ua: true
     snowplow__enable_yauaa: true
-    snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true, "value": 'tr_total_base', "default_value": 0.5}]
+  # These are at a full project level because they are using in both the web and int test models to determine which columns are needed
+  snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true, "value": 'tr_total_base', "default_value": 0.5}]
+  snowplow__total_all_conversions: true
+  snowplow__list_event_counts: true
 
 seeds:
   quote_columns: false
@@ -126,7 +129,7 @@ seeds:
           dvce_type: "{{ 'string' if target.type in ['bigquery', 'databricks', 'spark'] else 'varchar' }}"
           dvce_ismobile: boolean
           tr_currency: "{{ 'string' if target.type in ['bigquery', 'databricks', 'spark'] else 'varchar' }}"
-          tr_total_base: float
+          tr_total_base: "{{ 'decimal(9,1)' if target.type in ['databricks', 'spark'] else 'float' }}"
           tr_tax_base: float
           tr_shipping_base: float
           ti_currency: "{{ 'string' if target.type in ['bigquery', 'databricks', 'spark'] else 'varchar' }}"
@@ -475,7 +478,7 @@ seeds:
             operating_system_name_version: string
             operating_system_version: string
             cv_view_page_volume: integer
-            cv_view_page_total: float
+            cv_view_page_total: decimal(9, 1)
             cv_view_page_first_conversion: timestamp
             cv_view_page_converted: boolean
         snowplow_web_users_expected:
@@ -834,6 +837,7 @@ seeds:
             app_id: varchar
             start_tstamp: timestamp
             end_tstamp: timestamp
+            is_engaged: boolean
             first_page_urlfragment: varchar
             last_page_urlfragment: varchar
             refr_urlquery: varchar

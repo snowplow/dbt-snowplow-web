@@ -58,6 +58,7 @@ vars:
     snowplow__query_tag: "snowplow_dbt"
     snowplow__dev_target_name: 'dev'
     snowplow__allow_refresh: false
+    snowplow__list_event_counts: false
     # snowplow__limit_page_views_to_session: true
     # Variables - Databricks Only
     # Add the following variable to your dbt project's dbt_project.yml file
@@ -70,6 +71,7 @@ vars:
     # snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true},
     #                               {'name': 'sign_up', 'condition': "event_name = 'sign_up'", 'value': 5}
     #                             ]
+    # snowplow__total_all_conversions: false
 
 
 # Completely or partially remove models from the manifest during run start.

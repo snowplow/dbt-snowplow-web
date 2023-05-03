@@ -55,6 +55,20 @@ models:
         description: The urlquery of the first page visited by the user
       - name: first_page_urlfragment
         description: The urlfragment of the first page visited by the user
+      - name: first_geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: first_geo_country_name
+        description: '{{ doc("col_geo_country_name") }}'
+      - name: first_geo_continent
+        description: '{{ doc("col_geo_continent") }}'
+      - name: first_geo_city
+        description: '{{ doc("col_geo_city") }}'
+      - name: first_geo_region_name
+        description: '{{ doc("col_geo_region_name") }}'
+      - name: first_br_lang
+        description: '{{ doc("col_br_lang") }}'
+      - name: first_br_lang_name
+        description: '{{ doc("col_br_lang_name") }}'
       - name: last_page_title
         description: The title of the last page visited by the user
       - name: last_page_url
@@ -71,6 +85,20 @@ models:
         description: The urlquery of the last page visited by the user
       - name: last_page_urlfragment
         description: The urlfragment of the last page visited by the user
+      - name: last_geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: last_geo_country_name
+        description: '{{ doc("col_geo_country_name") }}'
+      - name: last_geo_continent
+        description: '{{ doc("col_geo_continent") }}'
+      - name: last_geo_city
+        description: '{{ doc("col_geo_city") }}'
+      - name: last_geo_region_name
+        description: '{{ doc("col_geo_region_name") }}'
+      - name: last_br_lang
+        description: '{{ doc("col_br_lang") }}'
+      - name: last_br_lang_name
+        description: '{{ doc("col_br_lang_name") }}'
       - name: referrer
         description: The referrer associated with the first page view of the user
       - name: refr_urlscheme
@@ -103,6 +131,11 @@ models:
         description: '{{ doc("col_mkt_clickid") }}'
       - name: mkt_network
         description: '{{ doc("col_mkt_network") }}'
+      - name: mkt_source_platform
+        description: '{{ doc("col_mkt_source_platform") }}'
+      - name: default_channel_group
+        description: '{{ doc("col_default_channel_group") }}'
+
   - name: snowplow_web_users_aggs
     description: '{{ doc("table_users_aggs") }}'
     columns:

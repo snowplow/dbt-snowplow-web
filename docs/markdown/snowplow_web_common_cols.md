@@ -827,4 +827,26 @@ The current timestamp when the model processed this row.
 {% enddocs %}
 
 
+{% docs col_mkt_source_platform %}
+Source platform based off the `utm_source_platform` parameter of the first page_url in the session.
+{% enddocs %}
 
+
+{% docs col_default_channel_group %}
+The channels by which users arrived at your site.
+{% enddocs %}
+
+
+{% docs col_geo_country_name %}
+Name of the country the visitor is located in
+{% enddocs %}
+
+
+{% docs col_geo_continent %}
+Name of the continent the visitor is located in
+{% enddocs %}
+
+
+{% docs col_br_lang_name %}
+Full name of the language the browser is set to e.g. ‘English (United Kingdom)’
+{% enddocs %}

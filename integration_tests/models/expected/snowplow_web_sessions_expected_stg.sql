@@ -1,6 +1,8 @@
+-- Removing model_tstamp
 
 SELECT
-    APP_ID,domain_sessionid
+    app_id
+    ,domain_sessionid
     ,domain_sessionidx
     ,start_tstamp
     ,end_tstamp
@@ -10,6 +12,13 @@ SELECT
     ,network_userid
     ,page_views
     ,engaged_time_in_s
+    {% if target.type =='redshift' %}
+    ,replace(event_counts, ' ', '') as event_counts
+    {% else %}
+    ,event_counts
+    {% endif %}
+    ,total_events
+    ,is_engaged
     ,absolute_time_in_s
     ,first_page_title
     ,first_page_url
@@ -41,6 +50,8 @@ SELECT
     ,mkt_campaign
     ,mkt_clickid
     ,mkt_network
+    ,mkt_source_platform
+    ,default_channel_group
     ,geo_country
     ,geo_region
     ,geo_region_name
@@ -49,10 +60,20 @@ SELECT
     ,geo_latitude
     ,geo_longitude
     ,geo_timezone
+    ,geo_country_name
+    ,geo_continent
+    ,last_geo_country
+    ,last_geo_region_name
+    ,last_geo_city
+    ,last_geo_country_name
+    ,last_geo_continent
     ,user_ipaddress
     ,useragent
     ,br_renderengine
     ,br_lang
+    ,br_lang_name
+    ,last_br_lang
+    ,last_br_lang_name
     ,os_timezone
     ,category
     ,primary_impact
@@ -97,14 +118,18 @@ SELECT
     ,cv_view_page_total
     ,cv_view_page_first_conversion
     ,cv_view_page_converted
+    ,cv__all_volume
+    ,cv__all_total
 {% elif target.type in ['bigquery'] %}
     ,cv_view_page_volume
     {# BQ can't compare array columns #}
-    ,TO_JSON_STRING(ARRAY(SELECT replace(x, '"', '') FROM UNNEST(JSON_EXTRACT_ARRAY(cv_view_page_events,'$')) as x)) as cv_view_page_events
-    ,TO_JSON_STRING(ARRAY(SELECT CAST(x AS FLOAT64) FROM UNNEST(JSON_EXTRACT_ARRAY(cv_view_page_values,'$')) as x)) as cv_view_page_values
+    ,to_json_string(array(select replace(x, '"', '') from unnest(json_extract_array(cv_view_page_events,'$')) as x)) as cv_view_page_events
+    ,to_json_string(array(select cast(x AS float64) from unnest(json_extract_array(cv_view_page_values,'$')) as x)) as cv_view_page_values
     ,cv_view_page_total
     ,cv_view_page_first_conversion
     ,cv_view_page_converted
+    ,cv__all_volume
+    ,cv__all_total
 {% elif target.type in ['spark', 'databricks'] %}
     ,cv_view_page_volume
     {# thank you chatGPT #}
@@ -113,13 +138,22 @@ SELECT
     ,cv_view_page_total
     ,cv_view_page_first_conversion
     ,cv_view_page_converted
-{% elif target.type in ['postgres'] %}
+    ,cv__all_volume
+    ,cv__all_total
+{% elif target.type in ['postgres', 'redshift'] %}
     ,cv_view_page_volume
+    {% if target.type == 'redshift' %}
+    ,nullif(split_to_array(translate(cv_view_page_events, '[]"]', ''),','), array()) as cv_view_page_events
+    ,nullif(split_to_array(translate(cv_view_page_values, '[]"]', ''),','), array()) as cv_view_page_values
+    {% else %}
     ,string_to_array(regexp_replace(cv_view_page_events, '[\[\]\"]', '', 'g'),',') as cv_view_page_events
     ,string_to_array(regexp_replace(cv_view_page_values, '[\[\]\"]', '', 'g'),',')::numeric[] as cv_view_page_values
+    {% endif %}
     ,cv_view_page_total
     ,cv_view_page_first_conversion
     ,cv_view_page_converted
+    ,cv__all_volume
+    ,cv__all_total
 {% endif %}
 
 

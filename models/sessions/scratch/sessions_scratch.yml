@@ -40,6 +40,16 @@ models:
         description: The total time engaged by a user within a session
         tests:
           - not_null
+      - name: event_counts
+        description: A json-type (warehouse dependant) object that gives counts for all event_names of events within the session (note you can get more page view events than true page_views based on their id)
+      - name: total_events
+        description: Count of all events in the session
+        tests:
+          - not_null
+      - name: is_engaged
+        description: A calculated boolean for if it was an engaged session or not, defined as having 2 or more page views, engaged time greater than or equal to 2 heartbeat lengths, or having any conversion event (if enabled)
+        tests:
+          - not_null
       - name: absolute_time_in_s
         description: The time in seconds between the `start_tstamp` and `end_tstamp`
         tests:
@@ -108,6 +118,10 @@ models:
         description: '{{ doc("col_mkt_clickid") }}'
       - name: mkt_network
         description: '{{ doc("col_mkt_network") }}'
+      - name: mkt_source_platform
+        description: '{{ doc("col_mkt_source_platform") }}'
+      - name: default_channel_group
+        description: '{{ doc("col_default_channel_group") }}'
       - name: geo_country
         description: '{{ doc("col_geo_country") }}'
       - name: geo_region
@@ -122,6 +136,20 @@ models:
         description: '{{ doc("col_geo_latitude") }}'
       - name: geo_longitude
         description: '{{ doc("col_geo_longitude") }}'
+      - name: geo_country_name
+        description: '{{ doc("col_geo_country_name") }}'
+      - name: geo_continent
+        description: '{{ doc("col_geo_continent") }}'
+      - name: last_geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: last_geo_region_name
+        description: '{{ doc("col_geo_region_name") }}'
+      - name: last_geo_city
+        description: '{{ doc("col_geo_city") }}'
+      - name: last_geo_country_name
+        description: '{{ doc("col_geo_country_name") }}'
+      - name: last_geo_continent
+        description: '{{ doc("col_geo_continent") }}'
       - name: geo_timezone
         description: '{{ doc("col_geo_timezone") }}'
       - name: user_ipaddress
@@ -132,6 +160,12 @@ models:
         description: '{{ doc("col_br_renderengine") }}'
       - name: br_lang
         description: '{{ doc("col_br_lang") }}'
+      - name: br_lang_name
+        description: '{{ doc("col_br_lang_name") }}'
+      - name: last_br_lang
+        description: '{{ doc("col_br_lang") }}'
+      - name: last_br_lang_name
+        description: '{{ doc("col_br_lang_name") }}'
       - name: os_timezone
         description: '{{ doc("col_os_timezone") }}'
       - name: category
