@@ -1,10 +1,18 @@
 snowplow-web 0.15.0 (2023-0X-XX)
 ---------------------------------------
 ## Summary
-This version contains moves the iab, ua, and yauaa contexts into the base events this run table for Postgres/Redshift, completing the work to decouple our sessions models from the page view models.
+The main change in this version is the addition of many new fields to the `sessions` table, including the ability to define your conversion events that are aggregated per session. You can read more about it in our docs [here](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-models/dbt-web-data-model/conversions/)! We also add the (optional) count of events per event type for each session, you can enable it by turning on the `snowplow__list_event_counts` variable.
+
+This version also moves the iab, ua, and yauaa contexts into the base events this run table for Postgres/Redshift, completing the work to decouple our sessions models from the page view models for all warehouses.
+
+## 🚨 Breaking Changes 🚨
+While not breaking in that your models should all still run, there are many new columns in the sessions and users tables that will be automatically added to your derived tables, which may have unintended consequences with existing queries or BI tools that use column position (although dbt usually appends these columns to the end). New columns will only be populated from new runs onwards, if you wish to populate them for older records you will need to do a full refresh.
 
 ## Features
 - Move contexts into base table for redshift (Close #185)
+- Add support for user-defined conversion aggregation to sessions
+- Add new fields to the sessions table including enhanced and last geo data, default channel group, marketing source platform, event count, and optional count by event_name
+- Add new fields to the users table relating to the latest event geo and browser information
 
 ## Under the hood
 - Optimizes a filter in the `snowplow_web_user_sessions_this_run` model (Close #186)
@@ -15,7 +23,6 @@ This version contains moves the iab, ua, and yauaa contexts into the base events
 
 ## Upgrading
 Bump the snowplow-web version in your `packages.yml` file.
-
 
 snowplow-web 0.14.1 (2023-05-23)
 ---------------------------------------

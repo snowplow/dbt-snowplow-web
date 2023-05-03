@@ -127,3 +127,25 @@ This macro is used to determine if a full-refresh is allowed (depending on the e
 
 {% endraw %}
 {% enddocs %}
+
+{% docs macro_channel_group_query %}
+{% raw %}		
+This macro returns the sql to identify the marketing channel from a url based on the `mkt_source`, `mkt_medium`, and `mkt_campaign` fields. It can be overwritten to use a different logic.
+
+#### Returns
+A `CASE WHEN` statement that classified the marketing channel group.
+
+{% endraw %}
+{% enddocs %}
+
+{% docs macro_engaged_session %}
+{% raw %}		
+This macro returns the sql to identify if a session is classed as engaged or not. It can be overwritten to use a different logic. By default any session that has 2 or more page views, more than 2 heartbeats worth of engaged time, or has any conversion events is classed as engaged.
+
+Note that if you are overwriting this macro you have may not have immediate access to all fields in the derived sessions table, and may have to use a table alias to specify the column you wish to use, please see the definition of `snowplow_web_sessions_this_run` to identify which fields are available at the time of the macro call.
+
+#### Returns
+The sql defining an engaged session (true/false).
+
+{% endraw %}
+{% enddocs %}

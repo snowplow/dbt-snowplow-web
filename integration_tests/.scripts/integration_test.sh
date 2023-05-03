@@ -29,7 +29,7 @@ for db in ${DATABASES[@]}; do
 
   echo "Snowplow web integration tests: Execute models - run 1/4 (no contexts, no conversions)"
 
-  eval "dbt run --target $db --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243, snowplow__enable_iab: false, snowplow__enable_ua: false, snowplow__enable_yauaa: false, snowplow__conversion_events:  }'" || exit 1;
+  eval "dbt run --target $db --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243, snowplow__enable_iab: false, snowplow__enable_ua: false, snowplow__enable_yauaa: false, snowplow__conversion_events: , snowplow__total_all_conversions: false, snowplow__list_event_counts: false }'" || exit 1;
 
   echo "Snowplow web integration tests: Execute models - run 1/4"
 
