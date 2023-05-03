@@ -74,6 +74,7 @@ vars:
     snowplow__enable_ua: true
     snowplow__enable_yauaa: true
     snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true, "value": 'tr_total_base', "default_value": 0.5}]
+    snowplow__total_all_conversions: true
 
 seeds:
   quote_columns: false
