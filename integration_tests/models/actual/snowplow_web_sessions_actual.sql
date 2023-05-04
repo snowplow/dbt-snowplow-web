@@ -137,10 +137,14 @@ select
   ,{% else %}
     cv_view_page_events
   ,  cv_view_page_values
-  ,{% endif %}
-    cv_view_page_total
+  {% endif %}
+  ,  cv_view_page_total
   ,  cv_view_page_first_conversion
   ,  cv_view_page_converted
+  {% if var('snowplow__total_all_conversions') %}
+    ,cv__all_volume
+    ,cv__all_total
+  {% endif %}
 {% endif %}
 
 
