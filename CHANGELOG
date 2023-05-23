@@ -1,3 +1,14 @@
+snowplow-web 0.14.1 (2023-05-23)
+---------------------------------------
+## Summary
+This version fixes an issue for new runs of the package on redshift where empty text field sizes were set to a length of 1.
+
+## Fixes
+- Fixes error with new install on redshift for character varying field sizes.
+
+## Upgrading
+To upgrade bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.14.0 (2023-03-28)
 ---------------------------------------
 ## Summary
