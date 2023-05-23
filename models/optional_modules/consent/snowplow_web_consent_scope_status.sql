@@ -23,7 +23,7 @@ with arrays as (
   )
 
 select
-  replace(replace(replace(cast(consent_scope as {{type_string() }}), '"', ''), '[', ''), ']', '') as scope,
+  replace(replace(replace(cast(consent_scope as {{ snowplow_utils.type_max_string() }}), '"', ''), '[', ''), ']', '') as scope,
   count(*) as total_consent
 
 from unnesting
