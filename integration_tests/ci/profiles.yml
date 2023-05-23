@@ -65,7 +65,7 @@ integration_tests:
       host: "{{ env_var('DATABRICKS_TEST_HOST') }}"
       http_path: "{{ env_var('DATABRICKS_TEST_HTTP_PATH') }}"
       token: "{{ env_var('DATABRICKS_TEST_TOKEN') }}"
-      threads: 4
+      threads: 1
 
     spark:
       type: spark
