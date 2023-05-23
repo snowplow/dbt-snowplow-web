@@ -18,9 +18,9 @@
         {% if table_prefix %}{{ table_prefix~"." }}{% endif %}reason,
         {% if table_prefix %}{{ table_prefix~"." }}{% endif %}spider_or_robot
     {%- else -%}
-        cast(null as {{ type_string() }}) as category,
-        cast(null as {{ type_string() }}) as primary_impact,
-        cast(null as {{ type_string() }}) as reason,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as category,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as primary_impact,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as reason,
         cast(null as boolean) as spider_or_robot
     {%- endif -%}
 {% endmacro %}
@@ -76,18 +76,18 @@
         {% if table_prefix %}{{ table_prefix~"." }}{% endif %}os_version,
         {% if table_prefix %}{{ table_prefix~"." }}{% endif %}device_family
     {%- else -%}
-        cast(null as {{ type_string() }}) as useragent_family,
-        cast(null as {{ type_string() }}) as useragent_major,
-        cast(null as {{ type_string() }}) as useragent_minor,
-        cast(null as {{ type_string() }}) as useragent_patch,
-        cast(null as {{ type_string() }}) as useragent_version,
-        cast(null as {{ type_string() }}) as os_family,
-        cast(null as {{ type_string() }}) as os_major,
-        cast(null as {{ type_string() }}) as os_minor,
-        cast(null as {{ type_string() }}) as os_patch,
-        cast(null as {{ type_string() }}) as os_patch_minor,
-        cast(null as {{ type_string() }}) as os_version,
-        cast(null as {{ type_string() }}) as device_family
+        cast(null as {{ snowplow_utils.type_max_string() }}) as useragent_family,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as useragent_major,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as useragent_minor,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as useragent_patch,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as useragent_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as os_family,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as os_major,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as os_minor,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as os_patch,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as os_patch_minor,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as os_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as device_family
     {%- endif -%}
 {% endmacro %}
 
@@ -182,26 +182,26 @@
         {% if table_prefix %}{{ table_prefix~"." }}{% endif %}operating_system_name_version,
         {% if table_prefix %}{{ table_prefix~"." }}{% endif %}operating_system_version
     {%- else -%}
-        cast(null as {{ type_string() }}) as device_class,
-        cast(null as {{ type_string() }}) as agent_class,
-        cast(null as {{ type_string() }}) as agent_name,
-        cast(null as {{ type_string() }}) as agent_name_version,
-        cast(null as {{ type_string() }}) as agent_name_version_major,
-        cast(null as {{ type_string() }}) as agent_version,
-        cast(null as {{ type_string() }}) as agent_version_major,
-        cast(null as {{ type_string() }}) as device_brand,
-        cast(null as {{ type_string() }}) as device_name,
-        cast(null as {{ type_string() }}) as device_version,
-        cast(null as {{ type_string() }}) as layout_engine_class,
-        cast(null as {{ type_string() }}) as layout_engine_name,
-        cast(null as {{ type_string() }}) as layout_engine_name_version,
-        cast(null as {{ type_string() }}) as layout_engine_name_version_major,
-        cast(null as {{ type_string() }}) as layout_engine_version,
-        cast(null as {{ type_string() }}) as layout_engine_version_major,
-        cast(null as {{ type_string() }}) as operating_system_class,
-        cast(null as {{ type_string() }}) as operating_system_name,
-        cast(null as {{ type_string() }}) as operating_system_name_version,
-        cast(null as {{ type_string() }}) as operating_system_version
+        cast(null as {{ snowplow_utils.type_max_string() }}) as device_class,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as agent_class,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as agent_name,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as agent_name_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as agent_name_version_major,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as agent_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as agent_version_major,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as device_brand,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as device_name,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as device_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as layout_engine_class,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as layout_engine_name,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as layout_engine_name_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as layout_engine_name_version_major,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as layout_engine_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as layout_engine_version_major,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as operating_system_class,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as operating_system_name,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as operating_system_name_version,
+        cast(null as {{ snowplow_utils.type_max_string() }}) as operating_system_version
     {%- endif -%}
 {% endmacro %}
 

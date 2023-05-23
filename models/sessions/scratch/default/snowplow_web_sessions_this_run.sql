@@ -22,7 +22,7 @@ with session_firsts as (
             -- updated with mapping as part of post hook on derived sessions table
             cast(domain_userid as {{ type_string() }}) as stitched_user_id,
         {% else %}
-            cast(null as {{ type_string() }}) as stitched_user_id,
+            cast(null as {{ snowplow_utils.type_max_string() }}) as stitched_user_id,
         {% endif %}
         network_userid as network_userid,
 
@@ -147,7 +147,7 @@ session_aggs as (
                 count(distinct case
                         when event_name = 'page_ping' then
                         -- need to get a unique list of floored time PER page view, so create a dummy surrogate key...
-                            {{ dbt.concat(['page_view_id', "cast(floor("~snowplow_utils.to_unixtstamp('dvce_created_tstamp')~"/"~var('snowplow__heartbeat', 10)~") as "~dbt.type_string()~")" ]) }}
+                            {{ dbt.concat(['page_view_id', "cast(floor("~snowplow_utils.to_unixtstamp('dvce_created_tstamp')~"/"~var('snowplow__heartbeat', 10)~") as "~snowplow_utils.type_max_string()~")" ]) }}
                         else
                             null end) -
                     count(distinct case when event_name = 'page_ping' then page_view_id else null end)

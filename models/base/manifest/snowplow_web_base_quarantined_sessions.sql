@@ -20,7 +20,7 @@ This significantly reduces table scans
 
 with prep as (
   select
-    cast(null as {{ type_string() }}) session_id
+    cast(null as {{ snowplow_utils.type_max_string() }}) session_id
 )
 
 select *
