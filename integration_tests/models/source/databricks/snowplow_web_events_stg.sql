@@ -213,7 +213,7 @@
     from_json(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_web_page_1,
     from_json(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, 'array<struct<basis_for_processing:string, consent_scopes:array<string>, consent_url:string, consent_version:string, domains_applied:array<string>, event_type:string, gdpr_applies:string>>') as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
     from_json(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, 'array<struct<elapsed_time:string>>') as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1,
-    from_json(unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1_0_0, 'array<struct<cls:string, fid:string, inp:string, lcp:string, navigation_type:string, ttfb:string>>') as unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1,
+    from_json(unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1_0_0, 'array<struct<cls:string, fcp:string, fid:string, inp:string, lcp:string, navigation_type:string, ttfb:string>>') as unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1,
     from_json(contexts_nl_basjes_yauaa_context_1_0_0, 'array<struct<device_class:string, agent_class:string, agent_name:string, agent_name_version:string, agent_name_version_major:string, agent_version:string, agent_version_major:string, device_brand:string, device_name:string, device_version:string, layout_engine_class:string, layout_engine_name:string, layout_engine_name_version:string, layout_engine_name_version_major:string, layout_engine_version:string, layout_engine_version_major:string, operating_system_class:string, operating_system_name:string, operating_system_name_version:string, operating_system_version:string>>') as contexts_nl_basjes_yauaa_context_1,
     from_json(contexts_com_iab_snowplow_spiders_and_robots_1_0_0, 'array<struct<category:string, primary_impact:string, reason:string, spider_or_robot:string>>') as contexts_com_iab_snowplow_spiders_and_robots_1
 
@@ -361,6 +361,7 @@ select
         unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].gdpr_applies::BOOLEAN as gdpr_applies) as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
   struct(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1[0].elapsed_time::FLOAT as elapsed_time) as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1,
   struct(unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].lcp::FLOAT as lcp,
+        unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].fcp::FLOAT as fcp,
         unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].fid::FLOAT as fid,
         unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].cls::FLOAT as cls,
         unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].inp::FLOAT as inp,

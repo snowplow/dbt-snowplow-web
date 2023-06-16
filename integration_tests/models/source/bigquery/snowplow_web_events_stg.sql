@@ -150,6 +150,7 @@
 
     array(
       select as struct JSON_EXTRACT_scalar(json_array,'$.cls') as cls,
+                      JSON_EXTRACT_scalar(json_array,'$.fcp') as fcp,
                       JSON_EXTRACT_scalar(json_array,'$.fid') as fid,
                       JSON_EXTRACT_scalar(json_array,'$.inp') as inp,
                       JSON_EXTRACT_scalar(json_array,'$.lcp') as lcp,

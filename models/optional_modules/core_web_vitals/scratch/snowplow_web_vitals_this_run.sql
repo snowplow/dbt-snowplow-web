@@ -31,6 +31,7 @@ with prep as (
     e.agent_version,
     e.operating_system_name,
     e.lcp,
+    e.fcp,
     e.fid,
     e.cls,
     e.inp,

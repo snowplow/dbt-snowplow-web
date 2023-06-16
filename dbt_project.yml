@@ -161,3 +161,7 @@ models:
       scratch:
         +schema: "scratch"
         +tags: "scratch"
+
+seeds:
+  snowplow_web:
+    +schema: snowplow_manifest

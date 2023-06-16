@@ -91,6 +91,8 @@ models:
         description: '{{ doc("col_operating_system_version") }}'
       - name: lcp
         description: A metric for measuring perceived load speed because it marks the point in the page load timeline when the page's main content has likely loaded. Measured in milliseconds. For more information https://web.dev/lcp/.
+      - name: fcp
+        description: A metric for measuring the time from when the page starts loading to when any part of the page's content is rendered on the screen.
       - name: fid
         description: A metric for measuring load responsiveness because it quantifies the experience users feel when trying to interact with unresponsive pages. Measured in milliseconds. For more information https://web.dev/fid/.
       - name: cls
@@ -148,6 +150,8 @@ models:
         description: '{{ doc("col_operating_system_name") }}'
       - name: lcp
         description: A metric for measuring perceived load speed because it marks the point in the page load timeline when the page's main content has likely loaded. Measured in milliseconds. For more information https://web.dev/lcp/.
+      - name: fcp
+        description: A metric for measuring the time from when the page starts loading to when any part of the page's content is rendered on the screen.
       - name: fid
         description: A metric for measuring load responsiveness because it quantifies the experience users feel when trying to interact with unresponsive pages. Measured in milliseconds. For more information https://web.dev/fid/.
       - name: cls

@@ -35,7 +35,7 @@ with prep as (
 
     {{ snowplow_utils.get_optional_fields(
         enabled= true,
-        fields=[{'field': 'lcp', 'dtype': 'string'}, {'field': 'fid', 'dtype': 'string'}, {'field': 'cls', 'dtype': 'string'}, {'field': 'inp', 'dtype': 'string'}, {'field': 'ttfb', 'dtype': 'string'}, {'field': 'navigation_type', 'dtype': 'string'}],
+        fields=[{'field': 'lcp', 'dtype': 'string'}, {'field': 'fcp', 'dtype': 'string'}, {'field': 'fid', 'dtype': 'string'}, {'field': 'cls', 'dtype': 'string'}, {'field': 'inp', 'dtype': 'string'}, {'field': 'ttfb', 'dtype': 'string'}, {'field': 'navigation_type', 'dtype': 'string'}],
         col_prefix='unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1_0_0',
         relation=ref('snowplow_web_base_events_this_run'),
         relation_alias='e') }}
@@ -100,6 +100,7 @@ select
   operating_system_name_version,
   operating_system_version,
   ceil(cast(lcp as decimal)) /1000 as lcp,
+  ceil(cast(fcp as decimal)) /1000 as fcp,
   ceil(safe_cast(fid as decimal) * 1000) /1000 as fid,
   ceil(cast(cls as decimal) * 1000) /1000 as cls,
   ceil(cast(inp as decimal) * 1000) /1000 as inp,

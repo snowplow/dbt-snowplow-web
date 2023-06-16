@@ -199,6 +199,7 @@
       unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].gdpr_applies as gdprApplies,
       unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1[0]:elapsed_time as elapsedTime,
       unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].lcp as lcp,
+      unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].fcp as fcp,
       unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].fid as fid,
       unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].cls as cls,
       unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1[0].inp as inp,
@@ -366,7 +367,7 @@
     contexts_com_snowplowanalytics_snowplow_web_page_1,
     object_construct('basisForProcessing', basisForProcessing,'consentScopes', consentScopes, 'consentUrl', consentUrl, 'consentVersion', consentVersion, 'domainsApplied', domainsApplied, 'eventType', eventType, 'gdprApplies', gdprApplies) as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
     object_construct_keep_null('elapsedTime', elapsedTime) as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1,
-    object_construct('cls', cls, 'fid', fid, 'inp', inp, 'lcp', lcp, 'navigationType', navigationType, 'ttfb', ttfb) as unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1,
+    object_construct('cls', cls, 'fcp', fcp, 'fid', fid, 'inp', inp, 'lcp', lcp, 'navigationType', navigationType, 'ttfb', ttfb) as unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1,
     parse_json('[{"deviceClass":"'||deviceClass||'", "agentClass":"'||agentClass||'", "agentName":"'||agentName||'", "agentNameVersion":"'||agentNameVersion||'", "agentNameVersionMajor":"'||agentNameVersionMajor||'", "agentVersion":"'||agentVersion||'", "agentVersionMajor":"'||agentVersionMajor||'", "deviceBrand":"'||deviceBrand||'", "deviceName":"'||deviceName||'", "deviceVersion":"'||deviceVersion||'", "layoutEngineClass":"'||layoutEngineClass||'", "layoutEngineName":"'||layoutEngineName||'", "layoutEngineNameVersion":"'||layoutEngineNameVersion||'", "layoutEngineNameVersionMajor":"'||layoutEngineNameVersionMajor||'", "layoutEngineVersion":"'||layoutEngineVersion||'", "layoutEngineVersionMajor":"'||layoutEngineVersionMajor||'", "operatingSystemClass":"'||operatingSystemClass||'", "operatingSystemName":"'||operatingSystemName||'", "operatingSystemNameVersion":"'||operatingSystemNameVersion||'", "operatingSystemVersion":"'||operatingSystemVersion||'"}]') as contexts_nl_basjes_yauaa_context_1,
     parse_json('[{"category":"'||category||'", "primaryImpact":"'||primaryImpact||'", "reason":"'||reason||'", "spiderOrRobot":"'||spiderOrRobot||'"}]') as contexts_com_iab_snowplow_spiders_and_robots_1
 
