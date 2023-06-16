@@ -37,6 +37,8 @@ vars:
 ## Upgrading
 Bump the snowplow-web version in your `packages.yml` file.
 
+Some of the tables are relying now on seeds that have just been introduced with this version (`dim_ga4_source_categories`, `dim_geo_country_mapping`,`dim_rfc_5646_language_mapping`). Please run `dbt seed --select snowplow_web --full-refresh` on your first run.
+
 snowplow-web 0.14.1 (2023-05-23)
 ---------------------------------------
 ## Summary
