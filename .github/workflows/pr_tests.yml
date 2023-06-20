@@ -117,8 +117,6 @@ jobs:
         run: |
           pip install --upgrade pip wheel setuptools
           pip install -Iv dbt-${{ matrix.warehouse }}==${{ matrix.dbt_version }} --upgrade
-          pip install dbt-databricks==1.5.3 --upgrade --force-reinstall
-          pip install databricks-sql-connector==2.5.2 --upgrade --force-reinstall
           dbt deps
         if: ${{matrix.warehouse != 'spark'}}
 
