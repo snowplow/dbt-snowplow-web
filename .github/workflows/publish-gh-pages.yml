@@ -105,7 +105,7 @@ jobs:
       run: |
         dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
         dbt seed --target ${{matrix.warehouse}} --full-refresh
-        dbt run --target ${{matrix.warehouse}} --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243}'
+        dbt run --target ${{matrix.warehouse}} --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243, snowplow__enable_cwv: false}'
         dbt docs generate
         rm -f ../docs/catalog.json
         rm -f ../docs/manifest.json
