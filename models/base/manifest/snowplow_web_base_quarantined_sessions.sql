@@ -20,7 +20,7 @@ This significantly reduces table scans
 
 with prep as (
   select
-    cast(null as {{ snowplow_utils.type_max_string() }}) session_id
+    cast(null as {% if target.type == 'redshift' %} varchar(400) {% else %} {{snowplow_utils.type_max_string()}} {% endif %}) session_id
 )
 
 select *
