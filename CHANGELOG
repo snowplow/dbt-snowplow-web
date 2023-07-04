@@ -1,3 +1,16 @@
+snowplow-web 0.15.1 (2023-07-XX)
+---------------------------------------
+## Summary
+This version contains a fix for Redshift users based on a default column size, and adds the package name to the run limits log. Note the `snowplow_utils` minimum version has now increased to 0.14.3.
+
+## Features
+- Added package name to run limits log message
+## Fixes
+- Fix issue with new runs of Redshift due to default column size.
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.15.0 (2023-06-21)
 ---------------------------------------
 ## Summary
