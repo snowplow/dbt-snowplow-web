@@ -25,6 +25,7 @@ with measurements as (
     percentile_cont(0.{{ var('snowplow__cwv_percentile') }}) within group (order by cls) as cls_{{ var('snowplow__cwv_percentile') }}p,
     percentile_cont(0.{{ var('snowplow__cwv_percentile') }}) within group (order by ttfb) as ttfb_{{ var('snowplow__cwv_percentile') }}p,
     percentile_cont(0.{{ var('snowplow__cwv_percentile') }}) within group (order by inp) as inp_{{ var('snowplow__cwv_percentile') }}p
+
   from {{ ref('snowplow_web_vitals') }}
 
   where cast(derived_tstamp as date) >= {{ dateadd('day', '-'+var('snowplow__cwv_days_to_measure')|string, date_trunc('day', snowplow_utils.current_timestamp_in_utc())) }}
@@ -50,28 +51,37 @@ with measurements as (
   from measurements
 )
 
+, coalesce as (
+
+  select
+    m.measurement_type,
+    coalesce(m.page_url, 'all') as page_url,
+    coalesce(m.device_class, 'all') as device_class,
+    coalesce(m.geo_country, 'all') as geo_country,
+    coalesce(g.name, 'all') as country,
+    coalesce(time_period, 'last {{var("snowplow__cwv_days_to_measure")|string }} days') as time_period,
+    page_view_count,
+    ceil(lcp_{{ var('snowplow__cwv_percentile') }}p, 3) as lcp_{{ var('snowplow__cwv_percentile') }}p,
+    ceil(fid_{{ var('snowplow__cwv_percentile') }}p, 3) as fid_{{ var('snowplow__cwv_percentile') }}p,
+    ceil(cls_{{ var('snowplow__cwv_percentile') }}p, 3) as cls_{{ var('snowplow__cwv_percentile') }}p,
+    ceil(ttfb_{{ var('snowplow__cwv_percentile') }}p, 3) as ttfb_{{ var('snowplow__cwv_percentile') }}p,
+    ceil(inp_{{ var('snowplow__cwv_percentile') }}p, 3) as inp_{{ var('snowplow__cwv_percentile') }}p,
+    m.lcp_result,
+    m.fid_result,
+    m.cls_result,
+    m.ttfb_result,
+    m.inp_result,
+    {{ snowplow_web.core_web_vital_pass_query() }} as passed
+
+  from measurement_type m
+
+  left join {{ ref('dim_geo_country_mapping') }} g on lower(m.geo_country) = lower(g.alpha_2)
+
+  order by 1
+
+)
+
 select
-  m.measurement_type,
-  coalesce(m.page_url, 'all') as page_url,
-  coalesce(m.device_class, 'all') as device_class,
-  coalesce(m.geo_country, 'all') as geo_country,
-  coalesce(g.name, 'all') as country,
-  coalesce(time_period, 'last {{var("snowplow__cwv_days_to_measure")|string }} days') as time_period,
-  page_view_count,
-  ceil(lcp_{{ var('snowplow__cwv_percentile') }}p, 3) as lcp_{{ var('snowplow__cwv_percentile') }}p,
-  ceil(fid_{{ var('snowplow__cwv_percentile') }}p, 3) as fid_{{ var('snowplow__cwv_percentile') }}p,
-  ceil(cls_{{ var('snowplow__cwv_percentile') }}p, 3) as cls_{{ var('snowplow__cwv_percentile') }}p,
-  ceil(ttfb_{{ var('snowplow__cwv_percentile') }}p, 3) as ttfb_{{ var('snowplow__cwv_percentile') }}p,
-  ceil(inp_{{ var('snowplow__cwv_percentile') }}p, 3) as inp_{{ var('snowplow__cwv_percentile') }}p,
-  m.lcp_result,
-  m.fid_result,
-  m.cls_result,
-  m.ttfb_result,
-  m.inp_result,
-  {{ snowplow_web.core_web_vital_pass_query() }} as passed
-
-from measurement_type m
-
-left join {{ ref('dim_geo_country_mapping') }} g on lower(m.geo_country) = lower(g.alpha_2)
-
-order by 1
+  {{ dbt.concat(['page_url', "'-'" , 'device_class', "'-'" , 'geo_country', "'-'" , 'time_period' ]) }} compound_key,
+  *
+from coalesce

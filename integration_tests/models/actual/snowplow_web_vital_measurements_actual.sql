@@ -1,6 +1,6 @@
 {{
   config(
-    enabled=var("snowplow__enable_cwv", false) and target.type in ('databricks', 'spark', 'snowflake', 'bigquery') | as_bool()
+    enabled=var("snowplow__enable_cwv", false) | as_bool()
     )
 }}
 
