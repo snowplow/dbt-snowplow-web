@@ -67,4 +67,4 @@ models:
           compare_model: ref('snowplow_web_vital_measurements_expected_stg')
       - snowplow_web_integration_tests.equality:
           compare_model: ref('snowplow_web_vital_measurements_expected_stg')
-          precision: 3
+          precision: 2

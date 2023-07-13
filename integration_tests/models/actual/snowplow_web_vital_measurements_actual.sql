@@ -5,5 +5,8 @@
 }}
 
 select *
-
+{% if target.type == 'bigquery' %}
+    except(time_period),
+    replace(time_period, '+00', '') as time_period
+{% endif %}
 from {{ ref('snowplow_web_vital_measurements') }}

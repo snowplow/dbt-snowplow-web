@@ -1,0 +1,210 @@
+measurement_type,page_url,device_class,geo_country,country,time_period,page_view_count,lcp_75p,fid_75p,cls_75p,ttfb_75p,inp_75p,lcp_result,fid_result,cls_result,ttfb_result,inp_result,passed
+by_country,all,all,AU,Australia,last 999 days,218,2.189,89.45,0.05,1420.4,182.4,good,good,good,needs improvement,good,1
+by_country,all,all,BR,Brazil,last 999 days,2,2.326,207.95,0.185,2035.9,232.95,good,needs improvement,needs improvement,poor,needs improvement,0
+by_country,all,all,CF,Central African Republic,last 999 days,10,3.912,342.25,0.188,2288.15,342.25,needs improvement,poor,needs improvement,poor,needs improvement,0
+by_country,all,all,CN,China,last 999 days,13,2.064,93.2,0.03,1020.9,193.2,good,good,good,needs improvement,good,1
+by_country,all,all,ES,Spain,last 999 days,243,3.665,303,0.28,1534.4,303,needs improvement,poor,poor,needs improvement,needs improvement,0
+by_country,all,all,GB,United Kingdom of Great Britain and Northern Ireland,last 999 days,239,3.192,283.5,0.225,1321.9,283.5,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_country,all,all,ID,Indonesia,last 999 days,9,4.017,300,0.56,1624.9,300,poor,poor,poor,needs improvement,needs improvement,0
+by_country,all,all,JM,Jamaica,last 999 days,255,2.599,210,0.075,1499.4,210,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_country,all,all,PK,Pakistan,last 999 days,11,2.515,138.95,0.03,517.9,182.35,needs improvement,needs improvement,good,good,good,0
+by_country_and_device,all,desktop,AU,Australia,last 999 days,131,2.182,84.9,0.055,1133.9,179.7,good,good,good,needs improvement,good,1
+by_country_and_device,all,desktop,CF,Central African Republic,last 999 days,10,3.912,342.25,0.188,2288.15,342.25,needs improvement,poor,needs improvement,poor,needs improvement,0
+by_country_and_device,all,desktop,CN,China,last 999 days,13,2.064,93.2,0.03,1020.9,193.2,good,good,good,needs improvement,good,1
+by_country_and_device,all,desktop,ES,Spain,last 999 days,176,3.701,303.25,0.29,1508.15,303.25,needs improvement,poor,poor,needs improvement,needs improvement,0
+by_country_and_device,all,desktop,GB,United Kingdom of Great Britain and Northern Ireland,last 999 days,152,3.223,281.25,0.24,1321.4,281.25,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_country_and_device,all,desktop,ID,Indonesia,last 999 days,9,4.017,300,0.56,1624.9,300,poor,poor,poor,needs improvement,needs improvement,0
+by_country_and_device,all,desktop,JM,Jamaica,last 999 days,195,2.634,211.05,0.08,1480.4,211.05,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_country_and_device,all,desktop,PK,Pakistan,last 999 days,11,2.515,138.95,0.03,517.9,182.35,needs improvement,needs improvement,good,good,good,0
+by_country_and_device,all,mobile,AU,Australia,last 999 days,87,2.188,92.2,0.05,1573.9,189.3,good,good,good,needs improvement,good,1
+by_country_and_device,all,mobile,BR,Brazil,last 999 days,2,2.326,207.95,0.185,2035.9,232.95,good,needs improvement,needs improvement,poor,needs improvement,0
+by_country_and_device,all,mobile,ES,Spain,last 999 days,67,3.576,302,0.27,1640.4,302,needs improvement,poor,poor,needs improvement,needs improvement,0
+by_country_and_device,all,mobile,GB,United Kingdom of Great Britain and Northern Ireland,last 999 days,87,3.111,293.4,0.22,1255.4,293.4,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_country_and_device,all,mobile,JM,Jamaica,last 999 days,60,2.441,204.05,0.063,1744.65,204.05,good,needs improvement,good,needs improvement,needs improvement,0
+by_day,all,all,all,all,2023-03-01 00:00:00,36,3.141,285.875,0.253,543.15,285.875,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day,all,all,all,all,2023-03-02 00:00:00,35,2.875,243.45,0.225,401.4,243.45,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day,all,all,all,all,2023-03-03 00:00:00,12,3.054,219.1,0.225,407.15,219.1,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day,all,all,all,all,2023-03-04 00:00:00,35,3.06,286.8,0.34,537.9,286.8,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day,all,all,all,all,2023-03-05 00:00:00,18,3.128,251,0.088,459.4,251,needs improvement,needs improvement,good,good,needs improvement,0
+by_day,all,all,all,all,2023-03-06 00:00:00,31,2.903,282.15,0.21,576.9,282.15,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day,all,all,all,all,2023-03-07 00:00:00,19,2.378,81.4,0.065,563.4,166.5,good,good,good,good,good,1
+by_day,all,all,all,all,2023-03-08 00:00:00,26,2.602,232.65,0.075,561.65,232.65,needs improvement,needs improvement,good,good,needs improvement,0
+by_day,all,all,all,all,2023-03-09 00:00:00,12,3.684,252,0.43,589.9,252,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day,all,all,all,all,2023-03-10 00:00:00,15,2.588,209.3,0.03,624.9,209.3,needs improvement,needs improvement,good,good,needs improvement,0
+by_day,all,all,all,all,2023-03-11 00:00:00,7,3.775,259.5,0.215,449.9,259.5,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day,all,all,all,all,2023-03-12 00:00:00,16,4.132,295.25,0.308,532.15,295.25,poor,needs improvement,poor,good,needs improvement,0
+by_day,all,all,all,all,2023-03-13 00:00:00,19,2.898,277.35,0.35,549.9,277.35,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day,all,all,all,all,2023-03-14 00:00:00,24,3.031,269.1,0.063,519.15,269.1,needs improvement,needs improvement,good,good,needs improvement,0
+by_day,all,all,all,all,2023-03-15 00:00:00,22,2.288,97.65,0.068,520.15,186.75,good,good,good,good,good,1
+by_day,all,all,all,all,2023-03-16 00:00:00,11,2.758,235.25,0.135,360.4,235.25,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day,all,all,all,all,2023-03-17 00:00:00,16,2.059,125.85,0.09,616.15,200.85,good,needs improvement,good,good,needs improvement,0
+by_day,all,all,all,all,2023-03-18 00:00:00,11,2.94,148,0.255,1281.9,197,needs improvement,needs improvement,poor,needs improvement,good,0
+by_day,all,all,all,all,2023-03-19 00:00:00,7,4.256,246,0.05,1305.4,246,poor,needs improvement,good,needs improvement,needs improvement,0
+by_day,all,all,all,all,2023-03-20 00:00:00,11,2.648,95.4,0.06,1521.9,180.9,needs improvement,good,good,needs improvement,good,0
+by_day,all,all,all,all,2023-03-21 00:00:00,12,2.997,276.525,0.21,1928.15,276.525,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_day,all,all,all,all,2023-03-22 00:00:00,11,2.146,91,0.015,1830.9,172.6,good,good,good,poor,good,1
+by_day,all,all,all,all,2023-03-23 00:00:00,10,3.363,242.25,0.07,1792.4,242.25,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day,all,all,all,all,2023-03-24 00:00:00,13,3.067,337,0.08,2101.9,337,needs improvement,poor,good,poor,needs improvement,0
+by_day,all,all,all,all,2023-03-25 00:00:00,6,2.909,274.275,0.035,1129.65,274.275,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day,all,all,all,all,2023-03-26 00:00:00,368,2.881,228.925,0.09,1732.9,228.925,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day,all,all,all,all,2023-03-27 00:00:00,142,3.209,287.925,0.22,1823.65,287.925,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_day,all,all,all,all,2023-03-28 00:00:00,55,2.817,238.45,0.23,1916.4,238.45,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-01 00:00:00,31,3.118,271.25,0.145,552.4,271.25,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-02 00:00:00,23,3.22,267.75,0.265,421.4,267.75,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-03 00:00:00,12,3.054,219.1,0.225,407.15,219.1,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-04 00:00:00,25,3.157,288,0.4,528.9,288,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-05 00:00:00,5,2.131,206.4,0.017,306.9,206.4,good,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-06 00:00:00,12,2.537,262.35,0.019,472.9,262.35,needs improvement,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-07 00:00:00,18,2.304,78.05,0.068,578.65,160.35,good,good,good,good,good,1
+by_day_and_device,all,desktop,all,all,2023-03-08 00:00:00,19,2.485,92.8,0.09,573.9,182,good,good,good,good,good,1
+by_day_and_device,all,desktop,all,all,2023-03-09 00:00:00,8,3.57,240.75,0.248,589.9,240.75,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-10 00:00:00,15,2.588,209.3,0.03,624.9,209.3,needs improvement,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-11 00:00:00,7,3.775,259.5,0.215,449.9,259.5,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-12 00:00:00,15,4.283,296.5,0.365,534.4,296.5,poor,needs improvement,poor,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-13 00:00:00,14,3.246,282.525,0.385,596.4,282.525,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-14 00:00:00,24,3.031,269.1,0.063,519.15,269.1,needs improvement,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-15 00:00:00,22,2.288,97.65,0.068,520.15,186.75,good,good,good,good,good,1
+by_day_and_device,all,desktop,all,all,2023-03-16 00:00:00,11,2.758,235.25,0.135,360.4,235.25,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-17 00:00:00,12,1.947,88.4,0.11,616.15,188.4,good,good,needs improvement,good,good,0
+by_day_and_device,all,desktop,all,all,2023-03-18 00:00:00,6,3.217,228.5,0.265,1306.15,228.5,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-19 00:00:00,3,5.308,258,0.05,1121.4,258,poor,needs improvement,good,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-20 00:00:00,2,2.818,212.375,0.57,1727.4,237.375,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-21 00:00:00,10,3.199,280.575,0.21,1762.65,280.575,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-22 00:00:00,1,1.915,88.4,0.013,1518.9,188.4,good,good,good,needs improvement,good,1
+by_day_and_device,all,desktop,all,all,2023-03-23 00:00:00,6,3.448,242.25,0.32,1236.4,242.25,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-24 00:00:00,9,2.962,337,0.08,2101.9,337,needs improvement,poor,good,poor,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-25 00:00:00,2,2.751,196.925,0.011,1753.9,221.925,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-26 00:00:00,238,2.883,229.575,0.088,1735.65,229.575,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-27 00:00:00,110,3.189,280.8,0.238,1754.9,280.8,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_day_and_device,all,desktop,all,all,2023-03-28 00:00:00,37,2.904,229.2,0.2,1906.9,229.2,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-01 00:00:00,5,4.084,350,0.28,493.9,350,poor,poor,poor,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-02 00:00:00,12,2.095,120.65,0.033,282.4,195.65,good,needs improvement,good,good,good,0
+by_day_and_device,all,mobile,all,all,2023-03-04 00:00:00,10,2.708,279.9,0.265,578.9,279.9,needs improvement,needs improvement,poor,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-05 00:00:00,13,3.419,267.3,0.09,472.9,267.3,needs improvement,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-06 00:00:00,19,2.962,290.5,0.215,598.9,290.5,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-07 00:00:00,1,3.234,357,0.018,87.9,357,needs improvement,poor,good,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-08 00:00:00,7,3.512,329.4,0.017,378.4,329.4,needs improvement,poor,good,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-09 00:00:00,4,4.061,254.925,0.463,432.65,254.925,poor,needs improvement,poor,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-12 00:00:00,1,2.57,98,0.09,498.9,198,needs improvement,good,good,good,good,0
+by_day_and_device,all,mobile,all,all,2023-03-13 00:00:00,5,2.541,214.2,0.06,359.9,214.2,needs improvement,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-17 00:00:00,4,2.059,215.55,0.09,560.4,215.55,good,needs improvement,good,good,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-18 00:00:00,5,2.171,51.2,0.03,1185.9,151.2,good,good,good,needs improvement,good,1
+by_day_and_device,all,mobile,all,all,2023-03-19 00:00:00,4,2.062,110.4,0.036,1298.65,185.4,good,needs improvement,good,needs improvement,good,0
+by_day_and_device,all,mobile,all,all,2023-03-20 00:00:00,9,2.501,91.8,0.019,1519.9,171.6,needs improvement,good,good,needs improvement,good,0
+by_day_and_device,all,mobile,all,all,2023-03-21 00:00:00,2,2.569,190.425,0.013,1678.15,215.425,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-22 00:00:00,10,2.232,92.05,0.015,1842.4,153.475,good,good,good,poor,good,1
+by_day_and_device,all,mobile,all,all,2023-03-23 00:00:00,4,2.784,132.675,0.024,1930.15,207.675,needs improvement,needs improvement,good,poor,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-24 00:00:00,4,3.146,342,0.09,2040.15,342,needs improvement,poor,good,poor,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-25 00:00:00,4,3.081,294.975,0.103,1029.15,294.975,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-26 00:00:00,130,2.78,227.875,0.09,1676.4,227.875,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-27 00:00:00,32,3.265,304.2,0.213,1990.9,304.2,needs improvement,poor,needs improvement,poor,needs improvement,0
+by_day_and_device,all,mobile,all,all,2023-03-28 00:00:00,18,2.584,246.975,0.23,1887.15,246.975,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_device,all,desktop,all,all,last 999 days,697,3.048,249.9,0.21,1438.9,249.9,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_device,all,mobile,all,all,last 999 days,303,2.891,250.5,0.2,1518.4,250.5,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/actually-rock,desktop,all,all,last 999 days,16,2.755,319.35,0.113,2177.9,319.35,needs improvement,poor,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/actually-rock,mobile,all,all,last 999 days,6,2.721,218.75,0.288,1334.4,243.75,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/against-dark,desktop,all,all,last 999 days,22,3.261,257.525,0.088,1338.15,257.525,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/against-dark,mobile,all,all,last 999 days,5,2.73,89.6,0.09,1005.9,189.6,needs improvement,good,good,needs improvement,good,0
+by_url_and_device,https://snowplow.io/anyone-guess,desktop,all,all,last 999 days,13,2.839,265.2,0.019,627.9,265.2,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/anyone-guess,mobile,all,all,last 999 days,4,2.496,232.575,0.086,692.65,232.575,good,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/appear-board,desktop,all,all,last 999 days,11,2.933,218.55,0.019,921.9,218.55,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/appear-board,mobile,all,all,last 999 days,7,2.487,228.1,0.035,617.4,228.1,good,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/arm-any-road-able,desktop,all,all,last 999 days,14,2.778,274.5,0.218,1211.9,274.5,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/arm-any-road-able,mobile,all,all,last 999 days,3,1.533,194.1,0.025,968.4,244.1,good,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/bad-business,desktop,all,all,last 999 days,22,2.923,252.3,0.09,1512.65,252.3,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/bad-business,mobile,all,all,last 999 days,4,3.269,248.025,0.129,1033.4,248.025,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/bar-past-blood,desktop,all,all,last 999 days,7,2.958,213.7,0.3,1667.9,213.7,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/bar-past-blood,mobile,all,all,last 999 days,5,3.531,228,0.2,1668.9,228,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/be-program-four,desktop,all,all,last 999 days,18,2.778,205.15,0.23,1384.65,205.15,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/be-program-four,mobile,all,all,last 999 days,8,2.741,254.55,0.323,1466.9,254.55,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/break-opportunity,desktop,all,all,last 999 days,23,3.371,235.95,0.26,1867.9,235.95,needs improvement,needs improvement,poor,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/break-opportunity,mobile,all,all,last 999 days,5,1.724,258,0.016,651.9,258,good,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/call-chair-itself,desktop,all,all,last 999 days,19,3.034,262.4,0.07,1281.4,262.4,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/call-chair-itself,mobile,all,all,last 999 days,8,2.573,303.75,0.203,1109.4,303.75,needs improvement,poor,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/candidate-natural,desktop,all,all,last 999 days,11,2.425,92.5,0.07,1590.9,183,good,good,good,needs improvement,good,1
+by_url_and_device,https://snowplow.io/candidate-natural,mobile,all,all,last 999 days,5,2.979,243,0.2,575.9,243,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_url_and_device,https://snowplow.io/city-modern-figure,desktop,all,all,last 999 days,13,3.202,266.7,0.22,1203.9,266.7,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/city-modern-figure,mobile,all,all,last 999 days,3,2.445,146.6,0.013,1080.9,196.6,good,needs improvement,good,needs improvement,good,0
+by_url_and_device,https://snowplow.io/clearly-yes,desktop,all,all,last 999 days,14,2.563,218.225,0.08,1141.4,218.225,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/clearly-yes,mobile,all,all,last 999 days,11,2.944,95.5,0.08,1525.9,194.55,needs improvement,good,good,needs improvement,good,0
+by_url_and_device,https://snowplow.io/collection-world,desktop,all,all,last 999 days,12,3.171,250.8,0.218,1758.15,250.8,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/collection-world,mobile,all,all,last 999 days,3,2.683,148.85,0.018,1758.9,198.85,needs improvement,needs improvement,good,needs improvement,good,0
+by_url_and_device,https://snowplow.io/crime-realize,desktop,all,all,last 999 days,12,2.468,240.25,0.118,1423.15,240.25,good,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/crime-realize,mobile,all,all,last 999 days,7,2.236,239.35,0.024,1590.9,239.35,good,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/cultural-prepare,desktop,all,all,last 999 days,15,3.343,252,0.225,1428.4,252,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/cultural-prepare,mobile,all,all,last 999 days,11,2.677,245,0.065,1818.9,245,needs improvement,needs improvement,good,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/customer-eye-fly,desktop,all,all,last 999 days,10,2.987,251,0.162,929.65,251,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/customer-eye-fly,mobile,all,all,last 999 days,7,2.89,258.3,0.19,1059.9,258.3,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/democratic-data-on,desktop,all,all,last 999 days,18,2.962,232.225,0.278,1111.65,232.225,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/democratic-data-on,mobile,all,all,last 999 days,6,3.41,312.5,0.027,1160.9,312.5,needs improvement,poor,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/difficult-create,desktop,all,all,last 999 days,13,2.956,99.5,0.23,1322.9,199.5,needs improvement,good,needs improvement,needs improvement,good,0
+by_url_and_device,https://snowplow.io/difficult-create,mobile,all,all,last 999 days,11,3.217,267.15,0.145,1928.4,267.15,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/find-away-manage,desktop,all,all,last 999 days,10,3.637,251.625,0.319,1694.4,251.625,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/find-away-manage,mobile,all,all,last 999 days,4,3.719,217.425,0.082,1899.65,217.425,needs improvement,needs improvement,good,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/force-material,desktop,all,all,last 999 days,15,2.697,245.25,0.039,697.9,245.25,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/force-material,mobile,all,all,last 999 days,7,3.309,93.9,0.114,1937.4,193.9,needs improvement,good,needs improvement,poor,good,0
+by_url_and_device,https://snowplow.io/ground-major-could,desktop,all,all,last 999 days,12,2.728,249.25,0.3,637.15,249.25,needs improvement,needs improvement,poor,good,needs improvement,0
+by_url_and_device,https://snowplow.io/ground-major-could,mobile,all,all,last 999 days,15,2.638,266.1,0.045,1769.9,266.1,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/head-half-instead,desktop,all,all,last 999 days,6,2.789,203,0.285,737.15,203,needs improvement,needs improvement,poor,good,needs improvement,0
+by_url_and_device,https://snowplow.io/head-half-instead,mobile,all,all,last 999 days,5,2.574,99.8,0.09,1961.9,199.8,needs improvement,good,good,poor,good,0
+by_url_and_device,https://snowplow.io/health-already-key,desktop,all,all,last 999 days,21,2.817,214,0.019,772.9,214,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/health-already-key,mobile,all,all,last 999 days,5,2.928,242,0.22,1367.9,242,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/heat-instead,desktop,all,all,last 999 days,1,1.926,30.3,0.017,56.9,30.3,good,good,good,good,good,1
+by_url_and_device,https://snowplow.io/land-power-meeting,desktop,all,all,last 999 days,14,3.116,247.25,0.283,1170.4,247.25,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/land-power-meeting,mobile,all,all,last 999 days,5,2.798,212.4,0.06,803.9,212.4,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/late-candidate,desktop,all,all,last 999 days,17,2.727,204,0.27,1457.9,204,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/late-candidate,mobile,all,all,last 999 days,2,3.654,53.3,0.027,1257.15,126.9,needs improvement,good,good,needs improvement,good,0
+by_url_and_device,https://snowplow.io/memory-region-model,desktop,all,all,last 999 days,14,3.361,236.25,0.24,1872.4,236.25,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/memory-region-model,mobile,all,all,last 999 days,6,2.771,222.975,0.019,1963.9,222.975,needs improvement,needs improvement,good,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/message-choice-live,desktop,all,all,last 999 days,11,3.417,246.45,0.053,1874.9,246.45,needs improvement,needs improvement,good,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/message-choice-live,mobile,all,all,last 999 days,3,2.611,64.9,0.165,1333.4,164.9,needs improvement,good,needs improvement,needs improvement,good,0
+by_url_and_device,https://snowplow.io/new-mission,desktop,all,all,last 999 days,16,3.004,238.425,0.025,1400.15,238.425,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/new-mission,mobile,all,all,last 999 days,8,3.364,315.375,0.018,893.4,315.375,needs improvement,poor,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/night-go-now,mobile,all,all,last 999 days,1,1.908,70.4,0.05,228.9,70.4,good,good,good,good,good,1
+by_url_and_device,https://snowplow.io/on-scene-other,desktop,all,all,last 999 days,10,3.235,229.2,0.019,1684.15,229.2,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/on-scene-other,mobile,all,all,last 999 days,8,2.456,88.2,0.113,737.4,150.6,good,good,needs improvement,good,good,0
+by_url_and_device,https://snowplow.io/parent-side-season,desktop,all,all,last 999 days,12,3.125,231.975,0.075,628.4,231.975,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/parent-side-season,mobile,all,all,last 999 days,4,2.644,134.125,0.036,2078.65,209.125,needs improvement,needs improvement,good,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/probably-daughter,desktop,all,all,last 999 days,16,3.229,242.825,0.245,1188.9,242.825,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/probably-daughter,mobile,all,all,last 999 days,4,2.757,229.95,0.075,825.15,229.95,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/remember-anything,desktop,all,all,last 999 days,14,3.481,271.225,0.173,979.15,271.225,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/remember-anything,mobile,all,all,last 999 days,3,2.539,203,0.06,787.9,253,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/research-wear,desktop,all,all,last 999 days,14,3.142,259.2,0.233,1856.4,259.2,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/research-wear,mobile,all,all,last 999 days,5,3.285,267.3,0.21,1680.9,267.3,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/return-again-water,desktop,all,all,last 999 days,15,2.877,280.9,0.235,871.9,280.9,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/return-again-water,mobile,all,all,last 999 days,7,2.04,143.95,0.215,1713.9,193.95,good,needs improvement,needs improvement,needs improvement,good,0
+by_url_and_device,https://snowplow.io/road-community,desktop,all,all,last 999 days,15,2.895,260.9,0.145,1500.9,260.9,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/road-community,mobile,all,all,last 999 days,4,3.765,271.775,0.123,2212.9,271.775,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/say-against-us,desktop,all,all,last 999 days,1,1.461,64.5,0.02,265.9,64.5,good,good,good,good,good,1
+by_url_and_device,https://snowplow.io/site-somebody,desktop,all,all,last 999 days,14,2.819,228.9,0.163,640.4,228.9,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_url_and_device,https://snowplow.io/site-somebody,mobile,all,all,last 999 days,5,3.159,251.1,0.26,657.9,251.1,needs improvement,needs improvement,poor,good,needs improvement,0
+by_url_and_device,https://snowplow.io/someone-guess,desktop,all,all,last 999 days,1,2.084,4.7,0.004,75.9,14.7,good,good,good,good,good,1
+by_url_and_device,https://snowplow.io/spend-computer-six,desktop,all,all,last 999 days,11,3.008,342,0.14,1808.4,342,needs improvement,poor,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/spend-computer-six,mobile,all,all,last 999 days,5,2.244,90.4,0.09,1056.9,190.4,good,good,good,needs improvement,good,1
+by_url_and_device,https://snowplow.io/spring-over-remain,desktop,all,all,last 999 days,13,2.984,239,0.28,963.9,239,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/spring-over-remain,mobile,all,all,last 999 days,12,3.138,253.175,0.24,1924.9,253.175,needs improvement,needs improvement,needs improvement,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/staff-natural,desktop,all,all,last 999 days,1,2.729,205.8,0.013,469.9,205.8,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/student-trip-song,desktop,all,all,last 999 days,12,3.116,269.775,0.215,654.65,269.775,needs improvement,needs improvement,needs improvement,good,needs improvement,0
+by_url_and_device,https://snowplow.io/student-trip-song,mobile,all,all,last 999 days,7,2.637,270.45,0.265,1154.4,270.45,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/style-health-far,desktop,all,all,last 999 days,14,2.765,292.25,0.017,1329.9,292.25,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/style-health-far,mobile,all,all,last 999 days,4,4.493,321.3,0.085,668.15,321.3,poor,poor,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/tell-against-us,desktop,all,all,last 999 days,8,2.731,265.325,0.29,1759.4,265.325,needs improvement,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/tell-against-us,mobile,all,all,last 999 days,5,2.131,79.2,0.2,1250.9,179.2,good,good,needs improvement,needs improvement,good,0
+by_url_and_device,https://snowplow.io/tree-somebody,desktop,all,all,last 999 days,1,0.32,29.7,0.015,501.9,29.7,good,good,good,good,good,1
+by_url_and_device,https://snowplow.io/tv-night-go-now,desktop,all,all,last 999 days,15,2.444,250.9,0.28,1580.4,250.9,good,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/tv-night-go-now,mobile,all,all,last 999 days,7,2.74,255.6,0.03,493.9,255.6,needs improvement,needs improvement,good,good,needs improvement,0
+by_url_and_device,https://snowplow.io/until-include-list,desktop,all,all,last 999 days,14,4.174,238.9,0.058,803.15,238.9,poor,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/until-include-list,mobile,all,all,last 999 days,7,2.532,231.6,0.014,1505.9,281.6,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/visit-structure,desktop,all,all,last 999 days,20,2.919,273.525,0.07,1593.15,273.525,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/visit-structure,mobile,all,all,last 999 days,2,3.482,182.8,0.014,2084.65,182.8,needs improvement,needs improvement,good,poor,good,0
+by_url_and_device,https://snowplow.io/western-city-say,desktop,all,all,last 999 days,15,3.121,252.45,0.025,1800.9,252.45,needs improvement,needs improvement,good,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/western-city-say,mobile,all,all,last 999 days,4,2.671,360,0.263,819.65,360,needs improvement,poor,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/window-significant,desktop,all,all,last 999 days,11,2.333,207.3,0.129,456.9,207.3,good,needs improvement,needs improvement,good,needs improvement,0
+by_url_and_device,https://snowplow.io/window-significant,mobile,all,all,last 999 days,12,3.251,242.85,0.09,1518.65,242.85,needs improvement,needs improvement,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/with-like-step,desktop,all,all,last 999 days,9,2.293,236.6,0.47,2102.9,236.6,good,needs improvement,poor,poor,needs improvement,0
+by_url_and_device,https://snowplow.io/with-like-step,mobile,all,all,last 999 days,6,3.358,312.15,0.013,945.9,312.15,needs improvement,poor,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/word-head-write,desktop,all,all,last 999 days,12,2.901,300,0.032,1629.65,300,needs improvement,poor,good,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/word-head-write,mobile,all,all,last 999 days,7,2.41,175,0.465,1607.9,225,good,needs improvement,poor,needs improvement,needs improvement,0
+by_url_and_device,https://snowplow.io/wrong-table-fear,desktop,all,all,last 999 days,9,3.198,91,0.06,1253.9,187,needs improvement,good,good,needs improvement,good,0
+by_url_and_device,https://snowplow.io/wrong-table-fear,mobile,all,all,last 999 days,5,2.224,211.4,0.018,1647.9,211.4,good,needs improvement,good,needs improvement,needs improvement,0
+overall,all,all,all,all,last 999 days,1000,2.989,250.05,0.203,1462.15,250.05,needs improvement,needs improvement,needs improvement,needs improvement,needs improvement,0
