@@ -1,6 +1,6 @@
 {{
   config(
-     enabled=var("snowplow__enable_cwv", false) and target.type in ('databricks', 'spark', 'snowflake', 'bigquery') | as_bool(),
+    enabled=var("snowplow__enable_cwv", false) | as_bool(),
     tags=["this_run"],
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
   )
@@ -36,13 +36,13 @@ with prep as (
     e.cls,
     e.inp,
     e.ttfb,
-    e.navigation_type
+    e.navigation_type,
+    row_number() over (partition by e.page_view_id order by e.derived_tstamp, e.dvce_created_tstamp, e.event_id) dedupe_index
 
   from {{ ref("snowplow_web_vital_events_this_run") }} as e
 
   where {{ snowplow_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.
 
-  qualify row_number() over (partition by e.page_view_id order by e.derived_tstamp, e.dvce_created_tstamp, e.event_id) = 1
 
 )
 
@@ -51,3 +51,5 @@ select
   {{ snowplow_web.core_web_vital_results_query() }}
 
 from prep p
+
+where dedupe_index = 1

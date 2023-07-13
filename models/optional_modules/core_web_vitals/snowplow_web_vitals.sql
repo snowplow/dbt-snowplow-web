@@ -1,7 +1,7 @@
 {{
   config(
     materialized= 'incremental',
-    enabled=var("snowplow__enable_cwv", false) and target.type in ('databricks', 'spark', 'snowflake', 'bigquery') | as_bool(),
+    enabled=var("snowplow__enable_cwv", false) | as_bool(),
     unique_key='page_view_id',
     upsert_date_key='derived_tstamp',
     sort='derived_tstamp',

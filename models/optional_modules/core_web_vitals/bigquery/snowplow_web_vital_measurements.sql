@@ -1,8 +1,7 @@
 {{
   config(
     materialized='table',
-    enabled=var("snowplow__enable_cwv", false) and target.type == 'bigquery' | as_bool(),
-    sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt'))
+    enabled=var("snowplow__enable_cwv", false) and target.type == 'bigquery' | as_bool()
   )
 }}
 
@@ -191,7 +190,7 @@ with by_url_and_device as (
 
   union all
 
-  select *,
+   select *,
 
   {{ snowplow_web.core_web_vital_results_query('_' + var('snowplow__cwv_percentile') | string + 'p') }}
 
@@ -215,6 +214,8 @@ with by_url_and_device as (
 
 )
 
+, coalesce as (
+
 select
   m.measurement_type,
   m.page_url,
@@ -234,8 +235,18 @@ select
   m.ttfb_result,
   m.inp_result,
   {{ snowplow_web.core_web_vital_pass_query() }} as passed
+
 from measurements m
 
 left join {{ ref('dim_geo_country_mapping') }} g on lower(m.geo_country) = lower(g.alpha_2)
 
 order by 1
+
+)
+
+select
+
+  {{ dbt.concat(['page_url', "'-'" , 'device_class', "'-'" , 'geo_country', "'-'" , 'time_period' ]) }} compound_key,
+  *
+
+from coalesce

@@ -173,6 +173,11 @@ models:
   - name: snowplow_web_vital_measurements
     description: A table aimed to use for visualisations that takes core web vital measurements at the user specified percentile point. Defaulted to 75.
     columns:
+      - name: compound_key
+        description: A compound key for the table.
+        tests:
+          - unique
+          - not_null
       - name: measurement_type
         description: The category to be measured. E.g. By country
       - name: page_url
