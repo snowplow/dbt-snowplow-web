@@ -4,11 +4,13 @@ select
     app_id
     ,platform
     ,domain_sessionid
+    ,original_domain_sessionid
     ,domain_sessionidx
     ,start_tstamp
     ,end_tstamp
     ,user_id
     ,domain_userid
+    ,original_domain_userid
     ,stitched_user_id
     ,network_userid
     ,page_views

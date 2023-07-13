@@ -244,6 +244,10 @@ models:
         description: '{{ doc("col_operating_system_name_version") }}'
       - name: operating_system_version
         description: '{{ doc("col_operating_system_version") }}'
+      - name: original_domain_sessionid
+        description: '{{ doc("col_original_domain_sessionid") }}'
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'
 
   - name: snowplow_web_pv_engaged_time
     description: '{{ doc("table_pv_engaged_time") }}'

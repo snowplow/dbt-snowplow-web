@@ -6,7 +6,7 @@
 
 {% macro default__web_cluster_by_fields_sessions_lifecycle() %}
 
-  {{ return(snowplow_utils.get_value_by_target_type(bigquery_val=["session_id"], snowflake_val=["to_date(start_tstamp)"])) }}
+  {{ return(snowplow_utils.get_value_by_target_type(bigquery_val=["session_identifier"], snowflake_val=["to_date(start_tstamp)"])) }}
 
 {% endmacro %}
 

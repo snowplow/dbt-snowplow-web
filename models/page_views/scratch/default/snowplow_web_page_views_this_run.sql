@@ -15,10 +15,12 @@ with prep as (
     -- user fields
     ev.user_id,
     ev.domain_userid,
+    ev.original_domain_userid,
     ev.network_userid,
 
     -- session fields
     ev.domain_sessionid,
+    ev.original_domain_sessionid,
     ev.domain_sessionidx,
 
     -- timestamp fields
@@ -118,10 +120,12 @@ with prep as (
     -- user fields
     p.user_id,
     p.domain_userid,
+    p.original_domain_userid,
     p.network_userid,
 
     -- session fields
     p.domain_sessionid,
+    p.original_domain_sessionid,
     p.domain_sessionidx,
 
     row_number() over (partition by p.domain_sessionid order by p.derived_tstamp, p.dvce_created_tstamp, p.event_id) AS page_view_in_session_index,
@@ -258,10 +262,12 @@ select
   -- user fields
   pve.user_id,
   pve.domain_userid,
+  pve.original_domain_userid,
   pve.network_userid,
 
   -- session fields
   pve.domain_sessionid,
+  pve.original_domain_sessionid,
   pve.domain_sessionidx,
 
   pve.page_view_in_session_index,

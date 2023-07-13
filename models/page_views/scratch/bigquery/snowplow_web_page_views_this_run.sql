@@ -15,10 +15,12 @@ select
   -- user fields
   ev.user_id,
   ev.domain_userid,
+  ev.original_domain_userid,
   ev.network_userid,
 
   -- session fields
   ev.domain_sessionid,
+  ev.original_domain_sessionid,
   ev.domain_sessionidx,
 
   -- timestamp fields
@@ -135,10 +137,12 @@ select
     -- user fields
     ev.user_id,
     ev.domain_userid,
+    ev.original_domain_userid,
     ev.network_userid,
 
     -- session fields
     ev.domain_sessionid,
+    ev.original_domain_sessionid,
     ev.domain_sessionidx,
 
     row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_view_in_session_index,
@@ -276,10 +280,12 @@ select
     -- user fields
     ev.user_id,
     ev.domain_userid,
+    ev.original_domain_userid,
     ev.network_userid,
 
     -- session fields
     ev.domain_sessionid,
+    ev.original_domain_sessionid,
     ev.domain_sessionidx,
 
     ev.page_view_in_session_index,

@@ -4,8 +4,8 @@ select
   page_view_id,
   event_id,
 
--- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres
-{% if target.type in ['redshift', 'postgres'] -%}
+-- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres/databricks
+{% if target.type in ['redshift', 'postgres', 'databricks'] -%}
   case when event_id = '1b4b3b57-3cb7-4df2-a7fd-526afa9e3c76' then 'true base' else app_id end as app_id,
 {% else %}
   app_id,
@@ -14,10 +14,12 @@ select
   -- user fields
   user_id,
   domain_userid,
+  original_domain_userid,
   network_userid,
 
   -- session fields
   domain_sessionid,
+  original_domain_sessionid,
   domain_sessionidx,
 
   page_view_in_session_index,
@@ -25,8 +27,8 @@ select
 
   -- timestamp fields
 
-  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres
-{% if target.type in ['redshift', 'postgres'] -%}
+  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres/databricks
+{% if target.type in ['redshift', 'postgres', 'databricks'] -%}
   case when event_id = '1b4b3b57-3cb7-4df2-a7fd-526afa9e3c76' then '2021-03-01 20:56:33.286' else dvce_created_tstamp end as dvce_created_tstamp,
 {% else %}
   dvce_created_tstamp,
@@ -34,22 +36,22 @@ select
 
   collector_tstamp,
 
-  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres
-{% if target.type in ['redshift', 'postgres'] -%}
+  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres/databricks
+{% if target.type in ['redshift', 'postgres', 'databricks'] -%}
   case when event_id = '1b4b3b57-3cb7-4df2-a7fd-526afa9e3c76' then '2021-03-01 20:56:39.192' else derived_tstamp end as derived_tstamp,
 {% else %}
   derived_tstamp,
 {% endif %}
 
-  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres
-{% if target.type in ['redshift', 'postgres'] -%}
+  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres/databricks
+{% if target.type in ['redshift', 'postgres', 'databricks'] -%}
   case when event_id = '1b4b3b57-3cb7-4df2-a7fd-526afa9e3c76' then '2021-03-01 20:56:39.192' else start_tstamp end as start_tstamp,
 {% else %}
   start_tstamp,
 {% endif %}
 
-  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres
-{% if target.type in ['redshift', 'postgres'] -%}
+  -- hard-coding due to non-deterministic outcome from row_number for Redshift/Postgres/databricks
+{% if target.type in ['redshift', 'postgres', 'databricks'] -%}
   case when event_id = '1b4b3b57-3cb7-4df2-a7fd-526afa9e3c76' then '2021-03-01 20:56:39.192' else end_tstamp end as end_tstamp,
 {% else %}
   end_tstamp,
