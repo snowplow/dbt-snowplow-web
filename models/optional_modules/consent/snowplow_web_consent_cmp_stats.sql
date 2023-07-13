@@ -13,8 +13,10 @@ with events as (
   select
     event_id,
     domain_userid,
+    original_domain_userid,
     page_view_id,
     domain_sessionid,
+    original_domain_sessionid,
     derived_tstamp,
     event_name,
     event_type,
@@ -35,8 +37,10 @@ with events as (
    select
     event_id,
     domain_userid,
+    original_domain_userid,
     page_view_id,
     domain_sessionid,
+    original_domain_sessionid,
     derived_tstamp,
     event_name,
     event_type,
@@ -58,8 +62,10 @@ with events as (
   select
     event_id,
     domain_userid,
+    original_domain_userid,
     page_view_id,
     domain_sessionid,
+    original_domain_sessionid,
     derived_tstamp,
     event_name,
     event_type,
@@ -108,8 +114,10 @@ with events as (
   select distinct
     event_id,
     domain_userid,
+    original_domain_userid,
     page_view_id,
     domain_sessionid,
+    original_domain_sessionid,
     cmp_load_time,
     derived_tstamp as cmp_tstamp
 
@@ -122,8 +130,10 @@ with events as (
 select
   e.event_id,
   e.domain_userid,
+  e.original_domain_userid,
   e.page_view_id,
   e.domain_sessionid,
+  e.original_domain_sessionid,
   e.cmp_load_time,
   e.cmp_tstamp,
   f.first_consent_event_tstamp,

@@ -1,3 +1,29 @@
+snowplow-web 0.16.0 (2023-0X-XX)
+---------------------------------------
+## Summary
+TBC
+
+## 🚨 Breaking Changes 🚨
+- Bumped required dbt version to 1.5.0
+- Added new fields (`original_domain_sessionid` and `original_domain_userid`) to all tables to support custom identifiers
+- Bumped snowplow_utils required version to 0.15.0
+- Altered entity/self-describing table variables to only be table names, instead of source strings
+- Renamed columns in quarantined sessions and sessions lifecycle manifest table (please run the ALTER TABLE statements or do a full-refresh)
+
+## Features
+- Migrate base models to the new `base` macros for flexibility and consistency
+- Add ability to add custom entity/self-describing event columns to the `base_events_this_run` table for Redshift/Postgres
+- Add ability to use a custom session identifier and user identifier
+- Add new fields `original_domain_sessionid` and `original_domain_userid` to derived tables (where applicable) 
+
+## Under the hood
+- Aligned variables to follow the public docs
+- Contexts are now joined and de-duped via a macro for Postgres/Redshift
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file.
+
+
 snowplow-web 0.15.1 (2023-07-25)
 ---------------------------------------
 ## Summary

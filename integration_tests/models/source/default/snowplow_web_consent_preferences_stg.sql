@@ -8,6 +8,7 @@ select
   domains_applied,
   consent_url,
   event_type,
-  gdpr_applies::boolean as gdpr_applies
+  gdpr_applies::boolean as gdpr_applies,
+  'consent_preferences' as schema_name
 
 from {{ ref('snowplow_web_consent_preferences') }}

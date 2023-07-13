@@ -50,7 +50,7 @@ for db in ${DATABASES[@]}; do
 
   echo "Snowplow web integration tests - Core Web Vitals: Execute models"
 
-  eval "dbt run --select +snowplow_web_vital_measurements_actual snowplow_web_vital_measurements_expected_stg --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__start_date: '2023-03-01', snowplow__backfill_limit_days: 50, snowplow__cwv_days_to_measure: 999}' --target $db" || exit 1;
+  eval "dbt run --select +snowplow_web_vital_measurements_actual snowplow_web_vital_measurements_expected_stg source  --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__start_date: '2023-03-01', snowplow__backfill_limit_days: 50, snowplow__cwv_days_to_measure: 999}' --target $db" || exit 1;
 
   eval "dbt test --select snowplow_web_vital_measurements_actual --store-failures --target $db" || exit 1;
 

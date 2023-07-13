@@ -4,15 +4,15 @@ models:
   - name: snowplow_web_base_sessions_lifecycle_manifest
     description: '{{ doc("table_base_sessions_lifecycle_manifest") }}'
     columns:
-      - name: session_id
-        description: '{{ doc("col_domain_sessionid") }}'
+      - name: session_identifier
+        description: '{{ doc("col_session_identifier") }}'
         tags:
           - primary-key
         tests:
           - unique
           - not_null
-      - name: domain_userid
-        description: '{{ doc("col_domain_userid") }}'
+      - name: user_identifier
+        description: '{{ doc("col_user_identifier") }}'
       - name: start_tstamp
         description: The `collector_tstamp` when the session began
         tests:
@@ -36,8 +36,8 @@ models:
   - name: snowplow_web_base_quarantined_sessions
     description: '{{ doc("table_base_quarantined_sessions") }}'
     columns:
-      - name: session_id
-        description: The `session_id` of the quarantined session
+      - name: session_identifier
+        description: The `session_identifier` of the quarantined session
         tags:
           - primary-key
         tests:

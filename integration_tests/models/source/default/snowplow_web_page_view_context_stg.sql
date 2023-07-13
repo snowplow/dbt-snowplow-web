@@ -16,6 +16,7 @@ from {{ ref('snowplow_web_events') }}
 select
   root_id,
   root_tstamp,
+  'page_view_context' as schema_name,
   case when id = 'null' or id = '' then null else id end as id
 
 from prep
@@ -35,6 +36,7 @@ from {{ ref('snowplow_web_vital_events') }}
 select
   root_id,
   root_tstamp,
+  'page_view_context' as schema_name,
   case when id = 'null' or id = '' then null else id end as id
 
 from prep

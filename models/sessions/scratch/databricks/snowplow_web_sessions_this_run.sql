@@ -13,6 +13,7 @@ with session_firsts as (
 
         -- session fields
         domain_sessionid,
+        original_domain_sessionid,
         domain_sessionidx,
 
         {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
@@ -20,6 +21,7 @@ with session_firsts as (
         -- user fields
         user_id,
         domain_userid,
+        original_domain_userid,
         {% if var('snowplow__session_stitching') %}
             -- updated with mapping as part of post hook on derived sessions table
             cast(domain_userid as {{ type_string() }}) as stitched_user_id,
@@ -196,6 +198,7 @@ select
 
     -- session fields
     a.domain_sessionid,
+    a.original_domain_sessionid,
     a.domain_sessionidx,
 
     -- when the session starts with a ping we need to add the min visit length to get when the session actually started
@@ -208,6 +211,7 @@ select
     -- user fields
     a.user_id,
     a.domain_userid,
+    a.original_domain_userid,
     a.stitched_user_id,
     a.network_userid,
 
