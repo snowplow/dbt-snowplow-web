@@ -98,6 +98,20 @@ with prep as (
 
     row_number() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) as page_view_id_dedupe_index
 
+    {%- if var('snowplow__page_view_passthroughs', []) -%}
+      {%- set passthrough_names = [] -%}
+      {%- for identifier in var('snowplow__page_view_passthroughs', []) %}
+      {# Check if it's a simple column or a sql+alias #}
+        {%- if identifier is mapping -%}
+          ,{{identifier['sql']}} as {{identifier['alias']}}
+          {%- do passthrough_names.append(identifier['alias']) -%}
+        {%- else -%}
+          ,ev.{{identifier}}
+          {%- do passthrough_names.append(identifier) -%}
+        {%- endif -%}
+      {% endfor -%}
+    {%- endif %}
+
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
   left join {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
 
@@ -240,6 +254,11 @@ with prep as (
     p.yauaa_operating_system_name as operating_system_name,
     p.yauaa_operating_system_name_version as operating_system_name_version,
     p.yauaa_operating_system_version as operating_system_version
+    {%- if var('snowplow__page_view_passthroughs', []) -%}
+      {%- for col in passthrough_names %}
+        , p.{{col}}
+      {%- endfor -%}
+    {%- endif %}
   from prep as p
     left join {{ ref('snowplow_web_pv_engaged_time') }} t
     on p.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and p.domain_sessionid = t.domain_sessionid {% endif %}
@@ -385,5 +404,10 @@ select
   pve.operating_system_name,
   pve.operating_system_name_version,
   pve.operating_system_version
+  {%- if var('snowplow__page_view_passthroughs', []) -%}
+    {%- for col in passthrough_names %}
+      , pve.{{col}}
+    {%- endfor -%}
+  {%- endif %}
 
 from page_view_events pve

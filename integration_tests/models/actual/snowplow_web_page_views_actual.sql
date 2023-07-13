@@ -157,6 +157,8 @@ select
   operating_system_class,
   operating_system_name,
   operating_system_name_version,
-  operating_system_version
+  operating_system_version,
+  event_id2,
+  v_collector
 
 from {{ ref('snowplow_web_page_views') }}
