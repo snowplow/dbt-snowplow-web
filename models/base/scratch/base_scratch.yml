@@ -11,15 +11,15 @@ models:
   - name: snowplow_web_base_sessions_this_run
     description: '{{ doc("table_base_sessions_this_run") }}'
     columns:
-      - name: session_id
-        description: '{{ doc("col_domain_sessionid") }}'
+      - name: session_identifier
+        description: '{{ doc("col_session_identifier") }}'
         tags:
           - primary-key
         tests:
           - unique
           - not_null
-      - name: domain_userid
-        description: '{{ doc("col_domain_userid") }}'
+      - name: user_identifier
+        description: '{{ doc("col_user_identifier") }}'
       - name: start_tstamp
         description: The `collector_tstamp` when the session began
       - name: end_tstamp
@@ -289,3 +289,8 @@ models:
       - name: true_tstamp
         description: '{{ doc("col_true_tstamp") }}'
       - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+      - name: original_domain_sessionid
+        description: '{{ doc("col_original_domain_sessionid") }}'
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'

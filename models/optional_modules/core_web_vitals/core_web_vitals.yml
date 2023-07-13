@@ -103,6 +103,11 @@ models:
         description: A DOMHighResTimeStamp referring to the time in milliseconds between the browser requesting a page and when it receives the first byte of information from the server. For more information https://web.dev/ttfb/.
       - name: navigation_type
         description: The navigation type recognised from the Navigation Timing API https://www.w3.org/TR/navigation-timing-2/. E.g. 'navigate', 'reload', 'back-forward', 'back-forward-cache', 'prerender', 'restore'.
+      - name: original_domain_sessionid
+        description: '{{ doc("col_original_domain_sessionid") }}'
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'
+
   - name: snowplow_web_vitals_this_run
     description: A scratch table used as a base for creating the main incremental core web vital events (first event per pageview).
   - name: snowplow_web_vitals
@@ -170,6 +175,11 @@ models:
         description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
       - name: ttfb_result
         description: The evaluation of the metric in question. One of 'good' / 'needs improvement' / 'poor' depending on the tresholds defined in macro core_web_vital_results_query()
+      - name: original_domain_sessionid
+        description: '{{ doc("col_original_domain_sessionid") }}'
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'
+
   - name: snowplow_web_vital_measurements
     description: A table aimed to use for visualisations that takes core web vital measurements at the user specified percentile point. Defaulted to 75.
     columns:

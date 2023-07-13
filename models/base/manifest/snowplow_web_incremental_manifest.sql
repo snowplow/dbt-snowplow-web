@@ -10,16 +10,6 @@
   )
 }}
 
--- Boilerplate to generate table.
--- Table updated as part of end-run hook
+{% set incremental_manifest_query = snowplow_utils.base_create_snowplow_incremental_manifest() %}
 
-with prep as (
-  select
-    cast(null as {{ snowplow_utils.type_max_string() }}) model,
-    cast('1970-01-01' as {{ type_timestamp() }}) as last_success
-)
-
-select *
-
-from prep
-where false
+{{ incremental_manifest_query }}

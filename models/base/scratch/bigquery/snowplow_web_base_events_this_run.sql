@@ -4,34 +4,29 @@
   )
 }}
 
-{%- set lower_limit, upper_limit = snowplow_utils.return_limits_from_model(ref('snowplow_web_base_sessions_this_run'),
-                                                                          'start_tstamp',
-                                                                          'end_tstamp') %}
+{% set base_events_query = snowplow_utils.base_create_snowplow_events_this_run(
+    sessions_this_run_table='snowplow_web_base_sessions_this_run',
+    session_identifiers=var('snowplow__session_identifiers', [{"table" : "events", "field" : "domain_sessionid"}]),
+    session_sql=var('snowplow__session_sql', none),
+    session_timestamp=var('snowplow__session_timestamp', 'collector_tstamp'),
+    derived_tstamp_partitioned=var('snowplow__derived_tstamp_partitioned', true),
+    days_late_allowed=var('snowplow__days_late_allowed', 3),
+    max_session_days=var('snowplow__max_session_days', 3),
+    app_ids=var('snowplow__app_ids', []),
+    snowplow_events_database=var('snowplow__database', target.database) if target.type not in ['databricks', 'spark'] else var('snowplow__databricks_catalog', 'hive_metastore') if target.type in ['databricks'] else var('snowplow__atomic_schema', 'atomic'),
+    snowplow_events_schema=var('snowplow__atomic_schema', 'atomic'),
+    snowplow_events_table=var('snowplow__events_table', 'events')) %}
 
--- without downstream joins, it's safe to dedupe by picking the first event_id found.
+with base_query as (
+  {{ base_events_query }}
+)
+
 select
-  array_agg(e order by e.collector_tstamp limit 1)[offset(0)].*
+  a.contexts_com_snowplowanalytics_snowplow_web_page_1_0_0[safe_offset(0)].id as page_view_id,
+  a.session_identifier as domain_sessionid,
+  a.domain_sessionid as original_domain_sessionid,
+  a.user_identifier as domain_userid,
+  a.domain_userid as original_domain_userid,
+  a.* except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, domain_sessionid, domain_userid)
 
-from (
-
-  select
-    a.contexts_com_snowplowanalytics_snowplow_web_page_1_0_0[safe_offset(0)].id as page_view_id,
-    b.domain_userid, -- take domain_userid from manifest. This ensures only 1 domain_userid per session.
-    a.* except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, domain_userid)
-
-  from {{ var('snowplow__events') }} as a
-  inner join {{ ref('snowplow_web_base_sessions_this_run') }} as b
-  on a.domain_sessionid = b.session_id
-
-  where a.collector_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__max_session_days", 3), 'b.start_tstamp') }}
-  and a.dvce_sent_tstamp <= {{ snowplow_utils.timestamp_add('day', var("snowplow__days_late_allowed", 3), 'a.dvce_created_tstamp') }}
-  and a.collector_tstamp >= {{ lower_limit }}
-  and a.collector_tstamp <= {{ upper_limit }}
-  {% if var('snowplow__derived_tstamp_partitioned', true) and target.type == 'bigquery' | as_bool() %}
-    and a.derived_tstamp >= {{ snowplow_utils.timestamp_add('hour', -1, lower_limit) }}
-    and a.derived_tstamp <= {{ upper_limit }}
-  {% endif %}
-  and {{ snowplow_utils.app_id_filter(var("snowplow__app_id",[])) }}
-
-) e
-group by e.event_id
+from base_query a

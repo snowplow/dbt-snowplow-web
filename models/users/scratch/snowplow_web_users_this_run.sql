@@ -9,6 +9,7 @@ select
   -- user fields
   a.user_id,
   a.domain_userid,
+  a.original_domain_userid,
   a.network_userid,
 
   b.start_tstamp,
