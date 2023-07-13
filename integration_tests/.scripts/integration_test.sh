@@ -44,7 +44,7 @@ for db in ${DATABASES[@]}; do
 
   echo "Snowplow web integration tests: Test models"
 
-  eval "dbt test --exclude snowplow_web_vital_measurements_actual snowplow_web_vital_events_this_run --store-failures --target $db" || exit 1;
+  eval "dbt test --exclude snowplow_web_vital_measurements snowplow_web_vital_measurements_actual snowplow_web_vital_events_this_run --store-failures --target $db" || exit 1;
 
   echo "Snowplow web integration tests: All non-CWV tests passed"
 

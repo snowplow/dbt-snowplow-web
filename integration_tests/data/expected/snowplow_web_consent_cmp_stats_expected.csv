@@ -1,4 +1,4 @@
-"event_id","domain_userid","page_view_id","domain_sessionid","cmp_load_time","cmp_tstamp","first_consent_event_tstamp","first_consent_event_type","cmp_interaction_time"
+event_id,domain_userid,page_view_id,domain_sessionid,cmp_load_time,cmp_tstamp,first_consent_event_tstamp,first_consent_event_type,cmp_interaction_time
 a08502a3-1b4b-4532-b7bb-53fb176e2f65,"8b996f0b240407b9c815f217e172be56c2f8b2d92edaddfaf03c293197ec00c4",,"9b36ac17669e3daa5e6a3fbbdad2aa1fb1a955890009729cf50a4d08a60f21b7",1.5,2021-02-26 09:10:59.570,2021-02-26 09:11:01.620,allow_selected,2
 "6f30fd58-900e-43d0-9108-e2531b75576e",f16ba0227d205b0269501cfb4cfd9f010fc4069c2901e530a9bdffcf21ff7242,,"6cc9e83a85c5d8f6a081f933d77bc1ca801c6166a07a65a06e8189467a4766fe",1.5,2021-02-26 09:09:22.654,2021-02-26 09:09:24.711,allow_selected,2
 e8ceca75-7774-477d-80f9-f539884c5fec,"2816bdb9d221b9354c1d45472e3624b7531265c5d644bb2aa760c1b6b57a3d8e",,"90af0c6f7463fc73b62d806cd8766617eec590e5da9eda06e93145a0bd210ad7",20.0,2021-02-26 09:11:49.891,2021-02-26 09:11:53.054,allow_selected,4
