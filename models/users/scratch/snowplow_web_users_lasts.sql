@@ -25,6 +25,17 @@ select
   a.last_br_lang,
   a.last_br_lang_name
 
+  {%- if var('snowplow__user_last_passthroughs', []) -%}
+    {%- for identifier in var('snowplow__user_last_passthroughs', []) %}
+    {# Check if it's a simple column or a sql+alias #}
+    {%- if identifier is mapping -%}
+        ,{{identifier['sql']}} as {{identifier['alias']}}
+    {%- else -%}
+        ,a.{{identifier}} as last_{{identifier}}
+    {%- endif -%}
+    {% endfor -%}
+  {%- endif %}
+
 from {{ ref('snowplow_web_users_sessions_this_run') }} a
 
 inner join {{ ref('snowplow_web_users_aggs') }} b

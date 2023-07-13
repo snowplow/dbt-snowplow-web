@@ -138,6 +138,8 @@ select
     ,  cv__all_total
     {% endif %}
 {% endif %}
+    ,event_id
+    ,event_id2
 
 
 from {{ ref('snowplow_web_sessions') }}

@@ -160,7 +160,7 @@ SELECT
     ,cv__all_volume
     ,cv__all_total
 {% endif %}
-
-
+    ,event_id
+    ,event_id2
 
 FROM {{ ref('snowplow_web_sessions_expected') }}

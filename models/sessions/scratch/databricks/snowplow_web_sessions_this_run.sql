@@ -97,6 +97,19 @@ with session_firsts as (
         {{snowplow_web.get_yauaa_context_fields()}},
 
         event_name
+        {%- if var('snowplow__session_passthroughs', []) -%}
+            {%- set passthrough_names = [] -%}
+            {%- for identifier in var('snowplow__session_passthroughs', []) %}
+            {# Check if it's a simple column or a sql+alias #}
+            {%- if identifier is mapping -%}
+                ,{{identifier['sql']}} as {{identifier['alias']}}
+                {%- do passthrough_names.append(identifier['alias']) -%}
+            {%- else -%}
+                ,ev.{{identifier}}
+                {%- do passthrough_names.append(identifier) -%}
+            {%- endif -%}
+            {% endfor -%}
+        {%- endif %}
     from {{ ref('snowplow_web_base_events_this_run') }}  ev
     left join
         {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
@@ -356,6 +369,13 @@ select
     {# Use 0 in case of no conversions having a value field #}
     ,0 {%- for conv_def in var('snowplow__conversion_events') %}{%- if conv_def.get('value') %} + {{'cv_' ~ conv_def['name'] ~ '_total'}}{% endif -%}{%- endfor %} as cv__all_total
     {% endif %}
+    {%- endif %}
+
+    -- passthrough fields
+    {%- if var('snowplow__session_passthroughs', []) -%}
+        {%- for col in passthrough_names %}
+            , a.{{col}}
+        {%- endfor -%}
     {%- endif %}
 from
     session_firsts a

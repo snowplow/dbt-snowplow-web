@@ -59,6 +59,10 @@ vars:
     snowplow__enable_iab: true
     snowplow__enable_ua: true
     snowplow__enable_yauaa: true
+    snowplow__page_view_passthroughs: ['v_collector', {'sql': 'event_id', 'alias': 'event_id2'}]
+    snowplow__session_passthroughs: ['event_id', {'sql': 'event_id', 'alias': 'event_id2'}]
+    snowplow__user_first_passthroughs: ['event_id', {'sql': "event_id2 || '-first'", 'alias': 'first_event_id2'}]
+    snowplow__user_last_passthroughs: ['event_id', {'sql': "event_id2 || '-last'", 'alias': 'last_event_id2'}]
   # These are at a full project level because they are using in both the web and int test models to determine which columns are needed
   snowplow__enable_consent: true
   snowplow__enable_cwv: true
