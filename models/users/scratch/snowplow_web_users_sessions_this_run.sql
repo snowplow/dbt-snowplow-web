@@ -11,4 +11,4 @@ select
   max(a.end_tstamp) over(partition by a.domain_userid) as user_end_tstamp
 
 from {{ var('snowplow__sessions_table') }} a
-where exists (select 1 from {{ ref('snowplow_web_base_sessions_this_run') }} b where a.domain_userid = b.domain_userid)
+where exists (select 1 from {{ ref('snowplow_web_base_sessions_this_run') }} b where a.domain_userid = b.user_identifier)

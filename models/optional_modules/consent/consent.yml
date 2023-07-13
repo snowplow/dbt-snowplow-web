@@ -54,6 +54,11 @@ models:
         description: A boolean which determines if GDPR applies based on the user's geo-location
       - name: cmp_load_time
         description: The time taken for the consent box to be shown to the screen
+      - name: original_domain_sessionid
+        description: '{{ doc("col_original_domain_sessionid") }}'
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'
+
   - name: snowplow_web_consent_users
     description: By user consent stats
     columns:

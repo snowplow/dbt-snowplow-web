@@ -135,7 +135,8 @@ models:
         description: '{{ doc("col_mkt_source_platform") }}'
       - name: default_channel_group
         description: '{{ doc("col_default_channel_group") }}'
-
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'
   - name: snowplow_web_users_aggs
     description: '{{ doc("table_users_aggs") }}'
     columns:

@@ -1,6 +1,7 @@
 select
   root_id,
   root_tstamp::timestamp,
+  'yauaa' as schema_name,
   agentClass::varchar as agent_class,
   agentInformationEmail::varchar as agent_information_email,
   agentName::varchar as agent_name,

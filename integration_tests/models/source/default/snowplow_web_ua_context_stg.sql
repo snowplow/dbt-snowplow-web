@@ -1,6 +1,7 @@
 select
   root_id,
   root_tstamp::timestamp,
+  'ua_parser' as schema_name,
   deviceFamily::varchar as device_family,
   osFamily::varchar as os_family,
   osMajor::varchar as os_major,
