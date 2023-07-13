@@ -113,6 +113,19 @@ with session_firsts as (
 
         row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_event_in_session_index,
         event_name
+        {%- if var('snowplow__session_passthroughs', []) -%}
+            {%- set passthrough_names = [] -%}
+            {%- for identifier in var('snowplow__session_passthroughs', []) %}
+            {# Check if it's a simple column or a sql+alias #}
+            {%- if identifier is mapping -%}
+                ,{{identifier['sql']}} as {{identifier['alias']}}
+                {%- do passthrough_names.append(identifier['alias']) -%}
+            {%- else -%}
+                ,ev.{{identifier}}
+                {%- do passthrough_names.append(identifier) -%}
+            {%- endif -%}
+            {% endfor -%}
+        {%- endif %}
     from {{ ref('snowplow_web_base_events_this_run') }} ev
     left join
         {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
@@ -375,6 +388,12 @@ select
     {% endif %}
     {%- endif %}
 
+    -- passthrough fields
+    {%- if var('snowplow__session_passthroughs', []) -%}
+        {%- for col in passthrough_names %}
+            , a.{{col}}
+        {%- endfor -%}
+    {%- endif %}
 from
     session_firsts a
 left join

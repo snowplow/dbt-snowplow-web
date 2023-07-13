@@ -97,6 +97,20 @@ select
   -- yauaa enrichment fields
   {{snowplow_web.get_yauaa_context_fields()}}
 
+  {%- if var('snowplow__page_view_passthroughs', []) -%}
+    {%- set passthrough_names = [] -%}
+    {%- for identifier in var('snowplow__page_view_passthroughs', []) %}
+    {# Check if it's a simple column or a sql+alias #}
+      {%- if identifier is mapping -%}
+        ,{{identifier['sql']}} as {{identifier['alias']}}
+        {%- do passthrough_names.append(identifier['alias']) -%}
+      {%- else -%}
+        ,ev.{{identifier}}
+        {%- do passthrough_names.append(identifier) -%}
+      {%- endif -%}
+    {% endfor -%}
+  {%- endif %}
+
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
 
   left join {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
@@ -242,6 +256,11 @@ select
     p.operating_system_name,
     p.operating_system_name_version,
     p.operating_system_version
+    {%- if var('snowplow__page_view_passthroughs', []) -%}
+      {%- for col in passthrough_names %}
+        , p.{{col}}
+      {%- endfor -%}
+    {%- endif %}
 
   from prep p
 
@@ -385,5 +404,10 @@ select
   pve.operating_system_name,
   pve.operating_system_name_version,
   pve.operating_system_version
+  {%- if var('snowplow__page_view_passthroughs', []) -%}
+    {%- for col in passthrough_names %}
+      , pve.{{col}}
+    {%- endfor -%}
+  {%- endif %}
 
 from page_view_events pve

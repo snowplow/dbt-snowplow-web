@@ -16,6 +16,8 @@ TBC
 - Add ability to add custom entity/self-describing event columns to the `base_events_this_run` table for Redshift/Postgres
 - Add ability to use a custom session identifier and user identifier
 - Add new fields `original_domain_sessionid` and `original_domain_userid` to derived tables (where applicable) 
+- Add ability to pass fields through to derived page views, sessions, and user tables
+- Add option to choose the logged `user_id` field that session stitching uses 
 
 ## Under the hood
 - Aligned variables to follow the public docs

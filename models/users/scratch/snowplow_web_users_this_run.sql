@@ -80,6 +80,27 @@ select
   a.mkt_source_platform,
   a.default_channel_group
 
+  {%- if var('snowplow__user_first_passthroughs', []) -%}
+    {%- for identifier in var('snowplow__user_first_passthroughs', []) %}
+    {# Check if it's a simple column or a sql+alias #}
+    {%- if identifier is mapping -%}
+        ,{{identifier['sql']}} as {{identifier['alias']}}
+    {%- else -%}
+        ,a.{{identifier}} as first_{{identifier}}
+    {%- endif -%}
+    {% endfor -%}
+  {%- endif %}
+  {%- if var('snowplow__user_last_passthroughs', []) -%}
+    {%- for identifier in var('snowplow__user_last_passthroughs', []) %}
+    {# Check if it's a simple column or a sql+alias #}
+    {%- if identifier is mapping -%}
+        ,c.{{identifier['alias']}}
+    {%- else -%}
+        ,c.last_{{identifier}}
+    {%- endif -%}
+    {% endfor -%}
+  {%- endif %}
+
 from {{ ref('snowplow_web_users_aggs') }} as b
 
 inner join {{ ref('snowplow_web_users_sessions_this_run') }} as a
