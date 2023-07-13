@@ -70,4 +70,9 @@ select
   ,mkt_source_platform
   ,default_channel_group
 
+  ,first_event_id
+  ,last_event_id
+  ,first_event_id2
+  ,last_event_id2
+
 from {{ ref('snowplow_web_users') }}

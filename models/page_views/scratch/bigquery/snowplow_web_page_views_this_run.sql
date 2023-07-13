@@ -112,6 +112,20 @@ select
         relation=ref('snowplow_web_base_events_this_run'),
         relation_alias='ev') }}
 
+  {%- if var('snowplow__page_view_passthroughs', []) -%}
+    {%- set passthrough_names = [] -%}
+    {%- for identifier in var('snowplow__page_view_passthroughs', []) %}
+    {# Check if it's a simple column or a sql+alias #}
+      {%- if identifier is mapping -%}
+        ,{{identifier['sql']}} as {{identifier['alias']}}
+        {%- do passthrough_names.append(identifier['alias']) -%}
+      {%- else -%}
+        ,ev.{{identifier}}
+        {%- do passthrough_names.append(identifier) -%}
+      {%- endif -%}
+    {% endfor -%}
+  {%- endif %}
+
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
   left join {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
 
@@ -259,6 +273,11 @@ select
     ev.operating_system_name,
     ev.operating_system_name_version,
     ev.operating_system_version
+    {%- if var('snowplow__page_view_passthroughs', []) -%}
+      {%- for col in passthrough_names %}
+        , ev.{{col}}
+      {%- endfor -%}
+    {%- endif %}
 
   from prep ev
 
@@ -400,5 +419,10 @@ select
     ev.operating_system_name,
     ev.operating_system_name_version,
     ev.operating_system_version
+    {%- if var('snowplow__page_view_passthroughs', []) -%}
+      {%- for col in passthrough_names %}
+        , ev.{{col}}
+      {%- endfor -%}
+    {%- endif %}
 
 from page_view_events ev

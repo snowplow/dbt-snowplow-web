@@ -16,7 +16,7 @@
 
 select distinct
   domain_userid,
-  last_value(user_id) over(
+  last_value({{ var('snowplow__user_stitching_id', 'user_id') }}) over(
     partition by domain_userid
     order by collector_tstamp
     rows between unbounded preceding and unbounded following
@@ -26,5 +26,5 @@ select distinct
 from {{ ref('snowplow_web_base_events_this_run') }}
 
 where {{ snowplow_utils.is_run_with_new_events('snowplow_web') }} --returns false if run doesn't contain new events.
-and user_id is not null
+and {{ var('snowplow__user_stitching_id', 'user_id') }} is not null
 and domain_userid is not null
