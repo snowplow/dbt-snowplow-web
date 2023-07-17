@@ -28,12 +28,12 @@ with prep as (
 
     {{snowplow_web.get_yauaa_context_fields()}},
 
-    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.lcp::decimal(9,4)) /1000 as lcp,
-    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.fcp::decimal(9,4), 3) as fcp,
-    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.fid::decimal(9,4), 3) as fid,
-    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.cls::decimal(9,4), 3) as cls,
-    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.inp::decimal(9,4), 3) as inp,
-    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.ttfb::decimal(9,4), 3) as ttfb,
+    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.lcp::decimal(14,4)) /1000 as lcp,
+    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.fcp::decimal(14,4), 3) as fcp,
+    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.fid::decimal(14,4), 3) as fid,
+    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.cls::decimal(14,4), 3) as cls,
+    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.inp::decimal(14,4), 3) as inp,
+    ceil(e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.ttfb::decimal(14,4), 3) as ttfb,
     e.unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1.navigation_type::varchar(128) as navigation_type
 
   from {{ ref("snowplow_web_base_events_this_run") }} as e
