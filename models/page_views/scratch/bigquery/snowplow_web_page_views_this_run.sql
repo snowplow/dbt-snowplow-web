@@ -4,7 +4,7 @@
   )
 }}
 
-with page_view_events as (
+with prep as (
 select
   ev.page_view_id,
   ev.event_id,
@@ -39,6 +39,7 @@ select
   ev.page_urlquery,
   ev.page_urlfragment,
 
+  -- marketing fields
   ev.mkt_medium,
   ev.mkt_source,
   ev.mkt_term,
@@ -46,7 +47,9 @@ select
   ev.mkt_campaign,
   ev.mkt_clickid,
   ev.mkt_network,
+  {{ channel_group_query() }} as default_channel_group,
 
+  -- referrer fields
   ev.page_referrer,
   ev.refr_urlscheme,
   ev.refr_urlhost,
@@ -57,6 +60,7 @@ select
   ev.refr_source,
   ev.refr_term,
 
+  -- geo fields
   ev.geo_country,
   ev.geo_region,
   ev.geo_region_name,
@@ -79,7 +83,6 @@ select
   ev.br_renderengine,
   ev.os_timezone,
 
-  row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_view_in_session_index,
 
   -- optional fields, only populated if enabled.
 
@@ -107,160 +110,289 @@ select
         relation=ref('snowplow_web_base_events_this_run'),
         relation_alias='ev') }}
 
-from (
+  from {{ ref('snowplow_web_base_events_this_run') }} as ev
+  left join {{ ref('dim_ga4_source_categories') }} c on lower(trim(ev.mkt_source)) = lower(c.source)
+
+  where ev.event_name = 'page_view'
+  and ev.page_view_id is not null
+
+  {% if var("snowplow__ua_bot_filter", true) %}
+  {{ filter_bots('ev') }}
+  {% endif %}
+
+  qualify row_number() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) = 1
+)
+
+, page_view_events as (
+
   select
-    array_agg(e order by e.derived_tstamp, e.dvce_created_tstamp limit 1)[offset(0)] as ev
-    -- order by matters here since derived_tstamp determines parts of model logic
+    ev.page_view_id,
+    ev.event_id,
 
-  from {{ ref('snowplow_web_base_events_this_run') }} as e
-  where e.event_name = 'page_view'
-  and e.page_view_id is not null
+    ev.app_id,
+    ev.platform,
 
-  group by e.page_view_id
+    -- user fields
+    ev.user_id,
+    ev.domain_userid,
+    ev.network_userid,
+
+    -- session fields
+    ev.domain_sessionid,
+    ev.domain_sessionidx,
+
+    row_number() over (partition by ev.domain_sessionid order by ev.derived_tstamp, ev.dvce_created_tstamp, ev.event_id) AS page_view_in_session_index,
+
+    -- timestamp fields
+    ev.dvce_created_tstamp,
+    ev.collector_tstamp,
+    ev.derived_tstamp,
+    ev.start_tstamp,
+    coalesce(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
+    {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
+
+    coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
+    {{ datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
+
+    sd.hmax as horizontal_pixels_scrolled,
+    sd.vmax as vertical_pixels_scrolled,
+
+    sd.relative_hmax as horizontal_percentage_scrolled,
+    sd.relative_vmax as vertical_percentage_scrolled,
+
+    ev.doc_width,
+    ev.doc_height,
+    ev.content_group,
+
+    ev.page_title,
+    ev.page_url,
+    ev.page_urlscheme,
+    ev.page_urlhost,
+    ev.page_urlpath,
+    ev.page_urlquery,
+    ev.page_urlfragment,
+
+    ev.mkt_medium,
+    ev.mkt_source,
+    ev.mkt_term,
+    ev.mkt_content,
+    ev.mkt_campaign,
+    ev.mkt_clickid,
+    ev.mkt_network,
+    ev.default_channel_group,
+
+    ev.page_referrer,
+    ev.refr_urlscheme,
+    ev.refr_urlhost,
+    ev.refr_urlpath,
+    ev.refr_urlquery,
+    ev.refr_urlfragment,
+    ev.refr_medium,
+    ev.refr_source,
+    ev.refr_term,
+
+    ev.geo_country,
+    ev.geo_region,
+    ev.geo_region_name,
+    ev.geo_city,
+    ev.geo_zipcode,
+    ev.geo_latitude,
+    ev.geo_longitude,
+    ev.geo_timezone,
+
+    ev.user_ipaddress,
+
+    ev.useragent,
+
+    ev.br_lang,
+    ev.br_viewwidth,
+    ev.br_viewheight,
+    ev.br_colordepth,
+    ev.br_renderengine,
+
+    ev.os_timezone,
+
+    ev.category,
+    ev.primary_impact,
+    ev.reason,
+    ev.spider_or_robot,
+
+    ev.useragent_family,
+    ev.useragent_major,
+    ev.useragent_minor,
+    ev.useragent_patch,
+    ev.useragent_version,
+    ev.os_family,
+    ev.os_major,
+    ev.os_minor,
+    ev.os_patch,
+    ev.os_patch_minor,
+    ev.os_version,
+    ev.device_family,
+
+    ev.device_class,
+    case when ev.device_class = 'Desktop' then 'Desktop'
+      when ev.device_class = 'Phone' then 'Mobile'
+      when ev.device_class = 'Tablet' then 'Tablet'
+      else 'Other' end as device_category,
+    ev.screen_resolution,
+    ev.agent_class,
+    ev.agent_name,
+    ev.agent_name_version,
+    ev.agent_name_version_major,
+    ev.agent_version,
+    ev.agent_version_major,
+    ev.device_brand,
+    ev.device_name,
+    ev.device_version,
+    ev.layout_engine_class,
+    ev.layout_engine_name,
+    ev.layout_engine_name_version,
+    ev.layout_engine_name_version_major,
+    ev.layout_engine_version,
+    ev.layout_engine_version_major,
+    ev.operating_system_class,
+    ev.operating_system_name,
+    ev.operating_system_name_version,
+    ev.operating_system_version
+
+  from prep ev
+
+  left join {{ ref('snowplow_web_pv_engaged_time') }} t
+  on ev.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = t.domain_sessionid {% endif %}
+
+  left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
+  on ev.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = sd.domain_sessionid {% endif %}
+
 )
-where 1 = 1
-
-{% if var("snowplow__ua_bot_filter", true) %}
- {{ filter_bots('ev') }}
-{% endif %}
-)
-
 
 select
-  ev.page_view_id,
-  ev.event_id,
+   ev.page_view_id,
+    ev.event_id,
 
-  ev.app_id,
-  ev.platform,
+    ev.app_id,
+    ev.platform,
 
-  -- user fields
-  ev.user_id,
-  ev.domain_userid,
-  ev.network_userid,
+    -- user fields
+    ev.user_id,
+    ev.domain_userid,
+    ev.network_userid,
 
-  -- session fields
-  ev.domain_sessionid,
-  ev.domain_sessionidx,
+    -- session fields
+    ev.domain_sessionid,
+    ev.domain_sessionidx,
 
-  ev.page_view_in_session_index,
-  max(ev.page_view_in_session_index) over (partition by ev.domain_sessionid) as page_views_in_session,
+    ev.page_view_in_session_index,
+    max(ev.page_view_in_session_index) over (partition by ev.domain_sessionid) as page_views_in_session,
 
-  -- timestamp fields
-  ev.dvce_created_tstamp,
-  ev.collector_tstamp,
-  ev.derived_tstamp,
-  ev.start_tstamp,
-  coalesce(t.end_tstamp, ev.derived_tstamp) as end_tstamp, -- only page views with pings will have a row in table t
-  {{ snowplow_utils.current_timestamp_in_utc() }} as model_tstamp,
+    -- timestamp fields
+    ev.dvce_created_tstamp,
+    ev.collector_tstamp,
+    ev.derived_tstamp,
+    ev.start_tstamp,
+    ev.end_tstamp,
+    ev.model_tstamp,
 
-  coalesce(t.engaged_time_in_s, 0) as engaged_time_in_s, -- where there are no pings, engaged time is 0.
-  {{ datediff('ev.derived_tstamp', 'coalesce(t.end_tstamp, ev.derived_tstamp)', 'second') }} as absolute_time_in_s,
+    ev.engaged_time_in_s,
+    ev.absolute_time_in_s,
 
-  sd.hmax as horizontal_pixels_scrolled,
-  sd.vmax as vertical_pixels_scrolled,
+    ev.horizontal_pixels_scrolled,
+    ev.vertical_pixels_scrolled,
 
-  sd.relative_hmax as horizontal_percentage_scrolled,
-  sd.relative_vmax as vertical_percentage_scrolled,
+    ev.horizontal_percentage_scrolled,
+    ev.vertical_percentage_scrolled,
 
-  ev.doc_width,
-  ev.doc_height,
-  ev.content_group,
+    ev.doc_width,
+    ev.doc_height,
+    ev.content_group,
 
-  ev.page_title,
-  ev.page_url,
-  ev.page_urlscheme,
-  ev.page_urlhost,
-  ev.page_urlpath,
-  ev.page_urlquery,
-  ev.page_urlfragment,
+    ev.page_title,
+    ev.page_url,
+    ev.page_urlscheme,
+    ev.page_urlhost,
+    ev.page_urlpath,
+    ev.page_urlquery,
+    ev.page_urlfragment,
 
-  ev.mkt_medium,
-  ev.mkt_source,
-  ev.mkt_term,
-  ev.mkt_content,
-  ev.mkt_campaign,
-  ev.mkt_clickid,
-  ev.mkt_network,
+    ev.mkt_medium,
+    ev.mkt_source,
+    ev.mkt_term,
+    ev.mkt_content,
+    ev.mkt_campaign,
+    ev.mkt_clickid,
+    ev.mkt_network,
+    ev.default_channel_group,
 
-  ev.page_referrer,
-  ev.refr_urlscheme,
-  ev.refr_urlhost,
-  ev.refr_urlpath,
-  ev.refr_urlquery,
-  ev.refr_urlfragment,
-  ev.refr_medium,
-  ev.refr_source,
-  ev.refr_term,
+    ev.page_referrer,
+    ev.refr_urlscheme,
+    ev.refr_urlhost,
+    ev.refr_urlpath,
+    ev.refr_urlquery,
+    ev.refr_urlfragment,
+    ev.refr_medium,
+    ev.refr_source,
+    ev.refr_term,
 
-  ev.geo_country,
-  ev.geo_region,
-  ev.geo_region_name,
-  ev.geo_city,
-  ev.geo_zipcode,
-  ev.geo_latitude,
-  ev.geo_longitude,
-  ev.geo_timezone,
+    ev.geo_country,
+    ev.geo_region,
+    ev.geo_region_name,
+    ev.geo_city,
+    ev.geo_zipcode,
+    ev.geo_latitude,
+    ev.geo_longitude,
+    ev.geo_timezone,
 
-  ev.user_ipaddress,
+    ev.user_ipaddress,
 
-  ev.useragent,
+    ev.useragent,
 
-  ev.br_lang,
-  ev.br_viewwidth,
-  ev.br_viewheight,
-  ev.br_colordepth,
-  ev.br_renderengine,
+    ev.br_lang,
+    ev.br_viewwidth,
+    ev.br_viewheight,
+    ev.br_colordepth,
+    ev.br_renderengine,
 
-  ev.os_timezone,
+    ev.os_timezone,
 
-  ev.category,
-  ev.primary_impact,
-  ev.reason,
-  ev.spider_or_robot,
+    ev.category,
+    ev.primary_impact,
+    ev.reason,
+    ev.spider_or_robot,
 
-  ev.useragent_family,
-  ev.useragent_major,
-  ev.useragent_minor,
-  ev.useragent_patch,
-  ev.useragent_version,
-  ev.os_family,
-  ev.os_major,
-  ev.os_minor,
-  ev.os_patch,
-  ev.os_patch_minor,
-  ev.os_version,
-  ev.device_family,
+    ev.useragent_family,
+    ev.useragent_major,
+    ev.useragent_minor,
+    ev.useragent_patch,
+    ev.useragent_version,
+    ev.os_family,
+    ev.os_major,
+    ev.os_minor,
+    ev.os_patch,
+    ev.os_patch_minor,
+    ev.os_version,
+    ev.device_family,
 
-  ev.device_class,
-  case when ev.device_class = 'Desktop' then 'Desktop'
-    when ev.device_class = 'Phone' then 'Mobile'
-    when ev.device_class = 'Tablet' then 'Tablet'
-    else 'Other' end as device_category,
-  ev.screen_resolution,
-  ev.agent_class,
-  ev.agent_name,
-  ev.agent_name_version,
-  ev.agent_name_version_major,
-  ev.agent_version,
-  ev.agent_version_major,
-  ev.device_brand,
-  ev.device_name,
-  ev.device_version,
-  ev.layout_engine_class,
-  ev.layout_engine_name,
-  ev.layout_engine_name_version,
-  ev.layout_engine_name_version_major,
-  ev.layout_engine_version,
-  ev.layout_engine_version_major,
-  ev.operating_system_class,
-  ev.operating_system_name,
-  ev.operating_system_name_version,
-  ev.operating_system_version
+    ev.device_class,
+    ev.device_category,
+    ev.screen_resolution,
+    ev.agent_class,
+    ev.agent_name,
+    ev.agent_name_version,
+    ev.agent_name_version_major,
+    ev.agent_version,
+    ev.agent_version_major,
+    ev.device_brand,
+    ev.device_name,
+    ev.device_version,
+    ev.layout_engine_class,
+    ev.layout_engine_name,
+    ev.layout_engine_name_version,
+    ev.layout_engine_name_version_major,
+    ev.layout_engine_version,
+    ev.layout_engine_version_major,
+    ev.operating_system_class,
+    ev.operating_system_name,
+    ev.operating_system_name_version,
+    ev.operating_system_version
 
 from page_view_events ev
-
-left join {{ ref('snowplow_web_pv_engaged_time') }} t
-on ev.page_view_id = t.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = t.domain_sessionid {% endif %}
-
-left join {{ ref('snowplow_web_pv_scroll_depth') }} sd
-on ev.page_view_id = sd.page_view_id {% if var('snowplow__limit_page_views_to_session', true) %} and ev.domain_sessionid = sd.domain_sessionid {% endif %}

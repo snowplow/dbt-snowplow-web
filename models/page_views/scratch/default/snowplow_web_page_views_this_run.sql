@@ -39,6 +39,7 @@ with prep as (
     ev.page_urlquery,
     ev.page_urlfragment,
 
+    -- marketing fields
     ev.mkt_medium,
     ev.mkt_source,
     ev.mkt_term,
@@ -46,7 +47,9 @@ with prep as (
     ev.mkt_campaign,
     ev.mkt_clickid,
     ev.mkt_network,
+    {{ channel_group_query() }} as default_channel_group,
 
+    -- referrer fields
     ev.page_referrer,
     ev.refr_urlscheme ,
     ev.refr_urlhost,
@@ -57,6 +60,7 @@ with prep as (
     ev.refr_source,
     ev.refr_term,
 
+    -- geo fields
     ev.geo_country,
     ev.geo_region,
     ev.geo_region_name,
@@ -93,6 +97,7 @@ with prep as (
     row_number() over (partition by ev.page_view_id order by ev.derived_tstamp, ev.dvce_created_tstamp) as page_view_id_dedupe_index
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
+  left join {{ ref('dim_ga4_source_categories') }} c on lower(trim(ev.mkt_source)) = lower(c.source)
 
   where ev.event_name = 'page_view'
     and ev.page_view_id is not null
@@ -158,6 +163,7 @@ with prep as (
     p.mkt_campaign,
     p.mkt_clickid,
     p.mkt_network,
+    p.default_channel_group,
 
     p.page_referrer,
     p.refr_urlscheme ,
@@ -297,6 +303,7 @@ select
   pve.mkt_campaign,
   pve.mkt_clickid,
   pve.mkt_network,
+  pve.default_channel_group,
 
   pve.page_referrer,
   pve.refr_urlscheme,

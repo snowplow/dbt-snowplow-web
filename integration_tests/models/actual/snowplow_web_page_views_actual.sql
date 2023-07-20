@@ -84,6 +84,7 @@ select
   mkt_campaign,
   mkt_clickid,
   mkt_network,
+  default_channel_group,
 
   page_referrer,
   refr_urlscheme,
