@@ -116,6 +116,8 @@ models:
         description: '{{ doc("col_mkt_clickid") }}'
       - name: mkt_network
         description: '{{ doc("col_mkt_network") }}'
+      - name: default_channel_group
+        description: '{{ doc("col_default_channel_group") }}'
       - name: page_referrer
         description: '{{ doc("col_page_referrer") }}'
       - name: refr_urlscheme
