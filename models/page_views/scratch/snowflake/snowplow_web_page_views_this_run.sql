@@ -40,6 +40,7 @@ select
   ev.page_urlquery,
   ev.page_urlfragment,
 
+  -- marketing fields
   ev.mkt_medium,
   ev.mkt_source,
   ev.mkt_term,
@@ -47,7 +48,9 @@ select
   ev.mkt_campaign,
   ev.mkt_clickid,
   ev.mkt_network,
+  {{ channel_group_query() }} as default_channel_group,
 
+  -- referrer fields
   ev.page_referrer,
   ev.refr_urlscheme,
   ev.refr_urlhost,
@@ -58,6 +61,7 @@ select
   ev.refr_source,
   ev.refr_term,
 
+  -- geo fields
   ev.geo_country,
   ev.geo_region,
   ev.geo_region_name,
@@ -92,6 +96,8 @@ select
   {{snowplow_web.get_yauaa_context_fields()}}
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
+
+  left join {{ ref('dim_ga4_source_categories') }} c on lower(trim(ev.mkt_source)) = lower(c.source)
 
   where ev.event_name = 'page_view'
   and ev.page_view_id is not null
@@ -159,6 +165,7 @@ select
     p.mkt_campaign,
     p.mkt_clickid,
     p.mkt_network,
+    p.default_channel_group,
 
     p.page_referrer,
     p.refr_urlscheme,
@@ -296,6 +303,7 @@ select
   pve.mkt_campaign,
   pve.mkt_clickid,
   pve.mkt_network,
+  pve.default_channel_group,
 
   pve.page_referrer,
   pve.refr_urlscheme,
