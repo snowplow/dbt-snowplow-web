@@ -1,5 +1,5 @@
 name: 'snowplow_custom_example'
-version: '0.15.0'
+version: '0.15.1'
 config-version: 2
 
 dispatch:

@@ -1,12 +1,19 @@
-snowplow-web 0.15.1 (2023-07-XX)
+snowplow-web 0.15.1 (2023-07-25)
 ---------------------------------------
 ## Summary
-This version contains a fix for Redshift users based on a default column size, and adds the package name to the run limits log. Note the `snowplow_utils` minimum version has now increased to 0.14.3.
+This version brings Redshift/Postgres support for the optional Core Web Vitals module, adds the `default channel group` field to the derived page_views table, contains a fix for Redshift users based on a default column size, another for Core Web Vital users and also adds the package name to the run limits log. Note the `snowplow_utils` minimum version has now increased to 0.14.3.
 
 ## Features
+- Add Redshift/Postgres support for Core Web Vitals
+- Add default channel group to page views (Close #211)
 - Added package name to run limits log message
+- Handle unexpected high web vital values (Close #208)
+
 ## Fixes
 - Fix issue with new runs of Redshift due to default column size.
+
+## 🚨 Breaking Changes 🚨
+Existing Core Web Vital optional module users on Snowflake and Databricks will need to make changes to one of their derived tables. For a full sql script on how to achieve this, check out the relevant [migration guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/web/) The other option is to do a [complete refresh](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-operation/#complete-refresh-of-snowplow-package) of the package.
 
 ## Upgrading
 Bump the snowplow-web version in your `packages.yml` file.
