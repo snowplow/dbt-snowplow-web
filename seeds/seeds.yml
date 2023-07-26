@@ -1,12 +1,12 @@
 version: 2
 
 seeds:
-  - name: dim_ga4_source_categories
+  - name: snowplow_web_dim_ga4_source_categories
     description: A list of all source (websites) and their corresponding GA4 category.
     columns:
       - name: source
       - name: source_category
-  - name: dim_geo_country_mapping
+  - name: snowplow_web_dim_geo_country_mapping
     description: A mapping from geo_country alpha-2 ISO 3166-2 codes to the other properties of the country.
     columns:
       - name: name
@@ -20,7 +20,7 @@ seeds:
       - name: region_code
       - name: sub_region_code
       - name: intermediate_region_code
-  - name: dim_rfc_5646_language_mapping
+  - name: snowplow_web_dim_rfc_5646_language_mapping
     description: A mapping between the RFC 5646 language code to the full name of the language.
     columns:
       - name: lang_tag

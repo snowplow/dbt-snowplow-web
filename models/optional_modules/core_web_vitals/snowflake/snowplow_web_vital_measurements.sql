@@ -75,7 +75,7 @@ with measurements as (
 
   from measurement_type m
 
-  left join {{ ref('dim_geo_country_mapping') }} g on lower(m.geo_country) = lower(g.alpha_2)
+  left join {{ ref(var('snowplow__geo_mapping_seed')) }} g on lower(m.geo_country) = lower(g.alpha_2)
 
   order by 1
 
