@@ -115,11 +115,11 @@ with session_firsts as (
         event_name
     from {{ ref('snowplow_web_base_events_this_run') }} ev
     left join
-        {{ ref('dim_ga4_source_categories') }} c on lower(trim(ev.mkt_source)) = lower(c.source)
+        {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
     left join
-        {{ ref('dim_rfc_5646_language_mapping') }} l on lower(trim(ev.br_lang)) = lower(l.lang_tag)
+        {{ ref(var('snowplow__rfc_5646_seed')) }} l on lower(trim(ev.br_lang)) = lower(l.lang_tag)
     left join
-        {{ ref('dim_geo_country_mapping') }} g on lower(ev.geo_country) = lower(g.alpha_2)
+        {{ ref(var('snowplow__geo_mapping_seed')) }} g on lower(ev.geo_country) = lower(g.alpha_2)
     where
         event_name in ('page_ping', 'page_view')
         and page_view_id is not null
@@ -148,9 +148,9 @@ session_lasts as (
         row_number() over (partition by domain_sessionid order by derived_tstamp desc, dvce_created_tstamp desc, event_id) AS page_event_in_session_index
     from {{ ref('snowplow_web_base_events_this_run') }} ev
     left join
-        {{ ref('dim_rfc_5646_language_mapping') }} l on lower(ev.br_lang) = lower(l.lang_tag)
+        {{ ref(var('snowplow__rfc_5646_seed')) }} l on lower(ev.br_lang) = lower(l.lang_tag)
     left join
-        {{ ref('dim_geo_country_mapping') }} g on lower(ev.geo_country) = lower(g.alpha_2)
+        {{ ref(var('snowplow__geo_mapping_seed')) }} g on lower(ev.geo_country) = lower(g.alpha_2)
     where
         event_name in ('page_view')
         and page_view_id is not null

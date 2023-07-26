@@ -113,7 +113,7 @@ select
         relation_alias='ev') }}
 
   from {{ ref('snowplow_web_base_events_this_run') }} as ev
-  left join {{ ref('dim_ga4_source_categories') }} c on lower(trim(ev.mkt_source)) = lower(c.source)
+  left join {{ ref(var('snowplow__ga4_categories_seed')) }} c on lower(trim(ev.mkt_source)) = lower(c.source)
 
   where ev.event_name = 'page_view'
   and ev.page_view_id is not null
