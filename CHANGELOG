@@ -9,6 +9,7 @@ TBC
 - Bumped snowplow_utils required version to 0.15.0
 - Altered entity/self-describing table variables to only be table names, instead of source strings
 - Renamed columns in quarantined sessions and sessions lifecycle manifest table (please run the ALTER TABLE statements or do a full-refresh)
+- Seeds have been renamed to be prefixed with `snowplow_web_*` to align with the rest of the package, and now you can use your own seed files or tables in their place (see the package config)
 
 ## Features
 - Migrate base models to the new `base` macros for flexibility and consistency

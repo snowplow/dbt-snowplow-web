@@ -34,6 +34,9 @@ vars:
     snowplow__heartbeat: 10
     snowplow__min_visit_length: 5
     snowplow__sessions_table: "{{ ref('snowplow_web_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
+    snowplow__ga4_categories_seed: snowplow_web_dim_ga4_source_categories
+    snowplow__geo_mapping_seed: snowplow_web_dim_geo_country_mapping
+    snowplow__rfc_5646_seed: snowplow_web_dim_rfc_5646_language_mapping
 
     # Operation and logic
     snowplow__allow_refresh: false
