@@ -1,3 +1,14 @@
+snowplow-web 0.15.2 (2023-07-28)
+---------------------------------------
+## Summary
+This version fixes a rare bug in the event of null values on specific fields used by the Core Web Vitals optional module.
+
+## Fixes
+- Prevent duplicates in web vital measurements (Close #215)
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.15.1 (2023-07-25)
 ---------------------------------------
 ## Summary
