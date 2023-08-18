@@ -15,6 +15,7 @@ select
   user_id,
   domain_userid,
   original_domain_userid,
+  stitched_user_id,
   network_userid,
 
   -- session fields

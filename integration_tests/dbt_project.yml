@@ -59,6 +59,7 @@ vars:
     snowplow__enable_iab: true
     snowplow__enable_ua: true
     snowplow__enable_yauaa: true
+    snowplow__page_view_stitching: true
     snowplow__page_view_passthroughs: ['v_collector', {'sql': 'event_id', 'alias': 'event_id2'}]
     snowplow__session_passthroughs: ['event_id', {'sql': 'event_id', 'alias': 'event_id2'}]
     snowplow__user_first_passthroughs: ['event_id', {'sql': "event_id2 || '-first'", 'alias': 'first_event_id2'}]

@@ -24,12 +24,11 @@ clean-targets:
 
 vars:
   snowplow_web:
-   # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/web/ for more information and an interactive tool to help you with the variable setup
+    # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/web/ for more information and an interactive tool to help you with the variable setup
     # Please only add those that you change the values of to your root dbt_project.yml file, do not copy all values as this can lead to unexpected issues
 
-    # Warehouse and tracker
+    # WAREHOUSE & TRACKER
     # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/web/ for more information
-    # Warehouse and tracker
     # snowplow__atomic_schema: 'atomic_data_sample' # Only set if not using 'atomic' schema for Snowplow events data
     # snowplow__database:  # Only set if not using target.database for Snowplow events data -- WILL BE IGNORED FOR DATABRICKS
     snowplow__dev_target_name: dev
@@ -42,7 +41,7 @@ vars:
     snowplow__geo_mapping_seed: snowplow_web_dim_geo_country_mapping
     snowplow__rfc_5646_seed: snowplow_web_dim_rfc_5646_language_mapping
 
-    # Operation and logic
+    # OPERATION & LOGIC
     snowplow__allow_refresh: false
     snowplow__backfill_limit_days: 30
     # snowplow__conversion_events: [{'name': 'view_page', 'condition': "event_name = 'page_view'", "list_events": true},
@@ -56,18 +55,19 @@ vars:
     snowplow__lookback_window_hours: 6
     snowplow__max_session_days: 3
     snowplow__session_lookback_days: 730
-    snowplow__session_identifiers: [{"table" : "events", "field" : "domain_sessionid"}]
+    snowplow__session_identifiers: [{"schema" : "atomic", "field" : "domain_sessionid"}]
     # snowplow__session_sql: 'e.domain_sessionid'  # takes priority over session_identifiers
     snowplow__session_stitching: true
+    snowplow__page_view_stitching: false
     snowplow__session_timestamp: collector_tstamp
     snowplow__start_date: '2020-01-01'
     # snowplow__total_all_conversions: false
     snowplow__upsert_lookback_days: 30
-    snowplow__user_identifiers: [{"table": "events", "field" : "domain_userid"}]
+    snowplow__user_identifiers: [{"schema": "atomic", "field" : "domain_userid"}]
     # snowplow__user_sql: 'e.domain_userid'
     snowplow__user_stitching_id: user_id
 
-    # Contexts, filters, and logs
+    # CONTEXTS, FILTERS, AND LOGS
     snowplow__app_id: []
     snowplow__enable_consent: false
     snowplow__enable_cwv: false
@@ -83,7 +83,7 @@ vars:
     snowplow__user_first_passthroughs: []
     snowplow__user_last_passthroughs: []
 
-    # Warehouse Specific
+    # WAREHOUSE SPECIFIC
       # Bigquery
     snowplow__derived_tstamp_partitioned: true
       # Snowflake

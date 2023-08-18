@@ -710,3 +710,7 @@ The session identifier as defined in your project variables. Default to domain_s
 {% docs col_user_identifier %}
 The user identifier as defined in your project variables. Default to domain_userid.
 {% enddocs %}
+
+{% docs col_stitched_user_id %}
+The `user_id` (or `domain_user_id` if not found during user stitching) when the `snowplow__session_stitching` or `snowplow__page_view_stitching` variable is enabled otherwise NULL. The `user_id` field to be used for stitching can be overwritten by `var('snowplow__user_stitching_id')`.
+{% enddocs %}
