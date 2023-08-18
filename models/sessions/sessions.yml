@@ -30,6 +30,8 @@ models:
         description: '{{ doc("col_user_id") }}'
       - name: domain_userid
         description: '{{ doc("col_domain_userid") }}'
+      - name: stitched_user_id
+        description: '{{ doc("col_stitched_user_id") }}'
       - name: network_userid
         description: '{{ doc("col_network_userid") }}'
       - name: page_views

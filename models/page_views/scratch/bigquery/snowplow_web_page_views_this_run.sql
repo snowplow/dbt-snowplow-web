@@ -16,6 +16,12 @@ select
   ev.user_id,
   ev.domain_userid,
   ev.original_domain_userid,
+  {% if var('snowplow__page_view_stitching') %}
+    -- updated with mapping as part of post hook on derived page_views table
+    cast(domain_userid as {{ type_string() }}) as stitched_user_id,
+  {% else %}
+    cast(null as {{ type_string() }}) as stitched_user_id,
+  {% endif %}
   ev.network_userid,
 
   -- session fields
@@ -152,6 +158,7 @@ select
     ev.user_id,
     ev.domain_userid,
     ev.original_domain_userid,
+    ev.stitched_user_id,
     ev.network_userid,
 
     -- session fields
@@ -300,6 +307,7 @@ select
     ev.user_id,
     ev.domain_userid,
     ev.original_domain_userid,
+    ev.stitched_user_id,
     ev.network_userid,
 
     -- session fields
