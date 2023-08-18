@@ -12,6 +12,9 @@
     }, databricks_val='start_tstamp_date'),
     cluster_by=snowplow_web.web_cluster_by_fields_page_views(),
     tags=["derived"],
+    post_hook="{{ snowplow_web.stitch_user_identifiers(
+      enabled=var('snowplow__page_view_stitching')
+      ) }}",
     sql_header=snowplow_utils.set_query_tag(var('snowplow__query_tag', 'snowplow_dbt')),
     tblproperties={
       'delta.autoOptimize.optimizeWrite' : 'true',

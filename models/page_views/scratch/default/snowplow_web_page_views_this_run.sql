@@ -16,6 +16,12 @@ with prep as (
     ev.user_id,
     ev.domain_userid,
     ev.original_domain_userid,
+    {% if var('snowplow__page_view_stitching') %}
+      -- updated with mapping as part of post hook on derived page_views table
+      cast(domain_userid as {{ type_string() }}) as stitched_user_id,
+    {% else %}
+      cast(null as {{ snowplow_utils.type_max_string() }}) as stitched_user_id,
+    {% endif %}
     ev.network_userid,
 
     -- session fields
@@ -135,6 +141,7 @@ with prep as (
     p.user_id,
     p.domain_userid,
     p.original_domain_userid,
+    p.stitched_user_id,
     p.network_userid,
 
     -- session fields
@@ -282,6 +289,7 @@ select
   pve.user_id,
   pve.domain_userid,
   pve.original_domain_userid,
+  pve.stitched_user_id,
   pve.network_userid,
 
   -- session fields
