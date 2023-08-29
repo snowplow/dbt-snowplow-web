@@ -14,7 +14,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
 
 {% set base_events_query = snowplow_utils.base_create_snowplow_events_this_run(
     sessions_this_run_table='snowplow_web_base_sessions_this_run',
-    session_identifiers=var('snowplow__session_identifiers', [{"table" : "events", "field" : "domain_sessionid"}]),
+    session_identifiers=var('snowplow__session_identifiers', [{"schema" : "atomic", "field" : "domain_sessionid"}]),
     session_sql=var('snowplow__session_sql', none),
     session_timestamp=var('snowplow__session_timestamp', 'collector_tstamp'),
     derived_tstamp_partitioned=var('snowplow__derived_tstamp_partitioned', true),
