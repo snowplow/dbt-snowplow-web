@@ -1,3 +1,10 @@
+{#
+Copyright (c) 2020-present Snowplow Analytics Ltd. All rights reserved.
+This program is licensed to you under the Snowplow Community License Version 1.0,
+and you may not use this file except in compliance with the Snowplow Community License Version 1.0.
+You may obtain a copy of the Snowplow Community License Version 1.0 at https://docs.snowplow.io/community-license-1.0
+#}
+
 {% macro stitch_user_identifiers(enabled, relation=this, user_mapping_relation='snowplow_web_user_mapping') %}
     {{ return(adapter.dispatch('stitch_user_identifiers', 'snowplow_web')(enabled, relation, user_mapping_relation)) }}
 {%- endmacro -%}
