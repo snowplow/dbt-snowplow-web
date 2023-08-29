@@ -1,5 +1,5 @@
 name: 'snowplow_web'
-version: '0.15.2'
+version: '0.16.0-rc1'
 config-version: 2
 
 require-dbt-version: [">=1.5.0", "<2.0.0"]
@@ -111,7 +111,7 @@ on-run-end:
   - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
 
 
-# Tag 'snowplow_web_incremental' allows snowplow_incremental_post_hook to identify Snowplow models and add their last sucessfull collector_tstamp to the manifest.
+# Tag 'snowplow_web_incremental' allows snowplow_incremental_post_hook to identify Snowplow models and add their last sucessful collector_tstamp to the manifest.
 
 
 # Please only add those that you change the values of to your root dbt_project.yml file, do not copy all values as this can lead to unexpected issues
