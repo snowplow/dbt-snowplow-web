@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: snowplow_web_users
+  - name: snowplow_unified_users
     description: '{{ doc("table_users") }}'
     columns:
       - name: user_id

@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: snowplow_web_user_mapping
+  - name: snowplow_unified_user_mapping
     description: A mapping table between `domain_userid` and `user_id`.
     columns:
       - name: domain_userid

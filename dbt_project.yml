@@ -1,5 +1,5 @@
-name: 'snowplow_web'
-version: '0.15.2'
+name: 'snowplow_unified'
+version: '0.1.0'
 config-version: 2
 
 require-dbt-version: [">=1.5.0", "<2.0.0"]
@@ -23,12 +23,12 @@ clean-targets:
     - "dbt_packages"
 
 vars:
-  snowplow_web:
-    # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/web/ for more information and an interactive tool to help you with the variable setup
+  snowplow_unified:
+    # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/unified/ for more information and an interactive tool to help you with the variable setup
     # Please only add those that you change the values of to your root dbt_project.yml file, do not copy all values as this can lead to unexpected issues
 
     # WAREHOUSE & TRACKER
-    # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/web/ for more information
+    # See https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/unified/ for more information
     # snowplow__atomic_schema: 'atomic_data_sample' # Only set if not using 'atomic' schema for Snowplow events data
     # snowplow__database:  # Only set if not using target.database for Snowplow events data -- WILL BE IGNORED FOR DATABRICKS
     snowplow__dev_target_name: dev
@@ -36,10 +36,10 @@ vars:
     # snowplow__events_table: "events" # Only set if not using 'events' table for Snowplow events data
     snowplow__heartbeat: 10
     snowplow__min_visit_length: 5
-    snowplow__sessions_table: "{{ ref('snowplow_web_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
-    snowplow__ga4_categories_seed: snowplow_web_dim_ga4_source_categories
-    snowplow__geo_mapping_seed: snowplow_web_dim_geo_country_mapping
-    snowplow__rfc_5646_seed: snowplow_web_dim_rfc_5646_language_mapping
+    snowplow__sessions_table: "{{ ref('snowplow_unified_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
+    snowplow__ga4_categories_seed: snowplow_unified_dim_ga4_source_categories
+    snowplow__geo_mapping_seed: snowplow_unified_dim_geo_country_mapping
+    snowplow__rfc_5646_seed: snowplow_unified_dim_rfc_5646_language_mapping
 
     # OPERATION & LOGIC
     snowplow__allow_refresh: false
@@ -96,28 +96,28 @@ vars:
     snowplow__enable_load_tstamp: true # set to false if you are using the postgres loader or earlier than 4.0.0 of the RDB loader
     snowplow__consent_cmp_visible: com_snowplowanalytics_snowplow_cmp_visible_1
     snowplow__consent_preferences: com_snowplowanalytics_snowplow_consent_preferences_1
-    snowplow__page_view_context: com_snowplowanalytics_snowplow_web_page_1
+    snowplow__page_view_context: com_snowplowanalytics_snowplow_unified_page_1
     snowplow__iab_context: com_iab_snowplow_spiders_and_robots_1
     snowplow__ua_parser_context: com_snowplowanalytics_snowplow_ua_parser_context_1
     snowplow__yauaa_context: nl_basjes_yauaa_context_1
-    snowplow__cwv_context: unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1
+    snowplow__cwv_context: unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1
 
 # Completely or partially remove models from the manifest during run start.
 on-run-start:
-  - "{{ snowplow_utils.snowplow_web_delete_from_manifest(var('models_to_remove',[])) }}"
+  - "{{ snowplow_utils.snowplow_delete_from_manifest(var('models_to_remove',[])) }}"
 
 # Update manifest table with last event consumed per sucessfully executed node/model
 on-run-end:
-  - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_web') }}"
+  - "{{ snowplow_utils.snowplow_incremental_post_hook('snowplow_unified') }}"
 
 
-# Tag 'snowplow_web_incremental' allows snowplow_incremental_post_hook to identify Snowplow models and add their last sucessfull collector_tstamp to the manifest.
+# Tag 'snowplow_unified_incremental' allows snowplow_incremental_post_hook to identify Snowplow models and add their last sucessfull collector_tstamp to the manifest.
 
 
 # Please only add those that you change the values of to your root dbt_project.yml file, do not copy all values as this can lead to unexpected issues
-# If you wish to change the output schemas please see here: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/web/#output-schemas
+# If you wish to change the output schemas please see here: https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/dbt-configuration/unified/#output-schemas
 models:
-  snowplow_web:
+  snowplow_unified:
     +materialized: table
     +file_format: delta
     +bind: false
@@ -139,20 +139,20 @@ models:
     optional_modules:
       consent:
         +schema: "derived"
-        +tags: ["snowplow_web_incremental", "derived", "consent"]
+        +tags: ["snowplow_unified_incremental", "derived", "consent"]
         scratch:
           +schema: "scratch"
           +tags: "scratch"
       core_web_vitals:
         +schema: "derived"
-        +tags: ["snowplow_web_incremental", "derived", "core_web_vitals"]
+        +tags: ["snowplow_unified_incremental", "derived", "core_web_vitals"]
         scratch:
           +schema: "scratch"
           +tags: "scratch"
 
-    page_views:
+    views:
       +schema: "derived"
-      +tags: "snowplow_web_incremental"
+      +tags: "snowplow_unified_incremental"
       scratch:
         +schema: "scratch"
         +tags: "scratch"
@@ -166,7 +166,7 @@ models:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
     sessions:
       +schema: "derived"
-      +tags: "snowplow_web_incremental"
+      +tags: "snowplow_unified_incremental"
       scratch:
         +schema: "scratch"
         +tags: "scratch"
@@ -180,14 +180,14 @@ models:
           enabled: "{{ target.type == 'snowflake' | as_bool() }}"
     user_mapping:
       +schema: "derived"
-      +tags: "snowplow_web_incremental"
+      +tags: "snowplow_unified_incremental"
     users:
       +schema: "derived"
-      +tags: "snowplow_web_incremental"
+      +tags: "snowplow_unified_incremental"
       scratch:
         +schema: "scratch"
         +tags: "scratch"
 
 seeds:
-  snowplow_web:
+  snowplow_unified:
     +schema: snowplow_manifest

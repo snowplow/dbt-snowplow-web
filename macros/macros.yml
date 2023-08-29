@@ -18,7 +18,7 @@ macros:
         description: (Optional) The model to update the `stitched_user_id` column in. Default `this`
       - name: user_mapping_relation
         type: string
-        description: (Optional) The model to use the `user_id` column from. Default `snowplow_web_user_mapping`
+        description: (Optional) The model to use the `user_id` column from. Default `snowplow_unified_user_mapping`
   - name: get_iab_context_fields
     description: '{{ doc("macro_get_iab_context_fields") }}'
     arguments:

@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: snowplow_web_base_sessions_lifecycle_manifest
+  - name: snowplow_unified_base_sessions_lifecycle_manifest
     description: '{{ doc("table_base_sessions_lifecycle_manifest") }}'
     columns:
       - name: session_identifier
@@ -21,7 +21,7 @@ models:
         description: The `collector_tstamp` when the session ended
         tests:
           - not_null
-  - name: snowplow_web_incremental_manifest
+  - name: snowplow_unified_incremental_manifest
     description: '{{ doc("table_base_incremental_manifest") }}'
     columns:
       - name: model
@@ -33,7 +33,7 @@ models:
           - not_null
       - name: last_success
         description: The latest event consumed by the model, based on `collector_tstamp`
-  - name: snowplow_web_base_quarantined_sessions
+  - name: snowplow_unified_base_quarantined_sessions
     description: '{{ doc("table_base_quarantined_sessions") }}'
     columns:
       - name: session_identifier

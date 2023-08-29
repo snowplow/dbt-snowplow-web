@@ -1,0 +1,287 @@
+version: 2
+
+models:
+  - name: snowplow_unified_views_this_run
+    description: '{{ doc("table_page_views_this_run") }}'
+    columns:
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+        tags:
+          - primary-key
+        tests:
+          - unique
+          - not_null
+      - name: event_id
+        description: '{{ doc("col_event_id") }}'
+        tests:
+          - unique
+          - not_null
+      - name: app_id
+        description: '{{ doc("col_app_id") }}'
+      - name: platform
+        description: '{{ doc("col_platform") }}'
+      - name: user_id
+        description: '{{ doc("col_user_id") }}'
+      - name: domain_userid
+        description: '{{ doc("col_domain_userid") }}'
+      - name: network_userid
+        description: '{{ doc("col_network_userid") }}'
+      - name: domain_sessionid
+        description: '{{ doc("col_domain_sessionid") }}'
+        tests:
+          - not_null
+      - name: domain_sessionidx
+        description: '{{ doc("col_domain_sessionidx") }}'
+        tests:
+          - not_null
+      - name: page_view_in_session_index
+        description: A page view index within a single session
+        tests:
+          - not_null
+      - name: page_views_in_session
+        description: Distinct count of `page_view_id` within a session
+        tests:
+          - not_null
+      - name: dvce_created_tstamp
+        description: '{{ doc("col_dvce_created_tstamp") }}'
+        tests:
+          - not_null
+      - name: collector_tstamp
+        description: '{{ doc("col_collector_tstamp") }}'
+        tests:
+          - not_null
+      - name: derived_tstamp
+        description: '{{ doc("col_derived_tstamp") }}'
+        tests:
+          - not_null
+      - name: start_tstamp
+        description: Timestamp for the start of the page view, based on `derived_tstamp`
+        tests:
+          - not_null
+      - name: end_tstamp
+        description: Timestamp for the end of the page view, based on `derived_tstamp`
+        tests:
+          - not_null
+      - name: model_tstamp
+        description: '{{ doc("col_model_tstamp") }}'
+      - name: engaged_time_in_s
+        description: Time spent by the user on the page calculated using page pings.
+        tests:
+          - not_null
+      - name: absolute_time_in_s
+        description: The time in seconds between the `start_tstamp` and `end_tstamp`
+        tests:
+          - not_null
+      - name: horizontal_pixels_scrolled
+        description: Distance the user scrolled horizontally in pixels
+      - name: vertical_pixels_scrolled
+        description: Distance the user scrolled vertically in pixels
+      - name: horizontal_percentage_scrolled
+        description: Percentage of page scrolled horizontally
+      - name: vertical_percentage_scrolled
+        description: Percentage of page scrolled vertically
+      - name: doc_width
+        description: '{{ doc("col_doc_width") }}'
+      - name: doc_height
+        description: '{{ doc("col_doc_height") }}'
+      - name: page_title
+        description: '{{ doc("col_page_title") }}'
+      - name: content_group
+        description: '{{ doc("col_content_group") }}'
+      - name: page_url
+        description: '{{ doc("col_page_url") }}'
+        tests:
+          - not_null
+      - name: page_urlscheme
+        description: '{{ doc("col_page_urlscheme") }}'
+      - name: page_urlhost
+        description: '{{ doc("col_page_urlhost") }}'
+      - name: page_urlpath
+        description: '{{ doc("col_page_urlpath") }}'
+      - name: page_urlquery
+        description: '{{ doc("col_page_urlquery") }}'
+      - name: page_urlfragment
+        description: '{{ doc("col_page_urlfragment") }}'
+      - name: mkt_medium
+        description: '{{ doc("col_mkt_medium") }}'
+      - name: mkt_source
+        description: '{{ doc("col_mkt_source") }}'
+      - name: mkt_term
+        description: '{{ doc("col_mkt_term") }}'
+      - name: mkt_content
+        description: '{{ doc("col_mkt_content") }}'
+      - name: mkt_campaign
+        description: '{{ doc("col_mkt_campaign") }}'
+      - name: mkt_clickid
+        description: '{{ doc("col_mkt_clickid") }}'
+      - name: mkt_network
+        description: '{{ doc("col_mkt_network") }}'
+      - name: default_channel_group
+        description: '{{ doc("col_default_channel_group") }}'
+      - name: page_referrer
+        description: '{{ doc("col_page_referrer") }}'
+      - name: refr_urlscheme
+        description: '{{ doc("col_refr_urlscheme") }}'
+      - name: refr_urlhost
+        description: '{{ doc("col_refr_urlhost") }}'
+      - name: refr_urlpath
+        description: '{{ doc("col_refr_urlpath") }}'
+      - name: refr_urlquery
+        description: '{{ doc("col_refr_urlquery") }}'
+      - name: refr_urlfragment
+        description: '{{ doc("col_refr_urlfragment") }}'
+      - name: refr_medium
+        description: '{{ doc("col_refr_medium") }}'
+      - name: refr_source
+        description: '{{ doc("col_refr_source") }}'
+      - name: refr_term
+        description: '{{ doc("col_refr_term") }}'
+      - name: geo_country
+        description: '{{ doc("col_geo_country") }}'
+      - name: geo_region
+        description: '{{ doc("col_geo_region") }}'
+      - name: geo_region_name
+        description: '{{ doc("col_geo_region_name") }}'
+      - name: geo_city
+        description: '{{ doc("col_geo_city") }}'
+      - name: geo_zipcode
+        description: '{{ doc("col_geo_zipcode") }}'
+      - name: geo_latitude
+        description: '{{ doc("col_geo_latitude") }}'
+      - name: geo_longitude
+        description: '{{ doc("col_geo_longitude") }}'
+      - name: geo_timezone
+        description: '{{ doc("col_geo_timezone") }}'
+      - name: user_ipaddress
+        description: '{{ doc("col_user_ipaddress") }}'
+      - name: useragent
+        description: '{{ doc("col_useragent") }}'
+      - name: br_lang
+        description: '{{ doc("col_br_lang") }}'
+      - name: br_viewwidth
+        description: '{{ doc("col_br_viewwidth") }}'
+      - name: br_viewheight
+        description: '{{ doc("col_br_viewheight") }}'
+      - name: br_colordepth
+        description: '{{ doc("col_br_colordepth") }}'
+      - name: br_renderengine
+        description: '{{ doc("col_br_renderengine") }}'
+      - name: os_timezone
+        description: '{{ doc("col_os_timezone") }}'
+      - name: category
+        description: '{{ doc("col_category") }}'
+      - name: primary_impact
+        description: '{{ doc("col_primary_impact") }}'
+      - name: reason
+        description: '{{ doc("col_reason") }}'
+      - name: spider_or_robot
+        description: '{{ doc("col_spider_or_robot") }}'
+      - name: useragent_family
+        description: '{{ doc("col_useragent_family") }}'
+      - name: useragent_major
+        description: '{{ doc("col_useragent_major") }}'
+      - name: useragent_minor
+        description: '{{ doc("col_useragent_minor") }}'
+      - name: useragent_patch
+        description: '{{ doc("col_useragent_patch") }}'
+      - name: useragent_version
+        description: '{{ doc("col_useragent_version") }}'
+      - name: os_family
+        description: '{{ doc("col_os_family") }}'
+      - name: os_major
+        description: '{{ doc("col_os_major") }}'
+      - name: os_minor
+        description: '{{ doc("col_os_minor") }}'
+      - name: os_patch
+        description: '{{ doc("col_os_patch") }}'
+      - name: os_patch_minor
+        description: '{{ doc("col_os_patch_minor") }}'
+      - name: os_version
+        description: '{{ doc("col_os_version") }}'
+      - name: device_family
+        description: '{{ doc("col_device_family") }}'
+      - name: device_class
+        description: '{{ doc("col_device_class") }}'
+      - name: device_category
+        description: '{{ doc("col_device_category") }}'
+      - name: screen_resolution
+        description: '{{ doc("col_screen_resolution") }}'
+      - name: agent_class
+        description: '{{ doc("col_agent_class") }}'
+      - name: agent_name
+        description: '{{ doc("col_agent_name") }}'
+      - name: agent_name_version
+        description: '{{ doc("col_agent_name_version") }}'
+      - name: agent_name_version_major
+        description: '{{ doc("col_agent_name_version_major") }}'
+      - name: agent_version
+        description: '{{ doc("col_agent_version") }}'
+      - name: agent_version_major
+        description: '{{ doc("col_agent_version_major") }}'
+      - name: device_brand
+        description: '{{ doc("col_device_brand") }}'
+      - name: device_name
+        description: '{{ doc("col_device_name") }}'
+      - name: device_version
+        description: '{{ doc("col_device_version") }}'
+      - name: layout_engine_class
+        description: '{{ doc("col_layout_engine_class") }}'
+      - name: layout_engine_name
+        description: '{{ doc("col_layout_engine_name") }}'
+      - name: layout_engine_name_version
+        description: '{{ doc("col_layout_engine_name_version") }}'
+      - name: layout_engine_name_version_major
+        description: '{{ doc("col_layout_engine_name_version_major") }}'
+      - name: layout_engine_version
+        description: '{{ doc("col_layout_engine_version") }}'
+      - name: layout_engine_version_major
+        description: '{{ doc("col_layout_engine_version_major") }}'
+      - name: operating_system_class
+        description: '{{ doc("col_operating_system_class") }}'
+      - name: operating_system_name
+        description: '{{ doc("col_operating_system_name") }}'
+      - name: operating_system_name_version
+        description: '{{ doc("col_operating_system_name_version") }}'
+      - name: operating_system_version
+        description: '{{ doc("col_operating_system_version") }}'
+      - name: original_domain_sessionid
+        description: '{{ doc("col_original_domain_sessionid") }}'
+      - name: original_domain_userid
+        description: '{{ doc("col_original_domain_userid") }}'
+
+  - name: snowplow_unified_pv_engaged_time
+    description: '{{ doc("table_pv_engaged_time") }}'
+    tests:
+      - unique:
+          column_name: "(page_view_id || '-' || domain_sessionid)"
+          config:
+            tags: primary-key
+            enabled: "{{ var('snowplow__limit_page_views_to_session', true) | as_bool }}"
+      - unique:
+          column_name: "page_view_id"
+          config:
+            tags: primary-key
+            enabled: "{{  var('snowplow__limit_page_views_to_session', true) is not true | as_bool }}"
+    columns:
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+        tests:
+          - not_null
+  - name: snowplow_unified_pv_scroll_depth
+    description: '{{ doc("table_scroll_depth") }}'
+    tests:
+      - unique:
+          column_name: "(page_view_id || '-' || domain_sessionid)"
+          config:
+            tags: primary-key
+            enabled: "{{ var('snowplow__limit_page_views_to_session', true) | as_bool }}"
+      - unique:
+          column_name: "page_view_id"
+          config:
+            tags: primary-key
+            enabled: "{{  var('snowplow__limit_page_views_to_session', true) is not true | as_bool }}"
+    columns:
+      - name: page_view_id
+        description: '{{ doc("col_page_view_id") }}'
+        tests:
+          - not_null

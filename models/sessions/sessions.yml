@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: snowplow_web_sessions
+  - name: snowplow_unified_sessions
     description: '{{ doc("table_sessions") }}'
     columns:
       - name: app_id

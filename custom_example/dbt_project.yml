@@ -21,13 +21,13 @@ clean-targets:
     - "dbt_modules"
 
 vars:
-  snowplow__sessions_table: "{{ ref('snowplow_web_sessions_custom') }}" # Redirect references to sessions table to your custom version.
+  snowplow__sessions_table: "{{ ref('snowplow_unified_sessions_custom') }}" # Redirect references to sessions table to your custom version.
 
 models:
   snowplow_custom_example:
-    snowplow_web_custom_modules:
-      +tags: snowplow_web_incremental #Adds tag to all models in the 'snowplow_web_custom_modules' directory
-  snowplow_web: # Only applies to models provided by the Snowplow Web dbt package
+    snowplow_unified_custom_modules:
+      +tags: snowplow_unified_incremental #Adds tag to all models in the 'snowplow_unified_custom_modules' directory
+  snowplow_unified: # Only applies to models provided by the Snowplow Web dbt package
     sessions:
-      snowplow_web_sessions:
-        +enabled: false # Disable the snowplow_web_sessions model as we have our custom version, snowplow_web_sessions_custom
+      snowplow_unified_sessions:
+        +enabled: false # Disable the snowplow_unified_sessions model as we have our custom version, snowplow_unified_sessions_custom

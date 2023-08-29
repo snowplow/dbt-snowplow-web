@@ -23,19 +23,19 @@ fi
 
 for db in ${DATABASES[@]}; do
 
-  echo "Snowplow web integration tests: Seeding data"
+  echo "Snowplow unified integration tests: Seeding data"
 
   eval "dbt seed --target $db --full-refresh" || exit 1;
 
-  echo "Snowplow web integration tests: Run 1: standard modules"
+  echo "Snowplow unified integration tests: Run 1: standard modules"
 
   eval "dbt run --target $db --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243}'" || exit 1;
 
-  echo "Snowplow web integration tests: Run 2: standard modules"
+  echo "Snowplow unified integration tests: Run 2: standard modules"
 
   eval "dbt run --target $db" || exit 1;
 
-  echo "Snowplow web integration tests: Run 3: Partial backfill of custom module + standard modules"
+  echo "Snowplow unified integration tests: Run 3: Partial backfill of custom module + standard modules"
   # This tests the functionality of the snowplow_utils.is_run_with_new_events() macro
   # Could be a scenario when a new custom module is added where:
   # - the main scheduled snowplow job runs i.e. all modules + custom backfill
@@ -44,21 +44,21 @@ for db in ${DATABASES[@]}; do
 
   eval "dbt run --target $db --vars '{snowplow__enable_custom_example: true, snowplow__backfill_limit_days: 243}'" || exit 1;
 
-  echo "Snowplow web integration tests: Run 4: Partial backfill of custom module only"
+  echo "Snowplow unified integration tests: Run 4: Partial backfill of custom module only"
 
-  eval "dbt run --models +snowplow_web_pv_channels --target $db --vars 'snowplow__enable_custom_example: true'" || exit 1;
+  eval "dbt run --models +snowplow_unified_pv_channels --target $db --vars 'snowplow__enable_custom_example: true'" || exit 1;
 
   for i in {5..6}
   do
-    echo "Snowplow web integration tests: Run $i/6: Standard increment - all modules"
+    echo "Snowplow unified integration tests: Run $i/6: Standard increment - all modules"
 
     eval "dbt run --target $db --vars 'snowplow__enable_custom_example: true'" || exit 1;
   done
 
-  echo "Snowplow web integration tests: Test models"
+  echo "Snowplow unified integration tests: Test models"
 
   eval "dbt test --target $db --store-failures" || exit 1;
 
-  echo "Snowplow web integration tests: All tests passed"
+  echo "Snowplow unified integration tests: All tests passed"
 
 done

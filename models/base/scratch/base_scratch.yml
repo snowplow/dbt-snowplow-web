@@ -1,14 +1,14 @@
 version: 2
 
 models:
-  - name: snowplow_web_base_new_event_limits
+  - name: snowplow_unified_base_new_event_limits
     description: '{{ doc("table_base_new_event_limits") }}'
     columns:
       - name: lower_limit
         description: The lower `collector_tstamp` limit for the run
       - name: upper_limit
         description: The upper `collector_tstamp` limit for the run
-  - name: snowplow_web_base_sessions_this_run
+  - name: snowplow_unified_base_sessions_this_run
     description: '{{ doc("table_base_sessions_this_run") }}'
     columns:
       - name: session_identifier
@@ -24,7 +24,7 @@ models:
         description: The `collector_tstamp` when the session began
       - name: end_tstamp
         description: The `collector_tstamp` when the session ended
-  - name: snowplow_web_base_events_this_run
+  - name: snowplow_unified_base_events_this_run
     description: '{{ doc("table_base_events_this_run") }}'
     columns:
       - name: app_id

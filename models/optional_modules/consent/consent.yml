@@ -11,7 +11,7 @@ sources:
         description: '{{ doc("table_cmp_visible") }}'
 
 models:
-  - name: snowplow_web_consent_log
+  - name: snowplow_unified_consent_log
     description: Incremental table showing the audit trail of consent and Consent Management Platform (cmp) events
     columns:
       - name: event_id
@@ -59,7 +59,7 @@ models:
       - name: original_domain_userid
         description: '{{ doc("col_original_domain_userid") }}'
 
-  - name: snowplow_web_consent_users
+  - name: snowplow_unified_consent_users
     description: By user consent stats
     columns:
       - name: domain_userid
@@ -93,7 +93,7 @@ models:
         description: The timestamp of the last processed event needed for the incremental logic
       - name: is_latest_version
         description: A boolean to filter whether the last consent or cmp visible event is sent after the latest privacy policy version goes live
-  - name: snowplow_web_consent_totals
+  - name: snowplow_unified_consent_totals
     description: Summary of the latest consent status as per consent version
     columns:
       - name: consent_version
@@ -130,7 +130,7 @@ models:
         description: Total number of users whose last consent event sent from the latest consent version has type withdrawn
       - name: expires_in_six_months
         description: The total number of users whose consent expires in six months (only the offical version is taken into account)
-  - name: snowplow_web_consent_scope_status
+  - name: snowplow_unified_consent_scope_status
     description: Aggregate of current number of users consented to each consent scope
     columns:
       - name: scope
@@ -140,7 +140,7 @@ models:
         description: Consent scope
       - name: total_consent
         description: The number of consent events corresponding to a scope
-  - name: snowplow_web_consent_cmp_stats
+  - name: snowplow_unified_consent_cmp_stats
     description: Used for modeling cmp_visible events and related metrics
     columns:
       - name: event_id
@@ -164,7 +164,7 @@ models:
         description: The event type of the first consent event after a cmp_visible event
       - name: cmp_interaction_time
         description: The time it takes for the user to make a consent choice after the cmp_visible event is fired
-  - name: snowplow_web_consent_versions
+  - name: snowplow_unified_consent_versions
     description: Used to keep track of each consent version and its validity
     columns:
       - name: consent_version
