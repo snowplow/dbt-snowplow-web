@@ -115,8 +115,16 @@ select
     {% endif %}
     null) as view_type,
 
+    -- only adding there for the int tests to pass before I start the pageview unification feature
+    a.domain_sessionid as original_domain_sessionid,
+    a.domain_userid as original_domain_userid,
+
   {% for col in base_query_cols | map(attribute='name') | list -%}
+    {% if col == 'domain_userid' -%}
+      a.user_identifier as domain_userid
+    {% else %}
     a.{{col}}
+    {% endif %}
     {%- if not loop.last -%},{%- endif %}
   {% endfor %}
 

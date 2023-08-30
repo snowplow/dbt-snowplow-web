@@ -50,6 +50,24 @@ select
     {% endif %}
     null) as view_type,
 
-  a.*
+    -- only adding there for the int tests to pass before I start the pageview unification feature
+    {% if var('snowplow__enable_web') %}
+    a.contexts_com_snowplowanalytics_snowplow_web_page_1[0]:id::varchar as page_view_id,
+    {% endif %}
+    {% if var('snowplow__enable_mobile') %}
+    a.unstruct_event_com_snowplowanalytics_mobile_screen_view_1:id::varchar as screen_view_id,
+    {% endif %}
+    a.domain_sessionid as original_domain_sessionid,
+    a.domain_userid as original_domain_userid,
+
+{% set base_query_cols = get_column_schema_from_query( 'select * from (' + base_events_query +') a') %}
+   {% for col in base_query_cols | map(attribute='name') | list -%}
+    {% if col == 'domain_userid' -%}
+      a.user_identifier as domain_userid
+    {% else %}
+    a.{{col}}
+    {% endif %}
+    {%- if not loop.last -%},{%- endif %}
+  {% endfor %}
 
 from base_query a
