@@ -11,6 +11,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
   )
 }}
 
+{{ config_check() }}
 
 {% set base_events_query = snowplow_utils.base_create_snowplow_events_this_run(
     sessions_this_run_table='snowplow_unified_base_sessions_this_run',
@@ -25,16 +26,30 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
     snowplow_events_schema=var('snowplow__atomic_schema', 'atomic'),
     snowplow_events_table=var('snowplow__events_table', 'events')) %}
 
+
 with base_query as (
   {{ base_events_query }}
 )
 
 select
-  a.contexts_com_snowplowanalytics_snowplow_unified_page_1[0].id as page_view_id,
-  a.session_identifier as domain_sessionid,
-  a.domain_sessionid as original_domain_sessionid,
-  a.user_identifier as domain_userid,
-  a.domain_userid as original_domain_userid,
-  a.* except(contexts_com_snowplowanalytics_snowplow_unified_page_1, domain_sessionid, domain_userid)
+  coalesce(
+    {% if var('snowplow__enable_web') %}
+      a.contexts_com_snowplowanalytics_snowplow_web_page_1[0].id,
+    {% endif %}
+    {% if var('snowplow__enable_mobile') %}
+      a.unstruct_event_com_snowplowanalytics_mobile_screen_view_1.id::STRING,
+    {% endif %}
+    null) as view_id,
+
+    coalesce(
+    {% if var('snowplow__enable_web') %}
+      'page_view',
+    {% endif %}
+    {% if var('snowplow__enable_mobile') %}
+      'screen_view',
+    {% endif %}
+    null) as view_type,
+
+  a.*
 
 from base_query a

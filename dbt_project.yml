@@ -34,6 +34,8 @@ vars:
     snowplow__dev_target_name: dev
     snowplow__events: "{{ source('atomic', 'events') }}"
     # snowplow__events_table: "events" # Only set if not using 'events' table for Snowplow events data
+    snowplow__enable_web: true
+    snowplow__enable_mobile: true
     snowplow__heartbeat: 10
     snowplow__min_visit_length: 5
     snowplow__sessions_table: "{{ ref('snowplow_unified_sessions') }}" # Change to your custom sessions table if you have disabled the standard sessions table in favour of a custom version. Advanced config.
@@ -77,6 +79,11 @@ vars:
     # snowplow__enable_iab: false
     # snowplow__enable_ua: false
     # snowplow__enable_yauaa: false
+    # snowplow__enable_mobile_context: false
+    # snowplow__enable_geolocation_context: false
+    # snowplow__enable_application_context: false
+    # snowplow__enable_screen_context: false
+    # snowplow__enable_app_errors_module: false
     snowplow__page_view_passthroughs: []
     snowplow__session_passthroughs: []
     snowplow__ua_bot_filter: true
@@ -94,6 +101,7 @@ vars:
       # Redshift/postgres
     snowplow__entities_or_sdes: []
     snowplow__enable_load_tstamp: true # set to false if you are using the postgres loader or earlier than 4.0.0 of the RDB loader
+    # web only contexts
     snowplow__consent_cmp_visible: com_snowplowanalytics_snowplow_cmp_visible_1
     snowplow__consent_preferences: com_snowplowanalytics_snowplow_consent_preferences_1
     snowplow__page_view_context: com_snowplowanalytics_snowplow_unified_page_1
@@ -101,6 +109,14 @@ vars:
     snowplow__ua_parser_context: com_snowplowanalytics_snowplow_ua_parser_context_1
     snowplow__yauaa_context: nl_basjes_yauaa_context_1
     snowplow__cwv_context: unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1
+    # mobile only contexts
+    snowplow__session_context: com_snowplowanalytics_snowplow_client_session_1
+    snowplow__mobile_context: com_snowplowanalytics_snowplow_mobile_context_1
+    snowplow__geolocation_context: com_snowplowanalytics_snowplow_geolocation_context_1
+    snowplow__application_context: com_snowplowanalytics_mobile_application_1
+    snowplow__screen_context: com_snowplowanalytics_mobile_screen_1
+    snowplow__app_errors_table: com_snowplowanalytics_snowplow_application_error_1
+    snowplow__screen_view_events: com_snowplowanalytics_mobile_screen_view_1
 
 # Completely or partially remove models from the manifest during run start.
 on-run-start:

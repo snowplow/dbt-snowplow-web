@@ -12,8 +12,8 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
   with prep as (
   select
     *
-    except(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0, contexts_com_snowplowanalytics_snowplow_ua_parser_context_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0),
-    JSON_EXTRACT_ARRAY(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0) AS contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0,
+    except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0, contexts_com_snowplowanalytics_snowplow_ua_parser_context_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0, unstruct_event_com_snowplowanalytics_mobile_screen_view_1_0_0),
+    JSON_EXTRACT_ARRAY(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) AS contexts_com_snowplowanalytics_snowplow_web_page_1_0_0,
     JSON_EXTRACT_ARRAY(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0) AS unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0,
     JSON_EXTRACT_ARRAY(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0) AS unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0,
     JSON_EXTRACT_ARRAY(contexts_com_iab_snowplow_spiders_and_robots_1_0_0) as contexts_com_iab_snowplow_spiders_and_robots_1_0_0,
@@ -25,12 +25,12 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
   -- recreate repeated record field i.e. array of structs as is originally in BQ events table
   select
     *
-    except(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0, contexts_com_snowplowanalytics_snowplow_ua_parser_context_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0),
+    except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0, contexts_com_snowplowanalytics_snowplow_ua_parser_context_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0),
     array(
       select as struct
         JSON_EXTRACT_scalar(json_array,'$.id') as id
-      from unnest(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0) as json_array
-      ) as contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0,
+      from unnest(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) as json_array
+      ) as contexts_com_snowplowanalytics_snowplow_web_page_1_0_0,
 
     array(
       select as struct
@@ -112,6 +112,10 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
       from unnest(contexts_nl_basjes_yauaa_context_1_0_0) as json_array
       ) as contexts_nl_basjes_yauaa_context_1_0_0,
 
+    array(
+      select as struct '' as id, '' as name, '' as previous_id, '' as transition_type, '' as type
+      ) as unstruct_event_com_snowplowanalytics_mobile_screen_view_1_0_0
+
 
   from prep
 
@@ -120,24 +124,24 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
   with prep as (
     select
       *
-      except(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0,  unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0),
-      JSON_EXTRACT_ARRAY(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0) AS contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0,
+      except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0,  unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0, unstruct_event_com_snowplowanalytics_mobile_screen_view_1_0_0),
+      JSON_EXTRACT_ARRAY(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) AS contexts_com_snowplowanalytics_snowplow_web_page_1_0_0,
       JSON_EXTRACT_ARRAY(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0) AS unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0,
       JSON_EXTRACT_ARRAY(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0) AS unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0,
       JSON_EXTRACT_ARRAY(unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0) AS unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0,
       JSON_EXTRACT_ARRAY(contexts_nl_basjes_yauaa_context_1_0_0) AS contexts_nl_basjes_yauaa_context_1_0_0,
       JSON_EXTRACT_ARRAY(contexts_com_iab_snowplow_spiders_and_robots_1_0_0) AS contexts_com_iab_snowplow_spiders_and_robots_1_0_0
 
-    from {{ ref('snowplow_unified_vital_events') }}
+    from {{ ref('snowplow_unified_web_vital_events') }}
   )
   -- recreate repeated record field i.e. array of structs as is originally in BQ events table
   select
     *
-    except(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0),
+    except(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0, contexts_nl_basjes_yauaa_context_1_0_0, contexts_com_iab_snowplow_spiders_and_robots_1_0_0),
     array(
       select as struct JSON_EXTRACT_scalar(json_array,'$.id') as id
-      from unnest(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0) as json_array
-      ) as contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0,
+      from unnest(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0) as json_array
+      ) as contexts_com_snowplowanalytics_snowplow_web_page_1_0_0,
 
     array(
       select as struct JSON_EXTRACT_scalar(json_array,'$.basis_for_processing') as basis_for_processing,
@@ -199,7 +203,11 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
                     JSON_EXTRACT_scalar(json_array,'$.spider_or_robot') as spider_or_robot
 
       from unnest(contexts_com_iab_snowplow_spiders_and_robots_1_0_0) as json_array
-      ) as contexts_com_iab_snowplow_spiders_and_robots_1_0_0
+      ) as contexts_com_iab_snowplow_spiders_and_robots_1_0_0,
+
+    array(
+      select as struct '' as id, '' as name, '' as previous_id, '' as transition_type, '' as type
+      ) as unstruct_event_com_snowplowanalytics_mobile_screen_view_1_0_0
 
   from prep
 

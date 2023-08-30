@@ -12,7 +12,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
     with prep as (
         select
             *,
-            from_json(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_unified_page_1,
+            from_json(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_web_page_1,
             from_json(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, 'array<struct<basis_for_processing:string, consent_scopes:array<string>, consent_url:string, consent_version:string, domains_applied:array<string>, event_type:string, gdpr_applies:string>>') as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
             from_json(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, 'array<struct<elapsed_time:string>>') as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1,
             from_json(contexts_com_iab_snowplow_spiders_and_robots_1_0_0, 'array<struct<category:string,primaryImpact:string,reason:string,spiderOrRobot:boolean>>') as contexts_com_iab_snowplow_spiders_and_robots_1,
@@ -152,7 +152,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
         event_fingerprint,
         true_tstamp,
         load_tstamp,
-        contexts_com_snowplowanalytics_snowplow_unified_page_1,
+        contexts_com_snowplowanalytics_snowplow_web_page_1,
         struct(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].basis_for_processing::STRING as basis_for_processing,
             unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_scopes::ARRAY<string> as consent_scopes,
             unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_url::STRING as consent_url,
@@ -207,7 +207,10 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
             contexts_nl_basjes_yauaa_context_1[0].webviewAppName as webview_app_name,
             contexts_nl_basjes_yauaa_context_1[0].webviewAppNameVersionMajor as webview_app_name_version_major,
             contexts_nl_basjes_yauaa_context_1[0].webviewAppVersion as webview_app_version,
-            contexts_nl_basjes_yauaa_context_1[0].webviewAppVersionMajor as webview_app_version_major)) as contexts_nl_basjes_yauaa_context_1
+            contexts_nl_basjes_yauaa_context_1[0].webviewAppVersionMajor as webview_app_version_major)) as contexts_nl_basjes_yauaa_context_1,
+        struct(''::STRING as basis_for_processing, ''::STRING as id, ''::STRING as name, ''::STRING as previous_id, ''::STRING as transition_type, '' as type) as unstruct_event_com_snowplowanalytics_mobile_screen_view_1
+
+
     from
         prep
 
@@ -217,7 +220,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
   with prep as (
     select
     *,
-    from_json(contexts_com_snowplowanalytics_snowplow_unified_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_unified_page_1,
+    from_json(contexts_com_snowplowanalytics_snowplow_web_page_1_0_0, 'array<struct<id:string>>') as contexts_com_snowplowanalytics_snowplow_web_page_1,
     from_json(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1_0_0, 'array<struct<basis_for_processing:string, consent_scopes:array<string>, consent_url:string, consent_version:string, domains_applied:array<string>, event_type:string, gdpr_applies:string>>') as unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1,
     from_json(unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1_0_0, 'array<struct<elapsed_time:string>>') as unstruct_event_com_snowplowanalytics_snowplow_cmp_visible_1,
     from_json(unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1_0_0, 'array<struct<cls:string, fcp:string, fid:string, inp:string, lcp:string, navigation_type:string, ttfb:string>>') as unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1,
@@ -358,7 +361,7 @@ select
   event_fingerprint,
   true_tstamp,
   load_tstamp,
-  contexts_com_snowplowanalytics_snowplow_unified_page_1,
+  contexts_com_snowplowanalytics_snowplow_web_page_1,
   struct(unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].basis_for_processing::STRING as basis_for_processing,
         unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_scopes::ARRAY<string> as consent_scopes,
         unstruct_event_com_snowplowanalytics_snowplow_consent_preferences_1[0].consent_url::STRING as consent_url,
@@ -375,7 +378,8 @@ select
         unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1[0].ttfb::FLOAT as ttfb,
         unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1[0].navigation_type::STRING as navigation_type) as unstruct_event_com_snowplowanalytics_snowplow_unified_vitals_1,
   contexts_nl_basjes_yauaa_context_1,
-  contexts_com_iab_snowplow_spiders_and_robots_1
+  contexts_com_iab_snowplow_spiders_and_robots_1,
+  struct(''::STRING as basis_for_processing, ''::STRING as id, ''::STRING as name, ''::STRING as previous_id, ''::STRING as transition_type, '' as type) as unstruct_event_com_snowplowanalytics_mobile_screen_view_1
 
 from prep
 {% endif %}
