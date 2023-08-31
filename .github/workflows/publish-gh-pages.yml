@@ -62,7 +62,7 @@ jobs:
         working-directory: ./integration_tests
     strategy:
       matrix:
-        dbt_version: ["1.4.*"]
+        dbt_version: ["1.5.*"]
         warehouse: ["snowflake"]
 
 
@@ -104,9 +104,9 @@ jobs:
     - name: Create dbt docs
       run: |
         dbt run-operation post_ci_cleanup --target ${{ matrix.warehouse }}
-        dbt seed --target ${{matrix.warehouse}} --full-refresh
-        dbt run --target ${{matrix.warehouse}} --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243, snowplow__enable_cwv: false}'
-        dbt docs generate
+        dbt seed --full-refresh --target ${{matrix.warehouse}} 
+        dbt run --full-refresh --vars '{snowplow__allow_refresh: true, snowplow__backfill_limit_days: 243, snowplow__enable_cwv: false}' --target ${{matrix.warehouse}} 
+        dbt docs generate --vars '{snowplow__atomic_schema: null}' --target ${{matrix.warehouse}}
         rm -f ../docs/catalog.json
         rm -f ../docs/manifest.json
         rm -f ../docs/run_results.json
