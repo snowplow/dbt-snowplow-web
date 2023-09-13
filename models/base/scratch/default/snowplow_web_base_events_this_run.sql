@@ -16,28 +16,28 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
 {# dbt passed variables by reference so need to use copy to avoid altering the list multiple times #}
 {% set contexts = var('snowplow__entities_or_sdes', []).copy() %}
 
-{% do contexts.append({'name': var('snowplow__page_view_context'), 'prefix': 'page_view', 'single_entity': True}) %}
+{% do contexts.append({'schema': var('snowplow__page_view_context'), 'prefix': 'page_view', 'single_entity': True}) %}
 
 {% if var('snowplow__enable_iab', false) -%}
-  {% do contexts.append({'name': var('snowplow__iab_context'), 'prefix': 'iab', 'single_entity': True}) %}
+  {% do contexts.append({'schema': var('snowplow__iab_context'), 'prefix': 'iab', 'single_entity': True}) %}
 {% endif -%}
 
 {% if var('snowplow__enable_ua', false) -%}
-  {% do contexts.append({'name': var('snowplow__ua_parser_context'), 'prefix': 'ua', 'single_entity': True}) %}
+  {% do contexts.append({'schema': var('snowplow__ua_parser_context'), 'prefix': 'ua', 'single_entity': True}) %}
 {% endif -%}
 
 {% if var('snowplow__enable_yauaa', false) -%}
-  {% do contexts.append({'name': var('snowplow__yauaa_context'), 'prefix': 'yauaa', 'single_entity': True}) %}
+  {% do contexts.append({'schema': var('snowplow__yauaa_context'), 'prefix': 'yauaa', 'single_entity': True}) %}
 {% endif -%}
 
 
 {% if var('snowplow__enable_consent', false) -%}
-  {% do contexts.append({'name': var('snowplow__consent_cmp_visible'), 'prefix': 'cmp_visible', 'single_entity': True}) %}
-  {% do contexts.append({'name': var('snowplow__consent_preferences'), 'prefix': 'consent_pref', 'single_entity': True}) %}
+  {% do contexts.append({'schema': var('snowplow__consent_cmp_visible'), 'prefix': 'cmp_visible', 'single_entity': True}) %}
+  {% do contexts.append({'schema': var('snowplow__consent_preferences'), 'prefix': 'consent_pref', 'single_entity': True}) %}
 {% endif -%}
 
 {% if var('snowplow__enable_cwv', false) -%}
-  {% do contexts.append({'name': var('snowplow__cwv_context'), 'prefix': 'cwv', 'single_entity': True}) %}
+  {% do contexts.append({'schema': var('snowplow__cwv_context'), 'prefix': 'cwv', 'single_entity': True}) %}
 {% endif -%}
 
 {% set base_events_query = snowplow_utils.base_create_snowplow_events_this_run(
