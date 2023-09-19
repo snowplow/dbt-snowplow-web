@@ -1,3 +1,37 @@
+snowplow-web 0.16.0 (2023-09-19)
+---------------------------------------
+## Summary
+This version adds a load of new features, powered by a complete refactor of the core processing of the package by moving it out to the new `base` macro functionality provided in `snowplow_utils`. This enables users to now specify custom fields for sessionization and user identification, to add custom entities/SDEs fields to the base events table for redshift/postgres, and to add passthrough fields to the derived tables so you can now more easily add your own fields to our tables. In addition we've increased the flexibility of how you apply user stitching, and made it available on the page views table! 
+
+From this release onwards, the package is being released under the [Snowplow Community License, Version 1.0](https://docs.snowplow.io/community-license-1.0/). If you are uncertain how it applies to your use case, check our answers to [frequently asked questions](https://docs.snowplow.io/docs/contributing/community-license-faq/).
+
+## 🚨 Breaking Changes 🚨
+- Bumped required dbt version to 1.5.0
+- Added new fields (`original_domain_sessionid` and `original_domain_userid`) to all tables to support custom identifiers
+- Bumped snowplow_utils required version to 0.15.0
+- Altered entity/self-describing table variables to only be table names, instead of source strings
+- Renamed columns in quarantined sessions and sessions lifecycle manifest table (please run the ALTER TABLE statements in the migration guide or do a full-refresh)
+- Seeds have been renamed to be prefixed with `snowplow_web_*` to align with the rest of the package, and now you can use your own seed files or tables in their place (see the package config)
+
+## Features
+- Migrate base models to the new `base` macros for flexibility and consistency
+- Add ability to add custom entity/self-describing event columns to the `base_events_this_run` table for Redshift/Postgres
+- Add ability to use a custom session identifier and user identifier
+- Add new fields `original_domain_sessionid` and `original_domain_userid` to derived tables (where applicable) 
+- Add ability to pass fields through to derived page views, sessions, and user tables
+- Add option to choose the logged `user_id` field that session stitching uses 
+- Add ability to run user stitching on the derived page views table
+
+## Under the hood
+- Aligned variables to follow the public docs
+- Contexts are now joined and de-duped via a macro for Postgres/Redshift
+- But filtering is now case insensitive
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file and follow all the other steps in our [migration guide](https://docs.snowplow.io/docs/modeling-your-data/modeling-your-data-with-dbt/migration-guides/web/).
+
+
+
 snowplow-web 0.16.0-rc1 (2023-08-31)
 ---------------------------------------
 ## Summary
