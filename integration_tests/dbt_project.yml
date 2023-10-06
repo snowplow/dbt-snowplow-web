@@ -56,6 +56,7 @@ vars:
     snowplow__start_date: "2020-07-03"
     snowplow__backfill_limit_days: 2
     snowplow__databricks_catalog: hive_metastore
+    snowplow__app_id: ['web_vital_sample', 'default', 'non dupe same time event', 'true base', 'true users', 'true page views', 'discourse', 'consent_accel']
     snowplow__enable_iab: true
     snowplow__enable_ua: true
     snowplow__enable_yauaa: true
