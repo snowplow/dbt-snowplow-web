@@ -1,3 +1,14 @@
+snowplow-web 0.16.1 (2023-10-06)
+---------------------------------------
+## Summary
+This version fixes an issue where the app_id filter was being ignored in the new models.
+
+## Fixes
+- Correctly process app id filter
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.16.0 (2023-09-19)
 ---------------------------------------
 ## Summary
