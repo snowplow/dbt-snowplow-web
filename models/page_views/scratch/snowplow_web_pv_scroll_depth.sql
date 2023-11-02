@@ -44,7 +44,7 @@ with prep as (
   group by 1 {% if var('snowplow__limit_page_views_to_session', true) %}, 2 {% endif %}
 )
 
-select
+Select
   page_view_id,
   {% if var('snowplow__limit_page_views_to_session', true) %}
   domain_sessionid,
