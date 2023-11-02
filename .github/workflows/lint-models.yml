@@ -1,0 +1,207 @@
+name: Lint dbt models
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release/**'
+      - 'test/**'
+    paths:
+      - 'models/**.sql'
+
+env:
+  # Redshift Connection
+  REDSHIFT_TEST_HOST: ${{ secrets.REDSHIFT_TEST_HOST }}
+  REDSHIFT_TEST_USER: ${{ secrets.REDSHIFT_TEST_USER }}
+  REDSHIFT_TEST_PASS: ${{ secrets.REDSHIFT_TEST_PASS }}
+  REDSHIFT_TEST_DBNAME: ${{ secrets.REDSHIFT_TEST_DBNAME }}
+  REDSHIFT_TEST_PORT: ${{ secrets.REDSHIFT_TEST_PORT }}
+
+  # BigQuery Connection
+  BIGQUERY_TEST_DATABASE: ${{ secrets.BIGQUERY_TEST_DATABASE }}
+  BIGQUERY_LOCATION: ${{ secrets.BIGQUERY_LOCATION }}
+  BIGQUERY_SERVICE_TYPE: ${{ secrets.BIGQUERY_SERVICE_TYPE }}
+  BIGQUERY_SERVICE_PROJECT_ID: ${{ secrets.BIGQUERY_SERVICE_PROJECT_ID }}
+  BIGQUERY_SERVICE_PRIVATE_KEY_ID: ${{ secrets.BIGQUERY_SERVICE_PRIVATE_KEY_ID }}
+  BIGQUERY_SERVICE_PRIVATE_KEY: ${{ secrets.BIGQUERY_SERVICE_PRIVATE_KEY }}
+  BIGQUERY_SERVICE_CLIENT_EMAIL: ${{ secrets.BIGQUERY_SERVICE_CLIENT_EMAIL }}
+  BIGQUERY_SERVICE_CLIENT_ID: ${{ secrets.BIGQUERY_SERVICE_CLIENT_ID }}
+  BIGQUERY_SERVICE_AUTH_URI: ${{ secrets.BIGQUERY_SERVICE_AUTH_URI }}
+  BIGQUERY_SERVICE_TOKEN_URI: ${{ secrets.BIGQUERY_SERVICE_TOKEN_URI }}
+  BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.BIGQUERY_SERVICE_AUTH_PROVIDER_X509_CERT_URL }}
+  BIGQUERY_SERVICE_CLIENT_X509_CERT_URL: ${{ secrets.BIGQUERY_SERVICE_CLIENT_X509_CERT_URL }}
+
+  # Snowflake Connection
+  SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+  SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+  SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+  SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+  SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+  SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+
+  # Postgres Connection
+  POSTGRES_TEST_HOST: ${{ secrets.POSTGRES_TEST_HOST }}
+  POSTGRES_TEST_USER: ${{ secrets.POSTGRES_TEST_USER }}
+  POSTGRES_TEST_PASS: ${{ secrets.POSTGRES_TEST_PASS }}
+  POSTGRES_TEST_PORT: ${{ secrets.POSTGRES_TEST_PORT }}
+  POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }}
+
+  # Databricks Connection
+  DATABRICKS_TEST_HOST: ${{ secrets.DATABRICKS_TEST_HOST }}
+  DATABRICKS_TEST_HTTP_PATH: ${{ secrets.DATABRICKS_TEST_HTTP_PATH }}
+  DATABRICKS_TEST_TOKEN: ${{ secrets.DATABRICKS_TEST_TOKEN }}
+  DATABRICKS_TEST_ENDPOINT: ${{ secrets.DATABRICKS_TEST_ENDPOINT }}
+
+permissions:
+  checks: write
+  contents: read
+
+jobs:
+  sqlfluff-lint-models:
+    name: Lint dbt models using SQLFluff
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dbt_version: ["1.*"]
+        warehouse: ["postgres", "snowflake"]
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_TEST_DBNAME }}
+          POSTGRES_USER: ${{ env.POSTGRES_TEST_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_TEST_PASS }}
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      # Remove '*' and replace '.' with '_' in DBT_VERSION & set as SCHEMA_SUFFIX.
+      # SCHEMA_SUFFIX allows us to run multiple versions of dbt in parallel without overwriting the output tables
+      - name: Set SCHEMA_SUFFIX env
+        run: echo "SCHEMA_SUFFIX=$(echo ${DBT_VERSION%.*} | tr . _)" >> $GITHUB_ENV
+        env:
+          DBT_VERSION: ${{ matrix.dbt_version }}
+
+      - name: Set DEFAULT_TARGET env
+        run: |
+          echo "DEFAULT_TARGET=${{ matrix.warehouse }}" >> $GITHUB_ENV
+
+      - name: Python setup
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.x"
+
+      - name: Pip cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.dbt_version }}-${{ matrix.warehouse }}
+
+      # Install latest patch version. Upgrade if cache contains old patch version.
+      - name: Install dependencies
+        run: |
+          pip install sqlfluff-templater-dbt==2.3.5
+          pip install dbt-${{ matrix.warehouse }}==${{ matrix.dbt_version }} --upgrade
+          dbt deps
+
+      - name: Get new and changed .sql files
+        id: changed-sql-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: |
+             **.sql
+
+      - name: Create annotations folder
+        run: mkdir -p ./sqlfluff_annotations
+
+      - name: Lint dbt models
+        shell: bash -l {0}
+        run: |
+          sqlfluff lint --dialect ${{ matrix.warehouse }} --format github-annotation --annotation-level failure --nofail ${{ steps.changed-sql-files.outputs.all_changed_files }} > sqlfluff_annotations/annotations_${{ matrix.warehouse }}.json
+
+      - name: Upload annotations
+        uses: actions/upload-artifact@v3
+        with:
+          name: sqlfluff_annotations
+          path: ./sqlfluff_annotations/*.json
+          retention-days: 1
+
+  sqlfluff-annotate:
+    name: Annotate SQLfluff lint errors
+    runs-on: ubuntu-latest
+    needs: [sqlfluff-lint-models]
+
+    steps:
+      - name: Python setup
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.x"
+
+      - name: Download annotation JSON files
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlfluff_annotations
+
+      - name: Combine and Deduplicate annotations
+        run: |
+          python - <<EOF
+          import json
+          import os
+
+          annotations_dir = '.'
+
+          # List to store combined annotations
+          combined_annotations = []
+
+          # Iterate over JSON files
+          for filename in os.listdir(annotations_dir):
+              if filename.endswith('.json') and filename != 'test.json':
+                  with open(os.path.join(annotations_dir, filename), 'r') as json_file:
+                      data = json.load(json_file)
+                      combined_annotations.extend(data)
+
+          # Remove duplicates based on the unique key(s) in the dictionaries
+          unique_data = []
+          unique_keys = set()
+
+          for item in combined_annotations:
+              key = (
+                  item["file"],
+                  item["line"],
+                  item["start_column"],
+                  item["end_column"],
+                  item["title"],
+                  item["message"]
+              )
+
+              if key not in unique_keys:
+                  unique_data.append(item)
+                  unique_keys.add(key)
+
+          # Save the unique data to a new JSON file
+          with open('annotations.json', 'w') as combined_file:
+              json.dump(unique_data, combined_file, indent=2)
+
+          EOF
+        working-directory: ${{ github.workspace }}
+
+      - name: Annotate
+        uses: yuzutech/annotations-action@v0.4.0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          title: "SQLFluff Lint"
+          input: "./annotations.json"

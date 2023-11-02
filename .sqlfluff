@@ -1,0 +1,48 @@
+[sqlfluff]
+templater = dbt
+processes = -1
+max_line_length = 120
+exclude_rules = CV11
+
+[sqlfluff:templater:dbt]
+apply_dbt_builtins = true
+profile = integration-tests
+project_dir = .
+profiles_dir = ./integration_tests/ci
+
+[sqlfluff:indentation]
+indent_unit = space
+indented_ctes = False
+indented_joins = True
+indented_using_on = True
+indented_on_contents = True
+tab_space_size = 2
+template_blocks_indent = True
+
+[sqlfluff:layout:type:comma]
+spacing_before = touch
+line_position = trailing
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = true
+
+[sqlfluff:rules:aliasing.table]
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.identifiers]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.types]
+capitalisation_policy = lower
