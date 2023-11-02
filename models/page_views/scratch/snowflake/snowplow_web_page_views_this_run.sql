@@ -12,7 +12,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
   )
 }}
 
-with prep as (
+with prep AS (
 select
   ev.page_view_id,
   ev.event_id,
