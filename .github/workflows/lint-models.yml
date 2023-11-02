@@ -64,7 +64,7 @@ jobs:
       fail-fast: false
       matrix:
         dbt_version: ["1.*"]
-        warehouse: ["postgres", "snowflake"]
+        warehouse: ["postgres", "bigquery", "snowflake", "databricks"]
 
     services:
       postgres:
