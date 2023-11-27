@@ -12,7 +12,7 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
     materialized='incremental',
     unique_key='page_view_id',
     upsert_date_key='start_tstamp',
-    partition_by = snowplow_utils.get_partition_by(databricks_val='start_tstamp_date'),
+    partition_by = snowplow_utils.get_value_by_target_type(databricks_val='start_tstamp_date'),
     snowplow_optimize=true
   )
 }}
