@@ -2,7 +2,7 @@ name: 'snowplow_web'
 version: '0.16.2'
 config-version: 2
 
-require-dbt-version: [">=1.5.0", "<2.0.0"]
+require-dbt-version: [">=1.6.0", "<2.0.0"]
 
 profile: 'default'
 
@@ -71,12 +71,9 @@ vars:
     snowplow__app_id: []
     snowplow__enable_consent: false
     snowplow__enable_cwv: false
-    # Setting default values for 3 enrichments below throughout package rather than here
-    # Workaround for a bug (https://github.com/dbt-labs/dbt-core/issues/3698).
-    # TODO: Return to having default values here once fixed.
-    # snowplow__enable_iab: false
-    # snowplow__enable_ua: false
-    # snowplow__enable_yauaa: false
+    snowplow__enable_iab: false
+    snowplow__enable_ua: false
+    snowplow__enable_yauaa: false
     snowplow__page_view_passthroughs: []
     snowplow__session_passthroughs: []
     snowplow__ua_bot_filter: true
