@@ -38,14 +38,14 @@ with prep as (
     {{ snowplow_utils.get_optional_fields(
         enabled=true,
         fields=yauaa_fields(),
-        col_prefix='contexts_nl_basjes_yauaa_context_1_0_0',
+        col_prefix='contexts_nl_basjes_yauaa_context_1',
         relation=ref('snowplow_web_base_events_this_run'),
         relation_alias='e') }},
 
     {{ snowplow_utils.get_optional_fields(
         enabled= true,
         fields=[{'field': 'lcp', 'dtype': 'string'}, {'field': 'fcp', 'dtype': 'string'}, {'field': 'fid', 'dtype': 'string'}, {'field': 'cls', 'dtype': 'string'}, {'field': 'inp', 'dtype': 'string'}, {'field': 'ttfb', 'dtype': 'string'}, {'field': 'navigation_type', 'dtype': 'string'}],
-        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1_0_0',
+        col_prefix='unstruct_event_com_snowplowanalytics_snowplow_web_vitals_1',
         relation=ref('snowplow_web_base_events_this_run'),
         relation_alias='e') }}
 
