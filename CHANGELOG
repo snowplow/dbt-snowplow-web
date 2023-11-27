@@ -1,3 +1,19 @@
+snowplow-web 1.0.0 (2023-12-05)
+---------------------------------------
+## Summary
+This version marks a major milestone as we move the package into a 1.0.0 release. The release itself only makes a few fixes for some issues, but this state marks the package as stable and production ready. This package will only receive critical bug fixes going forward as we invest our effort in new packages and projects. 
+
+## Breaking changes
+- We now require a dbt version >=1.6.0 to run this package
+
+# Fixes
+- Set default variables for contexts (Close #54)
+- Replace old macro in custom example (Close #236)
+- Remove full version number for core web vitals from bigquery (Close #235)
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 0.16.2 (2023-10-20)
 ---------------------------------------
 ## Summary
