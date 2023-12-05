@@ -1,6 +1,7 @@
 name: generate-docs-pages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -62,7 +63,7 @@ jobs:
         working-directory: ./integration_tests
     strategy:
       matrix:
-        dbt_version: ["1.5.*"]
+        dbt_version: ["1.6.*"]
         warehouse: ["snowflake"]
 
 
