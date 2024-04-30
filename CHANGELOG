@@ -1,3 +1,14 @@
+snowplow-web 1.0.1 (2024-05-01)
+---------------------------------------
+## Summary
+This version aligns the full refresh protection on manifest tables with other packages, requiring both `snowplow__allow_refresh` to be `true` and a `--full-refresh` flag.
+
+## Features
+- Require full refresh flag to refresh manifest tables
+
+## Upgrading
+Bump the snowplow-web version in your `packages.yml` file.
+
 snowplow-web 1.0.0 (2023-12-05)
 ---------------------------------------
 ## Summary
