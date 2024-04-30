@@ -12,12 +12,16 @@ You may obtain a copy of the Snowplow Community License Version 1.0 at https://d
 {% endmacro %}
 
 {% macro default__allow_refresh() %}
-  
-  {% set allow_refresh = snowplow_utils.get_value_by_target(
-                                    dev_value=none,
-                                    default_value=var('snowplow__allow_refresh'),
-                                    dev_target_name=var('snowplow__dev_target_name')
-                                    ) %}
+
+  {% if flags.FULL_REFRESH == True %}
+    {% set allow_refresh = snowplow_utils.get_value_by_target(
+                                      dev_value=none,
+                                      default_value=var('snowplow__allow_refresh'),
+                                      dev_target_name=var('snowplow__dev_target_name')
+                                      ) %}
+  {% else %}
+    {% set allow_refresh = none %}
+  {% endif %}
 
   {{ return(allow_refresh) }}
 
